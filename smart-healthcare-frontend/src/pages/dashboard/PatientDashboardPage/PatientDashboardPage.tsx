@@ -3,7 +3,7 @@ import {
   Typography,
 } from '@mui/material';
 
-export default function PatientDashboard() {
+export default function PatientDashboardPage() {
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4">Patient Dashboard</Typography>

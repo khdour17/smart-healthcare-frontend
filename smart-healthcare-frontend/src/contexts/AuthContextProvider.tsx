@@ -4,15 +4,15 @@ import {
   useState,
 } from 'react';
 
-import { login as loginApi } from './auth.api';
-import type { AuthUser } from './auth.types';
+import { login as loginApi } from '../api/auth/auth.api';
+import type { AuthUser } from '../types/auth.types';
 import {
   clearSession,
   getStoredUser,
   getToken,
   isTokenExpired,
   saveSession,
-} from './auth.utils';
+} from '../utils/authStorage';
 import { AuthContext } from './AuthContext';
 
 function getInitialUser(): AuthUser | null {
@@ -25,7 +25,7 @@ function getInitialUser(): AuthUser | null {
   return null;
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthContextProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(getInitialUser);
 
   async function login(username: string, password: string) {

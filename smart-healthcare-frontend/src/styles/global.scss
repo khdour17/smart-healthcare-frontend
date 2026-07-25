@@ -1,0 +1,26 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: $font-family-base;
+}
+
+// Custom scrollbar, matching the dark aesthetic — MUI's CssBaseline doesn't style this
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: $color-background;
+}
+::-webkit-scrollbar-thumb {
+  background: $color-border;
+  border-radius: 4px;
+}

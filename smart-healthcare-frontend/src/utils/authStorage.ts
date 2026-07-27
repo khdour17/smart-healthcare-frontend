@@ -1,6 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 
-import type { AuthUser } from '../types/auth.types';
+import type { AuthUser } from '../contexts/AuthContext';
 
 const TOKEN_KEY = 'token';
 const USER_KEY = 'user';

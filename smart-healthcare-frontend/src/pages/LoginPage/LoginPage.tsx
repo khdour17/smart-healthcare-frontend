@@ -1,12 +1,10 @@
 import {
-  type FormEvent,
   useContext,
   useState,
 } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import {
   Alert,
   Box,
@@ -15,7 +13,13 @@ import {
   Typography,
 } from '@mui/material';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { loginRequest } from '../../api/auth/LoginAPI';
+import logo from '../../assets/images/logo.png';
+import {
+  AuthContext,
+  type AuthUser,
+} from '../../contexts/AuthContext';
+import { saveSession } from '../../utils/authStorage';
 import styles from './LoginPage.module.scss';
 
 export default function LoginPage() {
@@ -24,14 +28,21 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const auth = useContext(AuthContext);
-  const navigate = useNavigate();
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
     try {
-      await auth?.login(username, password);
+      const response = await loginRequest({ username, password });
+      const authUser: AuthUser = {
+        id: response.id,
+        username: response.username,
+        email: response.email,
+        role: response.role,
+      };
+      saveSession(response.token, authUser);
+      auth?.setUser(authUser);
     } catch {
       setError('Invalid username or password.');
     } finally {
@@ -40,24 +51,20 @@ export default function LoginPage() {
   }
 
   if (auth?.user) {
-    navigate(`/dashboard/${auth.user.role.toLowerCase()}`, { replace: true });
-    return null;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
     <Box className={styles.page}>
       <Box className={styles.card}>
         <Box className={styles.logo}>
-          <LocalHospitalIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+          <Box component="img" src={logo} alt="Smart Healthcare logo" sx={{ height: 32, width: 32 }} />
           <Typography variant="h6" sx={{ fontWeight: 600 }}>Smart Healthcare</Typography>
         </Box>
-
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Sign in to manage your appointments
         </Typography>
-
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-
         <Box component="form" className={styles.form} onSubmit={handleSubmit}>
           <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} required fullWidth />
           <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required fullWidth />

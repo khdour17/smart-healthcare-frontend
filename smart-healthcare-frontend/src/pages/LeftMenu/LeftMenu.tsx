@@ -17,16 +17,16 @@ import {
   Tooltip,
 } from '@mui/material';
 
-import type { SidebarItem } from '../../constants/sidebarConfig';
+import type { LeftMenuItem } from './leftMenuConfig';
 
 const EXPANDED_WIDTH = 260;
 const COLLAPSED_WIDTH = 76;
 
-interface SidebarProps {
-  items: SidebarItem[];
+interface LeftMenuProps  {
+  items: LeftMenuItem [];
 }
 
-export function Sidebar({ items }: SidebarProps) {
+export function LeftMenu({ items }: LeftMenuProps ) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();

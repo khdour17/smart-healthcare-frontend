@@ -1,0 +1,7 @@
+@use '../../../styles/mixins' as *;
+
+.root {
+  @include flex-center(column);
+  height: 100vh;
+  gap: 16px;
+}

@@ -17,10 +17,11 @@ import {
   Typography,
 } from '@mui/material';
 
-import logo from '../../assets/images/logo.png';
-import { AuthContext } from '../../contexts/AuthContext';
-import { clearSession } from '../../utils/authStorage';
-import { getInitials } from '../../utils/getInitials';
+import logo from '../../../../assets/images/logo.png';
+import { AuthContext } from '../../../../contexts/AuthContext';
+import { clearSession } from '../../../../utils/authStorage';
+import { getInitials } from '../../../../utils/getInitials';
+import styles from './Header.module.scss';
 
 export function Header() {
   const auth = useContext(AuthContext);
@@ -35,30 +36,24 @@ export function Header() {
   }
 
   return (
-    <AppBar position="fixed" elevation={0} sx={{ bgcolor: 'background.default', borderBottom: '1px solid', borderColor: 'divider', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
+    <AppBar position="static" elevation={0} className={styles.appBar}>
+      <Toolbar className={styles.toolbar}>
+        <Box className={styles.brand} onClick={() => navigate('/dashboard')}>
           <Box component="img" src={logo} alt="Smart Healthcare logo" sx={{ height: 28, width: 28 }} />
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>Smart Healthcare</Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.2 }}>Appointment System</Typography>
+          <Box className={styles.brandText}>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>Smart Healthcare</Typography>
+            <Typography variant="caption" color="text.secondary">Appointment System</Typography>
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box className={styles.userArea}>
           <Typography variant="body2" color="text.secondary">Hello {auth?.user?.username}</Typography>
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
             <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
               {getInitials(auth?.user?.username)}
             </Avatar>
           </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          >
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
             <MenuItem onClick={() => setAnchorEl(null)}>Profile</MenuItem>
             <MenuItem onClick={() => setAnchorEl(null)}>Change Password</MenuItem>
             <MenuItem onClick={() => setAnchorEl(null)}>Settings</MenuItem>

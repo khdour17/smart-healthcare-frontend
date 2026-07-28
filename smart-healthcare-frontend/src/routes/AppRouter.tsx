@@ -11,10 +11,10 @@ import {
 
 import { RequireAuth } from './guards/RequireAuth';
 
-const LoginPage = lazy(() => import('../pages/LoginPage/LoginPage'));
-const MainLayout = lazy(() => import('../layouts/MainLayout/MainLayout'));
-const DashboardPage = lazy(() => import('../pages/DashboardPage/DashboardPage'));
-const NotFoundPage = lazy(() => import('../pages/NotFoundPage/NotFoundPage'));
+const LoginPage = lazy(() => import('../views/pages/LoginPage/LoginPage'));
+const MainLayout = lazy(() => import('../views/layouts/MainLayout/MainLayout'));
+const DashboardPage = lazy(() => import('../views/pages/DashboardPage/DashboardPage'));
+const NotFoundPage = lazy(() => import('../views/pages/NotFoundPage/NotFoundPage'));
 
 export function AppRouter() {
   return (

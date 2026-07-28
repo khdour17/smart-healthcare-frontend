@@ -8,7 +8,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../../contexts/AuthContext';
+import styles from './NotFoundPage.module.scss';
 
 export default function NotFoundPage() {
   const auth = useContext(AuthContext);
@@ -19,7 +20,7 @@ export default function NotFoundPage() {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: 2 }}>
+    <Box className={styles.root}>
       <Typography variant="h3">404</Typography>
       <Typography color="text.secondary">This page doesn't exist.</Typography>
       <Button variant="contained" onClick={handleGoBack}>

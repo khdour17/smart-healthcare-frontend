@@ -5,15 +5,16 @@ import {
   Typography,
 } from '@mui/material';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../../contexts/AuthContext';
+import styles from './DashboardPage.module.scss';
 
 export default function DashboardPage() {
   const auth = useContext(AuthContext);
   const role = auth?.user?.role;
 
   return (
-    <Box>
-      <Typography variant="h4" sx={{ mb: 1 }}>Welcome, {auth?.user?.username}</Typography>
+    <Box className={styles.root}>
+      <Typography variant="h4">Welcome, {auth?.user?.username}</Typography>
       <Typography color="text.secondary">
         {role === 'ADMIN' && 'Manage doctors, patients, and users from the sidebar.'}
         {role === 'DOCTOR' && 'View your appointments and patients from the sidebar.'}

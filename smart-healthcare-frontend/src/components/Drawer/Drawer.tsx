@@ -9,6 +9,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import styles from './Drawer.module.scss';
+
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
@@ -23,19 +25,19 @@ export function Drawer({ open, onClose, title, children, footer }: DrawerProps) 
       anchor="right"
       open={open}
       onClose={onClose}
-      slotProps={{ backdrop: { sx: { backgroundColor: 'rgba(0, 0, 0, 0.6)' } } }}
-      sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 2, // sits above the fixed Header
-        '& .MuiDrawer-paper': { width: { xs: '100%', sm: '65%', md: '38%' }, bgcolor: 'background.paper', display: 'flex', flexDirection: 'column' },
+      sx={{ zIndex: 1301 }}
+      slotProps={{
+        backdrop: { sx: { backgroundColor: 'rgba(0, 0, 0, 0.6)' } },
+        paper: { className: styles.paper, sx: { bgcolor: 'background.paper' } },
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2.5 }}>
+      <Box className={styles.header}>
         <Typography variant="h6">{title}</Typography>
         <IconButton onClick={onClose} size="small"><CloseIcon fontSize="small" /></IconButton>
       </Box>
       <Divider />
-      <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2.5 }}>{children}</Box>
-      {footer && (<><Divider /><Box sx={{ p: 2.5 }}>{footer}</Box></>)}
+      <Box className={styles.body}>{children}</Box>
+      {footer && (<><Divider /><Box className={styles.footer}>{footer}</Box></>)}
     </MuiDrawer>
   );
 }

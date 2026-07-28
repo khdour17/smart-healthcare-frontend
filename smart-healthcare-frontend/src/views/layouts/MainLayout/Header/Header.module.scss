@@ -1,0 +1,30 @@
+@use '../../../../styles/variables' as *;
+
+.appBar {
+  background-color: $color-background;
+  border-bottom: 1px solid $color-border;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

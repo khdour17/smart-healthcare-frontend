@@ -1,15 +1,16 @@
 import type { SvgIconComponent } from '@mui/icons-material';
+import AdminPanelSettingsIcon
+  from '@mui/icons-material/AdminPanelSettingsOutlined';
 import DashboardIcon from '@mui/icons-material/DashboardOutlined';
 import DescriptionIcon from '@mui/icons-material/DescriptionOutlined';
 import EventIcon from '@mui/icons-material/EventOutlined';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospitalOutlined';
 import MedicationIcon from '@mui/icons-material/MedicationOutlined';
 import PeopleIcon from '@mui/icons-material/PeopleOutlined';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAltOutlined';
 import PersonIcon from '@mui/icons-material/PersonOutlined';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 
-import type { UserRole } from '../../contexts/AuthContext';
+import type { UserRole } from '../../../../contexts/AuthContext';
 
 export interface LeftMenuItem {
   key: string;
@@ -26,12 +27,10 @@ const medicalRecords: LeftMenuItem = { key: 'medicalRecords', label: 'Medical Re
 const prescriptions: LeftMenuItem = { key: 'prescriptions', label: 'Prescriptions', path: '/dashboard/prescriptions', icon: MedicationIcon };
 const profile: LeftMenuItem = { key: 'profile', label: 'Profile', path: '/dashboard/profile', icon: PersonIcon };
 const settings: LeftMenuItem = { key: 'settings', label: 'Settings', path: '/dashboard/settings', icon: SettingsIcon };
-const createUser: LeftMenuItem = { key: 'createUser', label: 'Create User', path: '/dashboard/create-user', icon: PersonAddAltIcon };
+const admins: LeftMenuItem = { key: 'admins', label: 'Admins', path: '/dashboard/admins', icon: AdminPanelSettingsIcon };
 
 const itemsByRole: Record<UserRole, LeftMenuItem[]> = {
-  // Admin cannot GET /api/prescriptions or /api/medical-records — backend
-  // restricts both to DOCTOR + PATIENT only (see SecurityConfig).
-  ADMIN: [appointments, doctors, patients, createUser, settings],
+  ADMIN: [appointments, doctors, patients, admins, settings],
   DOCTOR: [appointments, patients, medicalRecords, prescriptions, profile, settings],
   PATIENT: [appointments, medicalRecords, prescriptions, profile, settings],
 };

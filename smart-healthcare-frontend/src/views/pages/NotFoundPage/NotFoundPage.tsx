@@ -22,7 +22,7 @@ export default function NotFoundPage() {
   return (
     <Box className={styles.root}>
       <Typography variant="h3">404</Typography>
-      <Typography color="text.secondary">This page doesn't exist.</Typography>
+      <Typography color="textSecondary">This page doesn't exist.</Typography>
       <Button variant="contained" onClick={handleGoBack}>
         {auth?.user ? 'Back to Dashboard' : 'Back to Login'}
       </Button>

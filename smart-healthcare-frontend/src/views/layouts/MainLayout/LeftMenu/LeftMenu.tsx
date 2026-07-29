@@ -46,6 +46,7 @@ export function LeftMenu({ items }: LeftMenuProps) {
           const button = (
             <ListItemButton
               key={item.key}
+              selected={isActive}
               onClick={() => navigate(item.path)}
               className={cx(styles.item, collapsed && styles.itemCollapsed, isActive && styles.itemActive)}
             >

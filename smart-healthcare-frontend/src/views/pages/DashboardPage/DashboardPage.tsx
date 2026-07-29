@@ -15,7 +15,7 @@ export default function DashboardPage() {
   return (
     <Box className={styles.root}>
       <Typography variant="h4">Welcome, {auth?.user?.username}</Typography>
-      <Typography color="text.secondary">
+      <Typography color="textSecondary">
         {role === 'ADMIN' && 'Manage doctors, patients, and users from the sidebar.'}
         {role === 'DOCTOR' && 'View your appointments and patients from the sidebar.'}
         {role === 'PATIENT' && 'Book and manage your appointments from the sidebar.'}

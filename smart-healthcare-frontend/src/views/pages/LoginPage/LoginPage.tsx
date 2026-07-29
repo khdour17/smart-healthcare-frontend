@@ -24,8 +24,8 @@ import { saveSession } from '../../../utils/authStorage';
 import styles from './LoginPage.module.scss';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const auth = useContext(AuthContext);
@@ -36,16 +36,11 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       const response = await loginRequest({ username, password });
-      const authUser: AuthUser = {
-        id: response.id,
-        username: response.username,
-        email: response.email,
-        role: response.role,
-      };
+      const authUser: AuthUser = { id: response.id, username: response.username, email: response.email, role: response.role };
       saveSession(response.token, authUser);
       auth?.setUser(authUser);
     } catch {
-      setError("Invalid username or password.");
+      setError('Invalid username or password.');
     } finally {
       setIsSubmitting(false);
     }
@@ -59,48 +54,18 @@ export default function LoginPage() {
     <Box className={styles.page}>
       <Box className={styles.card}>
         <Box className={styles.logo}>
-          <Box
-            component="img"
-            src={logo}
-            alt="Smart Healthcare logo"
-            sx={{ height: 32, width: 32 }}
-          />
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Smart Healthcare
-          </Typography>
+          <Box component="img" src={logo} alt="Smart Healthcare logo" className={styles.logoImage} />
+          <Typography variant="h6" className={styles.logoTitle}>Smart Healthcare</Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" color="textSecondary" className={styles.subtitle}>
           Sign in to manage your appointments
         </Typography>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+        {error && <Alert severity="error" className={styles.errorAlert}>{error}</Alert>}
         <Box component="form" className={styles.form} onSubmit={handleSubmit}>
-          <TextField
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            fullWidth
-          />
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            fullWidth
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            disabled={isSubmitting}
-            sx={{ mt: 1 }}
-          >
-            {isSubmitting ? "Signing in..." : "Sign in"}
+          <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} required fullWidth />
+          <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required fullWidth />
+          <Button type="submit" variant="contained" size="large" disabled={isSubmitting} className={styles.submitButton}>
+            {isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>
         </Box>
       </Box>

@@ -25,10 +25,10 @@ export function Drawer({ open, onClose, title, children, footer }: DrawerProps) 
       anchor="right"
       open={open}
       onClose={onClose}
-      sx={{ zIndex: 1301 }}
+      className={styles.root}
       slotProps={{
-        backdrop: { sx: { backgroundColor: 'rgba(0, 0, 0, 0.6)' } },
-        paper: { className: styles.paper, sx: { bgcolor: 'background.paper' } },
+        backdrop: { className: styles.backdrop },
+        paper: { className: styles.paper },
       }}
     >
       <Box className={styles.header}>

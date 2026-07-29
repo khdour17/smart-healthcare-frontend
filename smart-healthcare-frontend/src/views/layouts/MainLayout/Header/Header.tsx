@@ -39,19 +39,17 @@ export function Header() {
     <AppBar position="static" elevation={0} className={styles.appBar}>
       <Toolbar className={styles.toolbar}>
         <Box className={styles.brand} onClick={() => navigate('/dashboard')}>
-          <Box component="img" src={logo} alt="Smart Healthcare logo" sx={{ height: 28, width: 28 }} />
+          <Box component="img" src={logo} alt="Smart Healthcare logo" className={styles.logo} />
           <Box className={styles.brandText}>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>Smart Healthcare</Typography>
-            <Typography variant="caption" color="text.secondary">Appointment System</Typography>
+            <Typography variant="body2" className={styles.brandTitle}>Smart Healthcare</Typography>
+            <Typography variant="caption" color="textSecondary">Appointment System</Typography>
           </Box>
         </Box>
 
         <Box className={styles.userArea}>
-          <Typography variant="body2" color="text.secondary">Hello {auth?.user?.username}</Typography>
+          <Typography variant="body2" color="textPrimary">Hello {auth?.user?.username}</Typography>
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
-            <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
-              {getInitials(auth?.user?.username)}
-            </Avatar>
+            <Avatar className={styles.avatar}>{getInitials(auth?.user?.username)}</Avatar>
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
             <MenuItem onClick={() => setAnchorEl(null)}>Profile</MenuItem>

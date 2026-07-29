@@ -6,7 +6,7 @@
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.15), transparent 50%),
+  background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.16), transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.08), transparent 50%),
     $color-background;
 }
@@ -14,20 +14,27 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(rgba(39, 39, 42, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(39, 39, 42, 0.4) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(38, 38, 47, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(38, 38, 47, 0.4) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(circle at center, black, transparent 75%);
 }
 .card {
-  @include glass-panel;
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 380px;
   padding: 40px;
   border-radius: 16px;
+  background: rgba(23, 23, 31, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid $color-border;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 .logo { @include flex-center; gap: 10px; margin-bottom: 28px; }
+.logoImage { height: 32px; width: 32px; }
+.logoTitle { font-weight: 600; }
+.subtitle { margin-bottom: 24px; }
+.errorAlert { margin-bottom: 16px; }
 .form { display: flex; flex-direction: column; gap: 18px; }
+.submitButton { margin-top: 8px; }

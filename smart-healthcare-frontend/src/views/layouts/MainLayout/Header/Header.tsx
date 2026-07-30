@@ -47,7 +47,7 @@ export function Header() {
         </Box>
 
         <Box className={styles.userArea}>
-          <Typography variant="body2" color="textPrimary">Hello {auth?.user?.username}</Typography>
+          <Typography variant="body2" color="textSecondary">Hello {auth?.user?.username}</Typography>
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
             <Avatar className={styles.avatar}>{getInitials(auth?.user?.username)}</Avatar>
           </IconButton>

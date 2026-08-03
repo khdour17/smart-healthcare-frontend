@@ -3,17 +3,25 @@ import {
   useState,
 } from 'react';
 
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAltOutlined';
 import {
   Box,
   Button,
+  IconButton,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
 import {
+  deleteDoctor,
   type DoctorResponse,
   getAllDoctors,
 } from '../../../../api/doctors/DoctorsAPI';
+import {
+  ConfirmDialog,
+} from '../../../../components/ConfirmDialog/ConfirmDialog';
 import {
   DataTable,
   type DataTableColumn,
@@ -32,15 +40,15 @@ const columns: DataTableColumn<DoctorResponse>[] = [
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<DoctorResponse[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-
     async function load() {
       const data = await getAllDoctors();
       if (!cancelled) setDoctors(data);
     }
-
     load();
     return () => { cancelled = true; };
   }, []);
@@ -55,20 +63,64 @@ export default function DoctorsPage() {
     refreshDoctors();
   }
 
+  async function handleConfirmDelete() {
+    await Promise.all(Array.from(selectedKeys).map((id) => deleteDoctor(Number(id))));
+    setIsConfirmOpen(false);
+    setSelectedKeys(new Set());
+    refreshDoctors();
+  }
+
+  const hasSelection = selectedKeys.size > 0;
+
   return (
     <Box className={styles.page}>
       <Box className={styles.headerRow}>
         <Typography variant="h5">Doctors</Typography>
-        <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>
-          Add Doctor
-        </Button>
+
+        {hasSelection ? (
+          <Box className={styles.selectionBar}>
+            <Typography variant="body2" className={styles.selectionCount}>{selectedKeys.size} selected</Typography>
+            <Tooltip title="Delete selected">
+              <IconButton size="small" className={styles.selectionDelete} onClick={() => setIsConfirmOpen(true)}>
+                <DeleteOutlineIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Clear selection">
+              <IconButton size="small" onClick={() => setSelectedKeys(new Set())}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        ) : (
+          <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>
+            Add Doctor
+          </Button>
+        )}
       </Box>
 
-      <DataTable columns={columns} rows={doctors} getRowKey={(row) => row.id} emptyMessage="No doctors found." />
+      <DataTable
+        columns={columns}
+        rows={doctors}
+        getRowKey={(row) => row.id}
+        emptyMessage="No doctors found."
+        selectable
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      />
 
       <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Add Doctor">
         <AddDoctorForm onSuccess={handleCreated} onCancel={() => setIsDrawerOpen(false)} />
       </Drawer>
+
+      <ConfirmDialog
+        open={isConfirmOpen}
+        title="Delete doctors"
+        message={`Delete ${selectedKeys.size} doctor${selectedKeys.size === 1 ? '' : 's'}? This action cannot be undone.`}
+        confirmLabel="Delete"
+        confirmColor="error"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </Box>
   );
 }

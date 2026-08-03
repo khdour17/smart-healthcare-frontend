@@ -12,3 +12,7 @@ export async function getAllDoctors(): Promise<DoctorResponse[]> {
   const response = await httpClient.get<DoctorResponse[]>('/doctors');
   return response.data;
 }
+
+export async function deleteDoctor(id: number): Promise<void> {
+  await httpClient.delete(`/doctors/${id}`);
+}

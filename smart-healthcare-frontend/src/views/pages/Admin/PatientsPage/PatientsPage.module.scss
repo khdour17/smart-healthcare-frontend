@@ -1,2 +1,25 @@
+@use '../../../../styles/variables' as *;
+
 .page { display: flex; flex-direction: column; gap: 20px; }
 .headerRow { display: flex; align-items: center; justify-content: space-between; }
+
+.selectionBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px 4px 16px;
+  border-radius: 999px;
+  background-color: $color-surface-2;
+  border: 1px solid $color-border;
+}
+
+.selectionCount {
+  color: $color-text-secondary;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.selectionDelete {
+  color: $color-error;
+  &:hover { background-color: rgba(239, 68, 68, 0.1); }
+}

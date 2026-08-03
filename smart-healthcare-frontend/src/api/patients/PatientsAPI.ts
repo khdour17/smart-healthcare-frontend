@@ -14,3 +14,7 @@ export async function getAllPatients(): Promise<PatientResponse[]> {
   const response = await httpClient.get<PatientResponse[]>('/patients');
   return response.data;
 }
+
+export async function deletePatient(id: number): Promise<void> {
+  await httpClient.delete(`/patients/${id}`);
+}

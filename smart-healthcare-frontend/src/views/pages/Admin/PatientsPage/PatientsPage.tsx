@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import {
-  deletePatient,
+  deletePatients,
   getAllPatients,
   type PatientResponse,
 } from '../../../../api/patients/PatientsAPI';
@@ -44,31 +44,24 @@ export default function PatientsPage() {
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      const data = await getAllPatients();
-      if (!cancelled) setPatients(data);
-    }
-    load();
-    return () => { cancelled = true; };
-  }, []);
-
-  async function refreshPatients() {
-    const data = await getAllPatients();
-    setPatients(data);
+  function fetchPatients() {
+    getAllPatients().then(setPatients);
   }
+
+  useEffect(() => {
+    fetchPatients();
+  }, []);
 
   function handleCreated() {
     setIsDrawerOpen(false);
-    refreshPatients();
+    fetchPatients();
   }
 
   async function handleConfirmDelete() {
-    await Promise.all(Array.from(selectedKeys).map((id) => deletePatient(Number(id))));
+    await deletePatients(Array.from(selectedKeys).map(Number));
     setIsConfirmOpen(false);
     setSelectedKeys(new Set());
-    refreshPatients();
+    fetchPatients();
   }
 
   const hasSelection = selectedKeys.size > 0;
@@ -77,7 +70,6 @@ export default function PatientsPage() {
     <Box className={styles.page}>
       <Box className={styles.headerRow}>
         <Typography variant="h5">Patients</Typography>
-
         {hasSelection ? (
           <Box className={styles.selectionBar}>
             <Typography variant="body2" className={styles.selectionCount}>{selectedKeys.size} selected</Typography>
@@ -93,21 +85,11 @@ export default function PatientsPage() {
             </Tooltip>
           </Box>
         ) : (
-          <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>
-            Add Patient
-          </Button>
+          <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>Add Patient</Button>
         )}
       </Box>
 
-      <DataTable
-        columns={columns}
-        rows={patients}
-        getRowKey={(row) => row.id}
-        emptyMessage="No patients found."
-        selectable
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
-      />
+      <DataTable columns={columns} rows={patients} getRowKey={(row) => row.id} emptyMessage="No patients found." selectable selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} />
 
       <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Add Patient">
         <AddPatientForm onSuccess={handleCreated} onCancel={() => setIsDrawerOpen(false)} />

@@ -33,39 +33,26 @@ export default function AdminsPage() {
   const [admins, setAdmins] = useState<AdminResponse[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      const data = await getAllAdmins();
-      if (!cancelled) setAdmins(data);
-    }
-
-    load();
-    return () => { cancelled = true; };
-  }, []);
-
-  async function refreshAdmins() {
-    const data = await getAllAdmins();
-    setAdmins(data);
+  function fetchAdmins() {
+    getAllAdmins().then(setAdmins);
   }
+
+  useEffect(() => {
+    fetchAdmins();
+  }, []);
 
   function handleCreated() {
     setIsDrawerOpen(false);
-    refreshAdmins();
+    fetchAdmins();
   }
 
   return (
     <Box className={styles.page}>
       <Box className={styles.headerRow}>
         <Typography variant="h5">Admins</Typography>
-        <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>
-          Add Admin
-        </Button>
+        <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>Add Admin</Button>
       </Box>
-
       <DataTable columns={columns} rows={admins} getRowKey={(row) => row.id} emptyMessage="No admins found." />
-
       <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Add Admin">
         <AddAdminForm onSuccess={handleCreated} onCancel={() => setIsDrawerOpen(false)} />
       </Drawer>

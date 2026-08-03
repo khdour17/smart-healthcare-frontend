@@ -13,6 +13,13 @@ export async function getAllDoctors(): Promise<DoctorResponse[]> {
   return response.data;
 }
 
-export async function deleteDoctor(id: number): Promise<void> {
-  await httpClient.delete(`/doctors/${id}`);
+export async function deleteDoctors(ids: number[]): Promise<void> {
+  if (ids.length === 1) {
+    await httpClient.delete(`/doctors/${ids[0]}`);
+    return;
+  }
+
+  await httpClient.delete('/doctors', {
+    data: ids,
+  });
 }

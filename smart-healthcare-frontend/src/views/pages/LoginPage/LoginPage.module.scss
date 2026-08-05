@@ -34,7 +34,7 @@
 .logo { @include flex-center; gap: 10px; margin-bottom: 28px; }
 .logoImage { height: 32px; width: 32px; }
 .logoTitle { font-weight: 600; }
-.subtitle { margin-bottom: 24px; }
+.subtitle { margin-bottom: 24px; text-align: center;}
 .errorAlert { margin-bottom: 16px; }
 .form { display: flex; flex-direction: column; gap: 18px; }
 .submitButton { margin-top: 8px; }

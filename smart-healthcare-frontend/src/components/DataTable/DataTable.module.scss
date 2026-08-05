@@ -1,0 +1,11 @@
+.paper { width: 100%; overflow: hidden; }
+.table { table-layout: fixed; }
+.row { transition: background-color 0.15s ease; &:hover { background-color: rgba(255, 255, 255, 0.03); } }
+.cell {
+  border-color: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.checkboxCell { width: 48px; }
+.emptyMessage { padding: 24px; text-align: center; }

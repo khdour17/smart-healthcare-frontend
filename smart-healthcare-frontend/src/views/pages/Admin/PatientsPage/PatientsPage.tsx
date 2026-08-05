@@ -43,6 +43,7 @@ export default function PatientsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   function fetchPatients() {
     getAllPatients().then(setPatients);
@@ -57,11 +58,20 @@ export default function PatientsPage() {
     fetchPatients();
   }
 
+  function openConfirmDelete() {
+    setDeleteError(null);
+    setIsConfirmOpen(true);
+  }
+
   async function handleConfirmDelete() {
-    await deletePatients(Array.from(selectedKeys).map(Number));
-    setIsConfirmOpen(false);
-    setSelectedKeys(new Set());
-    fetchPatients();
+    try {
+      await deletePatients(Array.from(selectedKeys).map(Number));
+      setIsConfirmOpen(false);
+      setSelectedKeys(new Set());
+      fetchPatients();
+    } catch {
+      setDeleteError('Could not delete one or more patients. They may have existing appointments or records.');
+    }
   }
 
   const hasSelection = selectedKeys.size > 0;
@@ -74,7 +84,7 @@ export default function PatientsPage() {
           <Box className={styles.selectionBar}>
             <Typography variant="body2" className={styles.selectionCount}>{selectedKeys.size} selected</Typography>
             <Tooltip title="Delete selected">
-              <IconButton size="small" className={styles.selectionDelete} onClick={() => setIsConfirmOpen(true)}>
+              <IconButton size="small" className={styles.selectionDelete} onClick={openConfirmDelete}>
                 <DeleteOutlineIcon fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -101,6 +111,7 @@ export default function PatientsPage() {
         message={`Delete ${selectedKeys.size} patient${selectedKeys.size === 1 ? '' : 's'}? This action cannot be undone.`}
         confirmLabel="Delete"
         confirmColor="error"
+        error={deleteError}
         onConfirm={handleConfirmDelete}
         onCancel={() => setIsConfirmOpen(false)}
       />

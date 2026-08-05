@@ -7,6 +7,7 @@ export interface AuthUser {
   username: string;
   email: string;
   role: UserRole;
+  roleEntityId: number;
 }
 
 export interface AuthContextValue {

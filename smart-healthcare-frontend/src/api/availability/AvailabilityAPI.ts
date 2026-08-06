@@ -1,6 +1,5 @@
+import type { DayOfWeek } from '../../types/common';
 import httpClient from '../../utils/httpClient';
-
-export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
 export interface DoctorAvailabilityRequest {
   dayOfWeek: DayOfWeek;

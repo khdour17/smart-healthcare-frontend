@@ -12,10 +12,10 @@ import {
 } from '@mui/material';
 
 import {
-  type DayOfWeek,
   type DoctorAvailabilityRequest,
   setAvailability,
 } from '../../../../../api/availability/AvailabilityAPI';
+import type { DayOfWeek } from '../../../../../types/common';
 import { openNativePicker } from '../../../../../utils/openNativePicker';
 import styles from './AddAvailabilityForm.module.scss';
 

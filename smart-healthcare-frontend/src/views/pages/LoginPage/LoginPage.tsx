@@ -1,5 +1,4 @@
 import {
-  type FormEvent,
   useContext,
   useState,
 } from 'react';
@@ -30,13 +29,19 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const auth = useContext(AuthContext);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);
     try {
       const response = await loginRequest({ username, password });
-      const authUser: AuthUser = { id: response.id, username: response.username, email: response.email, role: response.role };
+      const authUser: AuthUser = {
+        id: response.id,
+        username: response.username,
+        email: response.email,
+        role: response.role,
+        roleEntityId: response.roleEntityId,
+      };
       saveSession(response.token, authUser);
       auth?.setUser(authUser);
     } catch {
@@ -46,9 +51,7 @@ export default function LoginPage() {
     }
   }
 
-  if (auth?.user) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  if (auth?.user) return <Navigate to="/dashboard" replace />;
 
   return (
     <Box className={styles.page}>
@@ -57,9 +60,7 @@ export default function LoginPage() {
           <Box component="img" src={logo} alt="Smart Healthcare logo" className={styles.logoImage} />
           <Typography variant="h6" className={styles.logoTitle}>Smart Healthcare</Typography>
         </Box>
-        <Typography variant="body2" color="textSecondary" className={styles.subtitle}>
-          Sign in to manage your appointments
-        </Typography>
+        <Typography variant="body2" color="textSecondary" className={styles.subtitle}>Sign in to manage your appointments</Typography>
         {error && <Alert severity="error" className={styles.errorAlert}>{error}</Alert>}
         <Box component="form" className={styles.form} onSubmit={handleSubmit}>
           <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} required fullWidth />

@@ -1,10 +1,7 @@
 import type { UserRole } from '../../contexts/AuthContext';
 import httpClient from '../../utils/httpClient';
 
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
+export interface LoginRequest { username: string; password: string; }
 
 export interface LoginResponse {
   token: string;
@@ -13,6 +10,7 @@ export interface LoginResponse {
   username: string;
   email: string;
   role: UserRole;
+  roleEntityId: number;
 }
 
 export async function loginRequest(credentials: LoginRequest): Promise<LoginResponse> {

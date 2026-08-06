@@ -15,6 +15,7 @@ import {
   registerPatient,
   type RegisterPatientRequest,
 } from '../../../../../api/auth/RegisterAPI';
+import { openNativePicker } from '../../../../../utils/openNativePicker';
 import styles from './AddPatientForm.module.scss';
 
 interface AddPatientFormProps { onSuccess: () => void; onCancel: () => void; }
@@ -59,7 +60,15 @@ export function AddPatientForm({ onSuccess, onCancel }: AddPatientFormProps) {
       <TextField label="Email" type="email" value={formData.email} onChange={handleChange('email')} required fullWidth />
       <TextField label="Password" type="password" value={formData.password} onChange={handleChange('password')} required fullWidth />
       <TextField label="Full Name" value={formData.name} onChange={handleChange('name')} required fullWidth />
-      <TextField label="Date of Birth" type="date" value={formData.dateOfBirth} onChange={handleChange('dateOfBirth')} required fullWidth slotProps={{ inputLabel: { shrink: true } }} />
+      <TextField
+        label="Date of Birth"
+        type="date"
+        value={formData.dateOfBirth}
+        onChange={handleChange('dateOfBirth')}
+        required
+        fullWidth
+        slotProps={{ inputLabel: { shrink: true }, htmlInput: { onClick: openNativePicker } }}
+      />
       <TextField label="Phone" value={formData.phone} onChange={handleChange('phone')} fullWidth />
       <TextField label="Address" value={formData.address} onChange={handleChange('address')} fullWidth />
       <Box className={styles.actions}>

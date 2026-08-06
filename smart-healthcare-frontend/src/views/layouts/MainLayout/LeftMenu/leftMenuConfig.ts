@@ -8,16 +8,12 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospitalOutlined';
 import MedicationIcon from '@mui/icons-material/MedicationOutlined';
 import PeopleIcon from '@mui/icons-material/PeopleOutlined';
 import PersonIcon from '@mui/icons-material/PersonOutlined';
+import ScheduleIcon from '@mui/icons-material/ScheduleOutlined';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 
 import type { UserRole } from '../../../../contexts/AuthContext';
 
-export interface LeftMenuItem {
-  key: string;
-  label: string;
-  path: string;
-  icon: SvgIconComponent;
-}
+export interface LeftMenuItem { key: string; label: string; path: string; icon: SvgIconComponent; }
 
 const dashboard: LeftMenuItem = { key: 'dashboard', label: 'Dashboard', path: '/dashboard', icon: DashboardIcon };
 const appointments: LeftMenuItem = { key: 'appointments', label: 'Appointments', path: '/dashboard/appointments', icon: EventIcon };
@@ -28,10 +24,12 @@ const prescriptions: LeftMenuItem = { key: 'prescriptions', label: 'Prescription
 const profile: LeftMenuItem = { key: 'profile', label: 'Profile', path: '/dashboard/profile', icon: PersonIcon };
 const settings: LeftMenuItem = { key: 'settings', label: 'Settings', path: '/dashboard/settings', icon: SettingsIcon };
 const admins: LeftMenuItem = { key: 'admins', label: 'Admins', path: '/dashboard/admins', icon: AdminPanelSettingsIcon };
+const workHours: LeftMenuItem = { key: 'workHours', label: 'Work Hours', path: '/dashboard/availability', icon: ScheduleIcon };
 
 const itemsByRole: Record<UserRole, LeftMenuItem[]> = {
+  // Admin cannot GET /api/prescriptions or /api/medical-records — backend restricts both to DOCTOR + PATIENT only.
   ADMIN: [appointments, doctors, patients, admins, settings],
-  DOCTOR: [appointments, patients, medicalRecords, prescriptions, profile, settings],
+  DOCTOR: [appointments, workHours, medicalRecords, prescriptions, profile, settings],
   PATIENT: [appointments, medicalRecords, prescriptions, profile, settings],
 };
 

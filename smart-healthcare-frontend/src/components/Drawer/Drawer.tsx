@@ -11,13 +11,7 @@ import {
 
 import styles from './Drawer.module.scss';
 
-interface DrawerProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: ReactNode;
-  footer?: ReactNode;
-}
+interface DrawerProps { open: boolean; onClose: () => void; title: string; children: ReactNode; footer?: ReactNode; }
 
 export function Drawer({ open, onClose, title, children, footer }: DrawerProps) {
   return (
@@ -25,11 +19,7 @@ export function Drawer({ open, onClose, title, children, footer }: DrawerProps) 
       anchor="right"
       open={open}
       onClose={onClose}
-      className={styles.root}
-      slotProps={{
-        backdrop: { className: styles.backdrop },
-        paper: { className: styles.paper },
-      }}
+      slotProps={{ backdrop: { className: styles.backdrop }, paper: { className: styles.paper } }}
     >
       <Box className={styles.header}>
         <Typography variant="h6">{title}</Typography>

@@ -46,3 +46,7 @@ export async function bookAppointment(patientId: number, data: AppointmentReques
   const response = await httpClient.post<AppointmentResponse>(`/appointments/patient/${patientId}`, data);
   return response.data;
 }
+
+export async function cancelAppointment(id: number): Promise<void> {
+  await httpClient.patch(`/appointments/${id}/cancel`);
+}

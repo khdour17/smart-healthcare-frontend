@@ -22,6 +22,7 @@ import {
 import {
   type DoctorResponse,
   getAllDoctors,
+  getDoctorsBySpecialty,
 } from '../../../../../api/doctors/DoctorsAPI';
 import { formatTime } from '../../../../../utils/formatTime';
 import { openNativePicker } from '../../../../../utils/openNativePicker';
@@ -59,6 +60,8 @@ function messageFromError(error: unknown, fallback: string) {
 
 export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppointmentFormProps) {
   const [doctors, setDoctors] = useState<DoctorResponse[]>([]);
+  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [specialty, setSpecialty] = useState('');
   const [formData, setFormData] = useState<BookAppointmentFormData>(initialFormData);
   const [slots, setSlots] = useState<AvailableSlotResponse[]>([]);
   const [slotsMessage, setSlotsMessage] = useState<string | null>(null);
@@ -67,8 +70,23 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    getAllDoctors().then(setDoctors);
+    // The full list doubles as the source of the specialty options — there is no endpoint listing them.
+    getAllDoctors().then((data) => {
+      setDoctors(data);
+      setSpecialties([...new Set(data.map((doctor) => doctor.specialty))].sort());
+    });
   }, []);
+
+  function handleSpecialtyChange(e: ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target;
+    setSpecialty(value);
+    // A different specialty means a different doctor list, so the picked doctor and slot no longer apply.
+    setFormData((prev) => ({ ...prev, doctorId: '', startTime: '' }));
+    setSlots([]);
+    setSlotsMessage(null);
+    const request = value ? getDoctorsBySpecialty(value) : getAllDoctors();
+    request.then(setDoctors);
+  }
 
   function loadSlots(nextDoctorId: string, nextDate: string) {
     if (!nextDoctorId || !nextDate) {
@@ -125,9 +143,28 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
     <Box component="form" className={styles.form} onSubmit={handleSubmit}>
       {error && <Alert severity="error">{error}</Alert>}
 
-      <TextField select label="Doctor" value={formData.doctorId} onChange={handleChange('doctorId')} required fullWidth>
+      <TextField select label="Specialty" value={specialty} onChange={handleSpecialtyChange} fullWidth>
+        <MenuItem value="">All specialties</MenuItem>
+        {specialties.map((option) => (
+          <MenuItem key={option} value={option}>{option}</MenuItem>
+        ))}
+      </TextField>
+
+      <TextField
+        select
+        label="Doctor"
+        value={formData.doctorId}
+        onChange={handleChange('doctorId')}
+        required
+        fullWidth
+        disabled={doctors.length === 0}
+        helperText={doctors.length === 0 && specialty ? `No doctors listed under ${specialty}.` : undefined}
+      >
         {doctors.map((doctor) => (
-          <MenuItem key={doctor.id} value={doctor.id}>{doctor.name} — {doctor.specialty}</MenuItem>
+          <MenuItem key={doctor.id} value={doctor.id}>
+            {/* The specialty is already the active filter, so repeating it on every row is noise. */}
+            {specialty ? doctor.name : `${doctor.name} — ${doctor.specialty}`}
+          </MenuItem>
         ))}
       </TextField>
 

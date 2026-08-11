@@ -50,7 +50,6 @@ function todayIso() {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
-/** The backend answers 409 with an explanation ("Doctor not available on MONDAY") — prefer it over a generic message. */
 function messageFromError(error: unknown, fallback: string) {
   if (isAxiosError<{ message?: string }>(error) && error.response?.status === 409) {
     return error.response.data?.message ?? fallback;
@@ -70,7 +69,6 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // The full list doubles as the source of the specialty options — there is no endpoint listing them.
     getAllDoctors().then((data) => {
       setDoctors(data);
       setSpecialties([...new Set(data.map((doctor) => doctor.specialty))].sort());
@@ -80,7 +78,6 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
   function handleSpecialtyChange(e: ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
     setSpecialty(value);
-    // A different specialty means a different doctor list, so the picked doctor and slot no longer apply.
     setFormData((prev) => ({ ...prev, doctorId: '', startTime: '' }));
     setSlots([]);
     setSlotsMessage(null);
@@ -110,7 +107,6 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
 
   function handleChange(field: keyof BookAppointmentFormData) {
     return (e: ChangeEvent<HTMLInputElement>) => {
-      // Changing the doctor or the date invalidates whichever slot was picked, and reopens the search.
       const resetSlot = field === 'doctorId' || field === 'appointmentDate';
       const next = { ...formData, [field]: e.target.value, ...(resetSlot ? { startTime: '' } : null) };
       setFormData(next);
@@ -162,7 +158,6 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
       >
         {doctors.map((doctor) => (
           <MenuItem key={doctor.id} value={doctor.id}>
-            {/* The specialty is already the active filter, so repeating it on every row is noise. */}
             {specialty ? doctor.name : `${doctor.name} — ${doctor.specialty}`}
           </MenuItem>
         ))}

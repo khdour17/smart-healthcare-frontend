@@ -105,10 +105,7 @@ export default function AppointmentsPage() {
     {
       key: 'actions',
       label: '',
-      // Reason has no width so it absorbs every spare pixel, leaving this column at
-      // exactly what is declared here — it must fit the button plus the cell padding.
       width: 72,
-      // Only scheduled appointments can be cancelled — the backend rejects the rest.
       render: (row) => row.status === 'SCHEDULED' && (
         <Tooltip title="Cancel appointment">
           <IconButton size="small" className={styles.cancelAction} onClick={() => openConfirmCancel(row)}>

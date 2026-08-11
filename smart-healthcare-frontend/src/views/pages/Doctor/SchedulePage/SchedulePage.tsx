@@ -5,10 +5,14 @@ import {
   useState,
 } from 'react';
 
+import InfoIcon from '@mui/icons-material/InfoOutlined';
+import TaskAltIcon from '@mui/icons-material/TaskAltOutlined';
 import {
   Box,
-  Button,
   Chip,
+  IconButton,
+  Link,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
@@ -24,6 +28,7 @@ import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import type { AppointmentStatus } from '../../../../types/common';
 import { formatTime } from '../../../../utils/formatTime';
+import { AppointmentDetails } from './AppointmentDetails/AppointmentDetails';
 import {
   CompleteAppointmentForm,
 } from './CompleteAppointmentForm/CompleteAppointmentForm';
@@ -44,6 +49,7 @@ export default function SchedulePage() {
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [completeTarget, setCompleteTarget] = useState<AppointmentResponse | null>(null);
+  const [detailsTarget, setDetailsTarget] = useState<AppointmentResponse | null>(null);
 
   const refreshAppointments = useCallback(() => {
     if (doctorId !== null) {
@@ -61,7 +67,23 @@ export default function SchedulePage() {
   }
 
   const columns: DataTableColumn<AppointmentResponse>[] = [
-    { key: 'patientName', label: 'Patient', width: 200, render: (row) => row.patientName },
+    {
+      key: 'patientName',
+      label: 'Patient',
+      width: 200,
+      render: (row) => (
+        <Link
+          component="button"
+          type="button"
+          underline="hover"
+          color="inherit"
+          className={styles.patientLink}
+          onClick={() => setDetailsTarget(row)}
+        >
+          {row.patientName}
+        </Link>
+      ),
+    },
     { key: 'appointmentDate', label: 'Date', width: 140, render: (row) => row.appointmentDate },
     {
       key: 'time',
@@ -81,11 +103,22 @@ export default function SchedulePage() {
     {
       key: 'actions',
       label: '',
-      width: 140,
-      render: (row) => row.status === 'SCHEDULED' && (
-        <Button size="small" variant="outlined" color="success" onClick={() => setCompleteTarget(row)}>
-          Complete
-        </Button>
+      width: 110,
+      render: (row) => (
+        <Box className={styles.rowActions}>
+          {row.status === 'SCHEDULED' && (
+            <Tooltip title="Complete appointment">
+              <IconButton size="small" className={styles.completeAction} onClick={() => setCompleteTarget(row)}>
+                <TaskAltIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title="View details">
+            <IconButton size="small" onClick={() => setDetailsTarget(row)}>
+              <InfoIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ),
     },
   ];
@@ -110,6 +143,12 @@ export default function SchedulePage() {
             onSuccess={handleCompleted}
             onCancel={() => setCompleteTarget(null)}
           />
+        </Drawer>
+      )}
+
+      {detailsTarget !== null && (
+        <Drawer open onClose={() => setDetailsTarget(null)} title="Appointment Details">
+          <AppointmentDetails appointment={detailsTarget} />
         </Drawer>
       )}
     </Box>

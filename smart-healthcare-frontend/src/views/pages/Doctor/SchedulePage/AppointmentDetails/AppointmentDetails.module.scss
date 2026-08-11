@@ -1,0 +1,17 @@
+@use '../../../../../styles/variables' as *;
+
+.details { display: flex; flex-direction: column; gap: 20px; }
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border-radius: $radius-base;
+  background-color: $color-surface-3;
+  border: 1px solid $color-border;
+}
+
+.section { display: flex; flex-direction: column; gap: 8px; }
+.sectionBody { white-space: pre-wrap; }
+.medicines { margin: 0; padding-left: 20px; }

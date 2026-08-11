@@ -6,6 +6,7 @@ import {
 } from 'react';
 
 import AddIcon from '@mui/icons-material/AddOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import EventBusyIcon from '@mui/icons-material/EventBusyOutlined';
 import {
   Box,
@@ -19,6 +20,7 @@ import {
 import {
   type AppointmentResponse,
   cancelAppointment,
+  deleteAppointment,
   getPatientAppointments,
 } from '../../../../api/appointments/AppointmentsAPI';
 import {
@@ -52,6 +54,8 @@ export default function AppointmentsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [cancelTarget, setCancelTarget] = useState<AppointmentResponse | null>(null);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AppointmentResponse | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const refreshAppointments = useCallback(() => {
     if (patientId !== null) {
@@ -84,6 +88,22 @@ export default function AppointmentsPage() {
     }
   }
 
+  function openConfirmDelete(appointment: AppointmentResponse) {
+    setDeleteError(null);
+    setDeleteTarget(appointment);
+  }
+
+  async function handleConfirmDelete() {
+    if (deleteTarget === null) return;
+    try {
+      await deleteAppointment(deleteTarget.id);
+      setDeleteTarget(null);
+      refreshAppointments();
+    } catch {
+      setDeleteError('Could not delete this appointment. Please try again.');
+    }
+  }
+
   const columns: DataTableColumn<AppointmentResponse>[] = [
     { key: 'doctorName', label: 'Doctor', width: 200, render: (row) => row.doctorName },
     { key: 'appointmentDate', label: 'Date', width: 140, render: (row) => row.appointmentDate },
@@ -106,12 +126,23 @@ export default function AppointmentsPage() {
       key: 'actions',
       label: '',
       width: 72,
-      render: (row) => row.status === 'SCHEDULED' && (
-        <Tooltip title="Cancel appointment">
-          <IconButton size="small" className={styles.cancelAction} onClick={() => openConfirmCancel(row)}>
-            <EventBusyIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
+      render: (row) => (
+        <>
+          {row.status === 'SCHEDULED' && (
+            <Tooltip title="Cancel appointment">
+              <IconButton size="small" className={styles.cancelAction} onClick={() => openConfirmCancel(row)}>
+                <EventBusyIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+          {row.status === 'CANCELLED' && (
+            <Tooltip title="Delete appointment">
+              <IconButton size="small" className={styles.deleteAction} onClick={() => openConfirmDelete(row)}>
+                <DeleteOutlineIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </>
       ),
     },
   ];
@@ -150,6 +181,19 @@ export default function AppointmentsPage() {
         error={cancelError}
         onConfirm={handleConfirmCancel}
         onCancel={() => setCancelTarget(null)}
+      />
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Delete appointment"
+        message={deleteTarget
+          ? `Remove your cancelled appointment with ${deleteTarget.doctorName} on ${deleteTarget.appointmentDate}? This cannot be undone.`
+          : ''}
+        confirmLabel="Delete"
+        confirmColor="error"
+        error={deleteError}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
       />
     </Box>
   );

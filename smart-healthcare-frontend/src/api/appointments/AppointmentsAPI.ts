@@ -50,3 +50,7 @@ export async function bookAppointment(patientId: number, data: AppointmentReques
 export async function cancelAppointment(id: number): Promise<void> {
   await httpClient.patch(`/appointments/${id}/cancel`);
 }
+
+export async function deleteAppointment(id: number): Promise<void> {
+  await httpClient.delete(`/appointments/${id}`);
+}

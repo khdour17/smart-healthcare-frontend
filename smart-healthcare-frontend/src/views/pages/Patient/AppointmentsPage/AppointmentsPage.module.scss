@@ -6,3 +6,8 @@
   color: $color-error;
   &:hover { background-color: rgba(239, 68, 68, 0.1); }
 }
+
+.deleteAction {
+  color: $color-text-secondary;
+  &:hover { color: $color-error; background-color: rgba(239, 68, 68, 0.1); }
+}

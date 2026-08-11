@@ -55,3 +55,10 @@ export async function bookAppointment(patientId: number, data: AppointmentReques
 export async function cancelAppointment(id: number): Promise<void> {
   await httpClient.patch(`/appointments/${id}/cancel`);
 }
+
+export async function completeAppointment(id: number, notes: string): Promise<AppointmentResponse> {
+  const response = await httpClient.patch<AppointmentResponse>(`/appointments/${id}/complete`, null, {
+    params: { notes: notes || undefined },
+  });
+  return response.data;
+}

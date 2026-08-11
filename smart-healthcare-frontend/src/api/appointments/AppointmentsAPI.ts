@@ -62,3 +62,7 @@ export async function completeAppointment(id: number, notes: string): Promise<Ap
   });
   return response.data;
 }
+
+export async function deleteAppointment(id: number): Promise<void> {
+  await httpClient.delete(`/appointments/${id}`);
+}

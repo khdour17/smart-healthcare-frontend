@@ -15,6 +15,7 @@ import {
 import { isAxiosError } from 'axios';
 
 import {
+  type AppointmentRequest,
   type AvailableSlotResponse,
   bookAppointment,
   getAvailableSlots,
@@ -26,6 +27,7 @@ import {
 } from '../../../../../api/doctors/DoctorsAPI';
 import { formatTime } from '../../../../../utils/formatTime';
 import { openNativePicker } from '../../../../../utils/openNativePicker';
+import { todayIso } from '../../../../../utils/todayIso';
 import styles from './BookAppointmentForm.module.scss';
 
 interface BookAppointmentFormProps {
@@ -34,21 +36,7 @@ interface BookAppointmentFormProps {
   onCancel: () => void;
 }
 
-interface BookAppointmentFormData {
-  doctorId: string;
-  appointmentDate: string;
-  startTime: string;
-  reason: string;
-}
-
-const initialFormData: BookAppointmentFormData = { doctorId: '', appointmentDate: '', startTime: '', reason: '' };
-
-function todayIso() {
-  const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${now.getFullYear()}-${month}-${day}`;
-}
+const initialFormData: AppointmentRequest = { doctorId: 0, appointmentDate: '', startTime: '', reason: '' };
 
 function messageFromError(error: unknown, fallback: string) {
   if (isAxiosError<{ message?: string }>(error) && error.response?.status === 409) {
@@ -61,7 +49,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
   const [doctors, setDoctors] = useState<DoctorResponse[]>([]);
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [specialty, setSpecialty] = useState('');
-  const [formData, setFormData] = useState<BookAppointmentFormData>(initialFormData);
+  const [formData, setFormData] = useState<AppointmentRequest>(initialFormData);
   const [slots, setSlots] = useState<AvailableSlotResponse[]>([]);
   const [slotsMessage, setSlotsMessage] = useState<string | null>(null);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
@@ -75,17 +63,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
     });
   }, []);
 
-  function handleSpecialtyChange(e: ChangeEvent<HTMLInputElement>) {
-    const { value } = e.target;
-    setSpecialty(value);
-    setFormData((prev) => ({ ...prev, doctorId: '', startTime: '' }));
-    setSlots([]);
-    setSlotsMessage(null);
-    const request = value ? getDoctorsBySpecialty(value) : getAllDoctors();
-    request.then(setDoctors);
-  }
-
-  function loadSlots(nextDoctorId: string, nextDate: string) {
+  function loadSlots(nextDoctorId: number, nextDate: string) {
     if (!nextDoctorId || !nextDate) {
       setSlots([]);
       setSlotsMessage(null);
@@ -93,7 +71,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
     }
     setIsLoadingSlots(true);
     setSlotsMessage(null);
-    getAvailableSlots(Number(nextDoctorId), nextDate)
+    getAvailableSlots(nextDoctorId, nextDate)
       .then((data) => {
         setSlots(data);
         setSlotsMessage(data.length === 0 ? 'Every slot on this date is already booked.' : null);
@@ -105,13 +83,34 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
       .finally(() => setIsLoadingSlots(false));
   }
 
-  function handleChange(field: keyof BookAppointmentFormData) {
-    return (e: ChangeEvent<HTMLInputElement>) => {
-      const resetSlot = field === 'doctorId' || field === 'appointmentDate';
-      const next = { ...formData, [field]: e.target.value, ...(resetSlot ? { startTime: '' } : null) };
-      setFormData(next);
-      if (resetSlot) loadSlots(next.doctorId, next.appointmentDate);
-    };
+  function handleSpecialtyChange(e: ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target;
+    setSpecialty(value);
+    setFormData((prev) => ({ ...prev, doctorId: 0, startTime: '' }));
+    setSlots([]);
+    setSlotsMessage(null);
+    const request = value ? getDoctorsBySpecialty(value) : getAllDoctors();
+    request.then(setDoctors);
+  }
+
+  function handleDoctorChange(e: ChangeEvent<HTMLInputElement>) {
+    const doctorId = Number(e.target.value);
+    setFormData((prev) => ({ ...prev, doctorId, startTime: '' }));
+    loadSlots(doctorId, formData.appointmentDate);
+  }
+
+  function handleDateChange(e: ChangeEvent<HTMLInputElement>) {
+    const appointmentDate = e.target.value;
+    setFormData((prev) => ({ ...prev, appointmentDate, startTime: '' }));
+    loadSlots(formData.doctorId, appointmentDate);
+  }
+
+  function handleStartTimeChange(e: ChangeEvent<HTMLInputElement>) {
+    setFormData((prev) => ({ ...prev, startTime: e.target.value }));
+  }
+
+  function handleReasonChange(e: ChangeEvent<HTMLInputElement>) {
+    setFormData((prev) => ({ ...prev, reason: e.target.value }));
   }
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
@@ -119,12 +118,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
     setError(null);
     setIsSubmitting(true);
     try {
-      await bookAppointment(patientId, {
-        doctorId: Number(formData.doctorId),
-        appointmentDate: formData.appointmentDate,
-        startTime: formData.startTime,
-        reason: formData.reason || undefined,
-      });
+      await bookAppointment(patientId, formData);
       onSuccess();
     } catch (err) {
       setError(messageFromError(err, 'Could not book the appointment. Please try again.'));
@@ -149,8 +143,8 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
       <TextField
         select
         label="Doctor"
-        value={formData.doctorId}
-        onChange={handleChange('doctorId')}
+        value={formData.doctorId || ''}
+        onChange={handleDoctorChange}
         required
         fullWidth
         disabled={doctors.length === 0}
@@ -167,7 +161,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
         label="Date"
         type="date"
         value={formData.appointmentDate}
-        onChange={handleChange('appointmentDate')}
+        onChange={handleDateChange}
         required
         fullWidth
         slotProps={{ inputLabel: { shrink: true }, htmlInput: { min: todayIso(), onClick: openNativePicker } }}
@@ -177,7 +171,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
         select
         label="Time"
         value={formData.startTime}
-        onChange={handleChange('startTime')}
+        onChange={handleStartTimeChange}
         required
         fullWidth
         disabled={!canPickSlot}
@@ -190,7 +184,7 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
         ))}
       </TextField>
 
-      <TextField label="Reason" value={formData.reason} onChange={handleChange('reason')} fullWidth multiline minRows={3} />
+      <TextField label="Reason" value={formData.reason} onChange={handleReasonChange} fullWidth multiline minRows={3} />
 
       <Box className={styles.actions}>
         <Button onClick={onCancel} disabled={isSubmitting}>Cancel</Button>

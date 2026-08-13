@@ -3,6 +3,8 @@ import {
   useState,
 } from 'react';
 
+import { isAxiosError } from 'axios';
+
 import {
   Box,
   Chip,
@@ -10,7 +12,9 @@ import {
   Typography,
 } from '@mui/material';
 
-import type { AppointmentResponse } from '../../../../../api/appointments/AppointmentsAPI';
+import type {
+  AppointmentResponse,
+} from '../../../../../api/appointments/AppointmentsAPI';
 import {
   getPrescriptionByAppointment,
   type PrescriptionResponse,
@@ -24,12 +28,18 @@ interface AppointmentDetailsProps {
 
 export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
   const [prescription, setPrescription] = useState<PrescriptionResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getPrescriptionByAppointment(appointment.id)
       .then(setPrescription)
-      .catch(() => setPrescription(null))
+      .catch((err) => {
+        setPrescription(null);
+        setError(isAxiosError(err) && err.response?.status === 404
+          ? null
+          : 'Could not load the prescription.');
+      })
       .finally(() => setIsLoading(false));
   }, [appointment.id]);
 
@@ -65,6 +75,8 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
         <Typography variant="subtitle2">Prescription</Typography>
         {isLoading ? (
           <Typography variant="body2" color="textSecondary">Loading...</Typography>
+        ) : error ? (
+          <Typography variant="body2" color="error">{error}</Typography>
         ) : prescription ? (
           <>
             <Typography variant="body2" color="textSecondary" className={styles.sectionBody}>

@@ -29,6 +29,7 @@ import {
 } from '../../../../components/DataTable/DataTable';
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
+import { formatTime } from '../../../../utils/formatTime';
 import { AddAvailabilityForm } from './AddAvailabilityForm/AddAvailabilityForm';
 import styles from './WorkHoursPage.module.scss';
 
@@ -71,8 +72,8 @@ export default function WorkHoursPage() {
 
   const columns: DataTableColumn<DoctorAvailabilityResponse>[] = [
     { key: 'dayOfWeek', label: 'Day', width: 160, render: (row) => row.dayOfWeek.charAt(0) + row.dayOfWeek.slice(1).toLowerCase() },
-    { key: 'startTime', label: 'Start', width: 140, render: (row) => row.startTime },
-    { key: 'endTime', label: 'End', width: 140, render: (row) => row.endTime },
+    { key: 'startTime', label: 'Start', width: 140, render: (row) => formatTime(row.startTime) },
+    { key: 'endTime', label: 'End', width: 140, render: (row) => formatTime(row.endTime) },
     { key: 'slotDurationMinutes', label: 'Slot Length', width: 160, render: (row) => `${row.slotDurationMinutes} min` },
     {
       key: 'actions',

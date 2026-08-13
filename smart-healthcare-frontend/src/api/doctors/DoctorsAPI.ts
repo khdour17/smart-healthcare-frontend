@@ -13,6 +13,13 @@ export async function getAllDoctors(): Promise<DoctorResponse[]> {
   return response.data;
 }
 
+export async function getDoctorsBySpecialty(specialty: string): Promise<DoctorResponse[]> {
+  const response = await httpClient.get<DoctorResponse[]>('/doctors/specialty', {
+    params: { specialty },
+  });
+  return response.data;
+}
+
 export async function deleteDoctors(ids: number[]): Promise<void> {
   if (ids.length === 1) {
     await httpClient.delete(`/doctors/${ids[0]}`);

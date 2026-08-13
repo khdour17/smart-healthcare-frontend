@@ -44,12 +44,19 @@ function bySoonestFirst(a: AppointmentResponse, b: AppointmentResponse) {
   return `${a.appointmentDate}${a.startTime}`.localeCompare(`${b.appointmentDate}${b.startTime}`);
 }
 
+type DrawerType = 'complete' | 'details';
+
+interface DrawerDetails {
+  appointmentId: number;
+  type: DrawerType;
+  title: string;
+}
+
 export default function SchedulePage() {
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
-  const [completeTarget, setCompleteTarget] = useState<AppointmentResponse | null>(null);
-  const [detailsTarget, setDetailsTarget] = useState<AppointmentResponse | null>(null);
+  const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
 
   const refreshAppointments = useCallback(() => {
     if (doctorId !== null) {
@@ -61,8 +68,24 @@ export default function SchedulePage() {
     refreshAppointments();
   }, [refreshAppointments]);
 
+  const drawerAppointment = drawerDetails
+    ? appointments.find((appointment) => appointment.id === drawerDetails.appointmentId) ?? null
+    : null;
+
+  function openComplete(appointment: AppointmentResponse) {
+    setDrawerDetails({ appointmentId: appointment.id, type: 'complete', title: 'Complete Appointment' });
+  }
+
+  function openDetails(appointment: AppointmentResponse) {
+    setDrawerDetails({ appointmentId: appointment.id, type: 'details', title: 'Appointment Details' });
+  }
+
+  function closeDrawer() {
+    setDrawerDetails(null);
+  }
+
   function handleCompleted() {
-    setCompleteTarget(null);
+    closeDrawer();
     refreshAppointments();
   }
 
@@ -78,7 +101,7 @@ export default function SchedulePage() {
           underline="hover"
           color="inherit"
           className={styles.patientLink}
-          onClick={() => setDetailsTarget(row)}
+          onClick={() => openDetails(row)}
         >
           {row.patientName}
         </Link>
@@ -108,13 +131,13 @@ export default function SchedulePage() {
         <Box className={styles.rowActions}>
           {row.status === 'SCHEDULED' && (
             <Tooltip title="Complete appointment">
-              <IconButton size="small" className={styles.completeAction} onClick={() => setCompleteTarget(row)}>
+              <IconButton size="small" className={styles.completeAction} onClick={() => openComplete(row)}>
                 <TaskAltIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           )}
           <Tooltip title="View details">
-            <IconButton size="small" onClick={() => setDetailsTarget(row)}>
+            <IconButton size="small" onClick={() => openDetails(row)}>
               <InfoIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -136,19 +159,17 @@ export default function SchedulePage() {
         emptyMessage="No appointments booked with you yet."
       />
 
-      {completeTarget !== null && (
-        <Drawer open onClose={() => setCompleteTarget(null)} title="Complete Appointment">
-          <CompleteAppointmentForm
-            appointment={completeTarget}
-            onSuccess={handleCompleted}
-            onCancel={() => setCompleteTarget(null)}
-          />
-        </Drawer>
-      )}
-
-      {detailsTarget !== null && (
-        <Drawer open onClose={() => setDetailsTarget(null)} title="Appointment Details">
-          <AppointmentDetails appointment={detailsTarget} />
+      {drawerDetails !== null && drawerAppointment !== null && (
+        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
+          {drawerDetails.type === 'complete' ? (
+            <CompleteAppointmentForm
+              appointment={drawerAppointment}
+              onSuccess={handleCompleted}
+              onCancel={closeDrawer}
+            />
+          ) : (
+            <AppointmentDetails appointment={drawerAppointment} />
+          )}
         </Drawer>
       )}
     </Box>

@@ -7,26 +7,29 @@ import { isAxiosError } from 'axios';
 
 import {
   Box,
-  Chip,
   Divider,
   Typography,
 } from '@mui/material';
 
 import type {
   AppointmentResponse,
-} from '../../../../../api/appointments/AppointmentsAPI';
+} from '../../../api/appointments/AppointmentsAPI';
 import {
   getPrescriptionByAppointment,
   type PrescriptionResponse,
-} from '../../../../../api/prescriptions/PrescriptionsAPI';
-import { formatTime } from '../../../../../utils/formatTime';
+} from '../../../api/prescriptions/PrescriptionsAPI';
+import { formatTime } from '../../../utils/formatTime';
+import {
+  AppointmentStatusChip,
+} from '../AppointmentStatusChip/AppointmentStatusChip';
 import styles from './AppointmentDetails.module.scss';
 
 interface AppointmentDetailsProps {
   appointment: AppointmentResponse;
+  heading: string;
 }
 
-export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
+export function AppointmentDetails({ appointment, heading }: AppointmentDetailsProps) {
   const [prescription, setPrescription] = useState<PrescriptionResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,11 +49,11 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
   return (
     <Box className={styles.details}>
       <Box className={styles.summary}>
-        <Typography variant="subtitle1">{appointment.patientName}</Typography>
+        <Typography variant="subtitle1">{heading}</Typography>
         <Typography variant="body2" color="textSecondary">
           {appointment.appointmentDate} · {formatTime(appointment.startTime)} - {formatTime(appointment.endTime)}
         </Typography>
-        <Box><Chip label={appointment.status.charAt(0) + appointment.status.slice(1).toLowerCase()} size="small" /></Box>
+        <Box><AppointmentStatusChip status={appointment.status} /></Box>
       </Box>
 
       <Box className={styles.section}>
@@ -84,8 +87,8 @@ export function AppointmentDetails({ appointment }: AppointmentDetailsProps) {
             </Typography>
             {prescription.medicines.length > 0 && (
               <Box component="ul" className={styles.medicines}>
-                {prescription.medicines.map((medicine) => (
-                  <Typography component="li" variant="body2" color="textSecondary" key={medicine}>{medicine}</Typography>
+                {prescription.medicines.map((medicine, index) => (
+                  <Typography component="li" variant="body2" color="textSecondary" key={index}>{medicine}</Typography>
                 ))}
               </Box>
             )}

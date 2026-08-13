@@ -2,6 +2,14 @@
 
 .page { display: flex; flex-direction: column; gap: 20px; }
 .headerRow { display: flex; align-items: center; justify-content: space-between; }
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
 .cancelAction {
   color: $color-error;
   &:hover { background-color: rgba(239, 68, 68, 0.1); }

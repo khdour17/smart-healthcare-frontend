@@ -9,7 +9,6 @@ import InfoIcon from '@mui/icons-material/InfoOutlined';
 import TaskAltIcon from '@mui/icons-material/TaskAltOutlined';
 import {
   Box,
-  Chip,
   IconButton,
   Link,
   Tooltip,
@@ -26,23 +25,18 @@ import {
 } from '../../../../components/DataTable/DataTable';
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
-import type { AppointmentStatus } from '../../../../types/common';
+import { bySoonestFirst } from '../../../../utils/bySoonestFirst';
 import { formatTime } from '../../../../utils/formatTime';
-import { AppointmentDetails } from './AppointmentDetails/AppointmentDetails';
+import {
+  AppointmentDetails,
+} from '../../../shared/AppointmentDetails/AppointmentDetails';
+import {
+  AppointmentStatusChip,
+} from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import {
   CompleteAppointmentForm,
 } from './CompleteAppointmentForm/CompleteAppointmentForm';
 import styles from './SchedulePage.module.scss';
-
-const statusColors: Record<AppointmentStatus, 'primary' | 'success' | 'default'> = {
-  SCHEDULED: 'primary',
-  COMPLETED: 'success',
-  CANCELLED: 'default',
-};
-
-function bySoonestFirst(a: AppointmentResponse, b: AppointmentResponse) {
-  return `${a.appointmentDate}${a.startTime}`.localeCompare(`${b.appointmentDate}${b.startTime}`);
-}
 
 type DrawerType = 'complete' | 'details';
 
@@ -118,9 +112,7 @@ export default function SchedulePage() {
       key: 'status',
       label: 'Status',
       width: 140,
-      render: (row) => (
-        <Chip label={row.status.charAt(0) + row.status.slice(1).toLowerCase()} size="small" color={statusColors[row.status]} />
-      ),
+      render: (row) => <AppointmentStatusChip status={row.status} />,
     },
     { key: 'reason', label: 'Reason', render: (row) => row.reason ?? '—' },
     {
@@ -168,7 +160,7 @@ export default function SchedulePage() {
               onCancel={closeDrawer}
             />
           ) : (
-            <AppointmentDetails appointment={drawerAppointment} />
+            <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.patientName} />
           )}
         </Drawer>
       )}

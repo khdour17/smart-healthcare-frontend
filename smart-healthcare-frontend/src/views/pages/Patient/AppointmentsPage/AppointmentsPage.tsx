@@ -47,15 +47,24 @@ function bySoonestFirst(a: AppointmentResponse, b: AppointmentResponse) {
   return `${a.appointmentDate}${a.startTime}`.localeCompare(`${b.appointmentDate}${b.startTime}`);
 }
 
+type ConfirmType = 'cancel' | 'delete';
+
+interface ConfirmDetails {
+  appointmentId: number;
+  type: ConfirmType;
+  title: string;
+  message: string;
+  confirmLabel: string;
+  cancelLabel: string;
+}
+
 export default function AppointmentsPage() {
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [cancelTarget, setCancelTarget] = useState<AppointmentResponse | null>(null);
-  const [cancelError, setCancelError] = useState<string | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<AppointmentResponse | null>(null);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [confirmDetails, setConfirmDetails] = useState<ConfirmDetails | null>(null);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
 
   const refreshAppointments = useCallback(() => {
     if (patientId !== null) {
@@ -73,34 +82,39 @@ export default function AppointmentsPage() {
   }
 
   function openConfirmCancel(appointment: AppointmentResponse) {
-    setCancelError(null);
-    setCancelTarget(appointment);
-  }
-
-  async function handleConfirmCancel() {
-    if (cancelTarget === null) return;
-    try {
-      await cancelAppointment(cancelTarget.id);
-      setCancelTarget(null);
-      refreshAppointments();
-    } catch {
-      setCancelError('Could not cancel this appointment. Please try again.');
-    }
+    setConfirmError(null);
+    setConfirmDetails({
+      appointmentId: appointment.id,
+      type: 'cancel',
+      title: 'Cancel appointment',
+      message: `Cancel your appointment with ${appointment.doctorName} on ${appointment.appointmentDate} at ${formatTime(appointment.startTime)}?`,
+      confirmLabel: 'Cancel appointment',
+      cancelLabel: 'Keep it',
+    });
   }
 
   function openConfirmDelete(appointment: AppointmentResponse) {
-    setDeleteError(null);
-    setDeleteTarget(appointment);
+    setConfirmError(null);
+    setConfirmDetails({
+      appointmentId: appointment.id,
+      type: 'delete',
+      title: 'Delete appointment',
+      message: `Remove your cancelled appointment with ${appointment.doctorName} on ${appointment.appointmentDate}? This cannot be undone.`,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+    });
   }
 
-  async function handleConfirmDelete() {
-    if (deleteTarget === null) return;
+  async function handleConfirm() {
+    if (confirmDetails === null) return;
+    const { appointmentId, type } = confirmDetails;
     try {
-      await deleteAppointment(deleteTarget.id);
-      setDeleteTarget(null);
+      if (type === 'cancel') await cancelAppointment(appointmentId);
+      else await deleteAppointment(appointmentId);
+      setConfirmDetails(null);
       refreshAppointments();
     } catch {
-      setDeleteError('Could not delete this appointment. Please try again.');
+      setConfirmError(`Could not ${type} this appointment. Please try again.`);
     }
   }
 
@@ -170,30 +184,15 @@ export default function AppointmentsPage() {
       )}
 
       <ConfirmDialog
-        open={cancelTarget !== null}
-        title="Cancel appointment"
-        message={cancelTarget
-          ? `Cancel your appointment with ${cancelTarget.doctorName} on ${cancelTarget.appointmentDate} at ${formatTime(cancelTarget.startTime)}?`
-          : ''}
-        confirmLabel="Cancel appointment"
-        cancelLabel="Keep it"
+        open={confirmDetails !== null}
+        title={confirmDetails?.title ?? ''}
+        message={confirmDetails?.message ?? ''}
+        confirmLabel={confirmDetails?.confirmLabel}
+        cancelLabel={confirmDetails?.cancelLabel}
         confirmColor="error"
-        error={cancelError}
-        onConfirm={handleConfirmCancel}
-        onCancel={() => setCancelTarget(null)}
-      />
-
-      <ConfirmDialog
-        open={deleteTarget !== null}
-        title="Delete appointment"
-        message={deleteTarget
-          ? `Remove your cancelled appointment with ${deleteTarget.doctorName} on ${deleteTarget.appointmentDate}? This cannot be undone.`
-          : ''}
-        confirmLabel="Delete"
-        confirmColor="error"
-        error={deleteError}
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setDeleteTarget(null)}
+        error={confirmError}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirmDetails(null)}
       />
     </Box>
   );

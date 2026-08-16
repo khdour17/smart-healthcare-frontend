@@ -17,3 +17,8 @@ export async function getPrescriptionByAppointment(appointmentId: number): Promi
   });
   return response.data;
 }
+
+export async function getPatientPrescriptions(patientId: number): Promise<PrescriptionResponse[]> {
+  const response = await httpClient.get<PrescriptionResponse[]>(`/prescriptions/patient/${patientId}`);
+  return response.data;
+}

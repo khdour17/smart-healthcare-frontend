@@ -21,6 +21,7 @@ const PatientsPage = lazy(() => import('../views/pages/Admin/PatientsPage/Patien
 const WorkHoursPage = lazy(() => import('../views/pages/Doctor/WorkHoursPage/WorkHoursPage'));
 const SchedulePage = lazy(() => import('../views/pages/Doctor/SchedulePage/SchedulePage'));
 const AppointmentsPage = lazy(() => import('../views/pages/Patient/AppointmentsPage/AppointmentsPage'));
+const PrescriptionsPage = lazy(() => import('../views/pages/Patient/PrescriptionsPage/PrescriptionsPage'));
 const NotFoundPage = lazy(() => import('../views/pages/NotFoundPage/NotFoundPage'));
 
 export function AppRouter() {
@@ -43,6 +44,7 @@ export function AppRouter() {
               </Route>
               <Route element={<RequireRole roles={['PATIENT']} />}>
                 <Route path="appointments" element={<AppointmentsPage />} />
+                <Route path="prescriptions" element={<PrescriptionsPage />} />
               </Route>
             </Route>
           </Route>

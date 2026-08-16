@@ -25,11 +25,11 @@ const profile: LeftMenuItem = { key: 'profile', label: 'Profile', path: '/dashbo
 const settings: LeftMenuItem = { key: 'settings', label: 'Settings', path: '/dashboard/settings', icon: SettingsIcon };
 const admins: LeftMenuItem = { key: 'admins', label: 'Admins', path: '/dashboard/admins', icon: AdminPanelSettingsIcon };
 const workHours: LeftMenuItem = { key: 'workHours', label: 'Work Hours', path: '/dashboard/availability', icon: ScheduleIcon };
+const schedule: LeftMenuItem = { key: 'schedule', label: 'Appointments', path: '/dashboard/schedule', icon: EventIcon };
 
 const itemsByRole: Record<UserRole, LeftMenuItem[]> = {
-  // Admin cannot GET /api/prescriptions or /api/medical-records — backend restricts both to DOCTOR + PATIENT only.
-  ADMIN: [appointments, doctors, patients, admins, settings],
-  DOCTOR: [appointments, workHours, medicalRecords, prescriptions, profile, settings],
+  ADMIN: [doctors, patients, admins, settings],
+  DOCTOR: [schedule, workHours, medicalRecords, prescriptions, profile, settings],
   PATIENT: [appointments, medicalRecords, prescriptions, profile, settings],
 };
 

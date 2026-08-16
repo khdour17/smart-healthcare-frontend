@@ -8,10 +8,10 @@ import {
 import AddIcon from '@mui/icons-material/AddOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import EventBusyIcon from '@mui/icons-material/EventBusyOutlined';
+import InfoIcon from '@mui/icons-material/InfoOutlined';
 import {
   Box,
   Button,
-  Chip,
   IconButton,
   Tooltip,
   Typography,
@@ -32,20 +32,20 @@ import {
 } from '../../../../components/DataTable/DataTable';
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
-import type { AppointmentStatus } from '../../../../types/common';
+import { bySoonestFirst } from '../../../../utils/bySoonestFirst';
 import { formatTime } from '../../../../utils/formatTime';
+import {
+  AppointmentDetails,
+} from '../../../shared/AppointmentDetails/AppointmentDetails';
+import {
+  AppointmentStatusChip,
+} from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import { BookAppointmentForm } from './BookAppointmentForm/BookAppointmentForm';
 import styles from './AppointmentsPage.module.scss';
 
-const statusColors: Record<AppointmentStatus, 'primary' | 'success' | 'default'> = {
-  SCHEDULED: 'primary',
-  COMPLETED: 'success',
-  CANCELLED: 'default',
-};
-
-function bySoonestFirst(a: AppointmentResponse, b: AppointmentResponse) {
-  return `${a.appointmentDate}${a.startTime}`.localeCompare(`${b.appointmentDate}${b.startTime}`);
-}
+type DrawerDetails =
+  | { type: 'book'; title: string }
+  | { type: 'details'; title: string; appointmentId: number };
 
 type ConfirmType = 'cancel' | 'delete';
 
@@ -62,7 +62,7 @@ export default function AppointmentsPage() {
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
   const [confirmDetails, setConfirmDetails] = useState<ConfirmDetails | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
 
@@ -76,8 +76,24 @@ export default function AppointmentsPage() {
     refreshAppointments();
   }, [refreshAppointments]);
 
+  const drawerAppointment = drawerDetails?.type === 'details'
+    ? appointments.find((appointment) => appointment.id === drawerDetails.appointmentId) ?? null
+    : null;
+
+  function closeDrawer() {
+    setDrawerDetails(null);
+  }
+
+  function openBook() {
+    setDrawerDetails({ type: 'book', title: 'Book Appointment' });
+  }
+
+  function openDetails(appointment: AppointmentResponse) {
+    setDrawerDetails({ type: 'details', title: 'Appointment Details', appointmentId: appointment.id });
+  }
+
   function handleBooked() {
-    setIsDrawerOpen(false);
+    closeDrawer();
     refreshAppointments();
   }
 
@@ -131,17 +147,15 @@ export default function AppointmentsPage() {
       key: 'status',
       label: 'Status',
       width: 140,
-      render: (row) => (
-        <Chip label={row.status.charAt(0) + row.status.slice(1).toLowerCase()} size="small" color={statusColors[row.status]} />
-      ),
+      render: (row) => <AppointmentStatusChip status={row.status} />,
     },
     { key: 'reason', label: 'Reason', render: (row) => row.reason ?? '—' },
     {
       key: 'actions',
       label: '',
-      width: 72,
+      width: 110,
       render: (row) => (
-        <>
+        <Box className={styles.rowActions}>
           {row.status === 'SCHEDULED' && (
             <Tooltip title="Cancel appointment">
               <IconButton size="small" className={styles.cancelAction} onClick={() => openConfirmCancel(row)}>
@@ -156,7 +170,12 @@ export default function AppointmentsPage() {
               </IconButton>
             </Tooltip>
           )}
-        </>
+          <Tooltip title="View details">
+            <IconButton size="small" onClick={() => openDetails(row)}>
+              <InfoIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ),
     },
   ];
@@ -165,7 +184,7 @@ export default function AppointmentsPage() {
     <Box className={styles.page}>
       <Box className={styles.headerRow}>
         <Typography variant="h5">My Appointments</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={patientId === null}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
           Book Appointment
         </Button>
       </Box>
@@ -177,9 +196,17 @@ export default function AppointmentsPage() {
         emptyMessage="No appointments booked yet."
       />
 
-      {patientId !== null && (
-        <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Book Appointment">
-          <BookAppointmentForm patientId={patientId} onSuccess={handleBooked} onCancel={() => setIsDrawerOpen(false)} />
+      {drawerDetails !== null && (
+        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
+          {drawerDetails.type === 'book' ? (
+            patientId !== null && (
+              <BookAppointmentForm patientId={patientId} onSuccess={handleBooked} onCancel={closeDrawer} />
+            )
+          ) : (
+            drawerAppointment !== null && (
+              <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.doctorName} />
+            )
+          )}
         </Drawer>
       )}
 

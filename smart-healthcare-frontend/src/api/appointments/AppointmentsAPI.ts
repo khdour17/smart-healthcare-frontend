@@ -35,6 +35,11 @@ export async function getPatientAppointments(patientId: number): Promise<Appoint
   return response.data;
 }
 
+export async function getDoctorAppointments(doctorId: number): Promise<AppointmentResponse[]> {
+  const response = await httpClient.get<AppointmentResponse[]>(`/appointments/doctor/${doctorId}`);
+  return response.data;
+}
+
 export async function getAvailableSlots(doctorId: number, date: string): Promise<AvailableSlotResponse[]> {
   const response = await httpClient.get<AvailableSlotResponse[]>('/appointments/available-slots', {
     params: { doctorId, date },
@@ -49,6 +54,13 @@ export async function bookAppointment(patientId: number, data: AppointmentReques
 
 export async function cancelAppointment(id: number): Promise<void> {
   await httpClient.patch(`/appointments/${id}/cancel`);
+}
+
+export async function completeAppointment(id: number, notes: string): Promise<AppointmentResponse> {
+  const response = await httpClient.patch<AppointmentResponse>(`/appointments/${id}/complete`, null, {
+    params: { notes: notes || undefined },
+  });
+  return response.data;
 }
 
 export async function deleteAppointment(id: number): Promise<void> {

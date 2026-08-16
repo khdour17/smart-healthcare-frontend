@@ -10,12 +10,19 @@
   flex-wrap: nowrap;
   gap: 4px;
 }
-.cancelAction {
-  color: $color-error;
-  &:hover { background-color: rgba(239, 68, 68, 0.1); }
+
+.completeAction {
+  color: $color-success;
+  &:hover { background-color: rgba(34, 197, 94, 0.1); }
 }
 
-.deleteAction {
-  color: $color-text-secondary;
-  &:hover { color: $color-error; background-color: rgba(239, 68, 68, 0.1); }
+.patientLink {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
 }

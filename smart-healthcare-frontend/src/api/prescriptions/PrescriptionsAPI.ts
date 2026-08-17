@@ -11,6 +11,18 @@ export interface PrescriptionResponse {
   instructions: string | null;
 }
 
+export interface PrescriptionRequest {
+  appointmentId: number;
+  medicines: string[];
+  diagnosis: string;
+  instructions: string;
+}
+
+export async function createPrescription(data: PrescriptionRequest): Promise<PrescriptionResponse> {
+  const response = await httpClient.post<PrescriptionResponse>('/prescriptions', data);
+  return response.data;
+}
+
 export async function getPrescriptionByAppointment(appointmentId: number): Promise<PrescriptionResponse> {
   const response = await httpClient.get<PrescriptionResponse>('/prescriptions/appointment', {
     params: { appointmentId },

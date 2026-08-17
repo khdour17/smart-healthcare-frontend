@@ -6,6 +6,7 @@ export interface PrescriptionResponse {
   patientName: string;
   doctorName: string;
   prescriptionDate: string;
+  appointmentDate: string | null;
   medicines: string[];
   diagnosis: string | null;
   instructions: string | null;

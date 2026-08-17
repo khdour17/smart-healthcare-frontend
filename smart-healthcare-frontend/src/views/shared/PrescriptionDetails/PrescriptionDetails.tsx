@@ -19,7 +19,14 @@ export function PrescriptionDetails({ prescription, heading }: PrescriptionDetai
     <Box className={styles.details}>
       <Box className={styles.summary}>
         <Typography variant="subtitle1">{heading}</Typography>
-        <Typography variant="body2" color="textSecondary">{prescription.prescriptionDate}</Typography>
+        <Typography variant="body2" color="textSecondary">
+          Written {prescription.prescriptionDate}
+        </Typography>
+        {prescription.appointmentDate && (
+          <Typography variant="body2" color="textSecondary">
+            For the appointment on {prescription.appointmentDate}
+          </Typography>
+        )}
       </Box>
 
       <Box className={styles.section}>

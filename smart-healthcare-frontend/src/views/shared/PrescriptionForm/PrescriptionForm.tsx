@@ -15,21 +15,24 @@ import {
 import {
   createPrescription,
   type PrescriptionRequest,
+  type PrescriptionResponse,
+  updatePrescription,
 } from '../../../api/prescriptions/PrescriptionsAPI';
 import styles from './PrescriptionForm.module.scss';
 
 interface PrescriptionFormProps {
   appointmentId: number;
+  prescription?: PrescriptionResponse;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export function PrescriptionForm({ appointmentId, onSuccess, onCancel }: PrescriptionFormProps) {
+export function PrescriptionForm({ appointmentId, prescription, onSuccess, onCancel }: PrescriptionFormProps) {
   const [formData, setFormData] = useState<PrescriptionRequest>({
     appointmentId,
-    medicines: [],
-    diagnosis: '',
-    instructions: '',
+    medicines: prescription?.medicines ?? [],
+    diagnosis: prescription?.diagnosis ?? '',
+    instructions: prescription?.instructions ?? '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +52,8 @@ export function PrescriptionForm({ appointmentId, onSuccess, onCancel }: Prescri
     setError(null);
     setIsSubmitting(true);
     try {
-      await createPrescription(formData);
+      if (prescription) await updatePrescription(prescription.id, formData);
+      else await createPrescription(formData);
       onSuccess();
     } catch {
       setError('Could not save the prescription. Please try again.');
@@ -91,7 +95,7 @@ export function PrescriptionForm({ appointmentId, onSuccess, onCancel }: Prescri
       <Box className={styles.actions}>
         <Button onClick={onCancel} disabled={isSubmitting}>Cancel</Button>
         <Button type="submit" variant="contained" disabled={isSubmitting || formData.medicines.length === 0}>
-          {isSubmitting ? 'Saving...' : 'Save Prescription'}
+          {isSubmitting ? 'Saving...' : prescription ? 'Save Changes' : 'Save Prescription'}
         </Button>
       </Box>
     </Box>

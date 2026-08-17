@@ -23,6 +23,11 @@ export async function createPrescription(data: PrescriptionRequest): Promise<Pre
   return response.data;
 }
 
+export async function updatePrescription(id: string, data: PrescriptionRequest): Promise<PrescriptionResponse> {
+  const response = await httpClient.put<PrescriptionResponse>(`/prescriptions/${id}`, data);
+  return response.data;
+}
+
 export async function getPrescriptionByAppointment(appointmentId: number): Promise<PrescriptionResponse> {
   const response = await httpClient.get<PrescriptionResponse>('/prescriptions/appointment', {
     params: { appointmentId },

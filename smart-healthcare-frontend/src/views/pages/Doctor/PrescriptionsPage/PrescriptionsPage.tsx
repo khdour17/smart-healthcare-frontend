@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react';
 
+import EditIcon from '@mui/icons-material/EditOutlined';
 import InfoIcon from '@mui/icons-material/InfoOutlined';
 import {
   Box,
@@ -26,17 +27,28 @@ import { AuthContext } from '../../../../contexts/AuthContext';
 import {
   PrescriptionDetails,
 } from '../../../shared/PrescriptionDetails/PrescriptionDetails';
+import {
+  PrescriptionForm,
+} from '../../../shared/PrescriptionForm/PrescriptionForm';
 import styles from './PrescriptionsPage.module.scss';
 
 function byNewestFirst(a: PrescriptionResponse, b: PrescriptionResponse) {
   return b.prescriptionDate.localeCompare(a.prescriptionDate);
 }
 
+type DrawerType = 'details' | 'edit';
+
+interface DrawerDetails {
+  prescriptionId: string;
+  type: DrawerType;
+  title: string;
+}
+
 export default function PrescriptionsPage() {
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [prescriptions, setPrescriptions] = useState<PrescriptionResponse[]>([]);
-  const [detailsId, setDetailsId] = useState<string | null>(null);
+  const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
 
   const refreshPrescriptions = useCallback(() => {
     if (doctorId !== null) {
@@ -48,9 +60,26 @@ export default function PrescriptionsPage() {
     refreshPrescriptions();
   }, [refreshPrescriptions]);
 
-  const detailsPrescription = detailsId !== null
-    ? prescriptions.find((prescription) => prescription.id === detailsId) ?? null
+  const drawerPrescription = drawerDetails
+    ? prescriptions.find((prescription) => prescription.id === drawerDetails.prescriptionId) ?? null
     : null;
+
+  function openDetails(prescription: PrescriptionResponse) {
+    setDrawerDetails({ prescriptionId: prescription.id, type: 'details', title: 'Prescription Details' });
+  }
+
+  function openEdit(prescription: PrescriptionResponse) {
+    setDrawerDetails({ prescriptionId: prescription.id, type: 'edit', title: 'Edit Prescription' });
+  }
+
+  function closeDrawer() {
+    setDrawerDetails(null);
+  }
+
+  function handleSaved() {
+    closeDrawer();
+    refreshPrescriptions();
+  }
 
   const columns: DataTableColumn<PrescriptionResponse>[] = [
     { key: 'prescriptionDate', label: 'Date', width: 140, render: (row) => row.prescriptionDate },
@@ -65,11 +94,16 @@ export default function PrescriptionsPage() {
     {
       key: 'actions',
       label: '',
-      width: 72,
+      width: 110,
       render: (row) => (
         <Box className={styles.rowActions}>
+          <Tooltip title="Edit prescription">
+            <IconButton size="small" onClick={() => openEdit(row)}>
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="View details">
-            <IconButton size="small" onClick={() => setDetailsId(row.id)}>
+            <IconButton size="small" onClick={() => openDetails(row)}>
               <InfoIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -91,9 +125,18 @@ export default function PrescriptionsPage() {
         emptyMessage="You have not written any prescriptions yet."
       />
 
-      {detailsPrescription !== null && (
-        <Drawer open onClose={() => setDetailsId(null)} title="Prescription Details">
-          <PrescriptionDetails prescription={detailsPrescription} heading={detailsPrescription.patientName} />
+      {drawerDetails !== null && drawerPrescription !== null && (
+        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
+          {drawerDetails.type === 'edit' ? (
+            <PrescriptionForm
+              appointmentId={drawerPrescription.appointmentId}
+              prescription={drawerPrescription}
+              onSuccess={handleSaved}
+              onCancel={closeDrawer}
+            />
+          ) : (
+            <PrescriptionDetails prescription={drawerPrescription} heading={drawerPrescription.patientName} />
+          )}
         </Drawer>
       )}
     </Box>

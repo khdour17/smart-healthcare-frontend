@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react';
 
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import InfoIcon from '@mui/icons-material/InfoOutlined';
 import {
@@ -15,9 +16,13 @@ import {
 } from '@mui/material';
 
 import {
+  deletePrescription,
   getDoctorPrescriptions,
   type PrescriptionResponse,
 } from '../../../../api/prescriptions/PrescriptionsAPI';
+import {
+  ConfirmDialog,
+} from '../../../../components/ConfirmDialog/ConfirmDialog';
 import {
   DataTable,
   type DataTableColumn,
@@ -46,6 +51,8 @@ export default function PrescriptionsPage() {
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [prescriptions, setPrescriptions] = useState<PrescriptionResponse[]>([]);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const refreshPrescriptions = useCallback(() => {
     if (doctorId !== null) {
@@ -60,6 +67,10 @@ export default function PrescriptionsPage() {
 
   const drawerPrescription = drawerDetails
     ? prescriptions.find((prescription) => prescription.id === drawerDetails.prescriptionId) ?? null
+    : null;
+
+  const deleteTarget = deleteId !== null
+    ? prescriptions.find((prescription) => prescription.id === deleteId) ?? null
     : null;
 
   function openDetails(prescription: PrescriptionResponse) {
@@ -79,6 +90,22 @@ export default function PrescriptionsPage() {
     refreshPrescriptions();
   }
 
+  function openConfirmDelete(prescription: PrescriptionResponse) {
+    setDeleteError(null);
+    setDeleteId(prescription.id);
+  }
+
+  async function handleConfirmDelete() {
+    if (deleteId === null) return;
+    try {
+      await deletePrescription(deleteId);
+      setDeleteId(null);
+      refreshPrescriptions();
+    } catch {
+      setDeleteError('Could not delete this prescription. Please try again.');
+    }
+  }
+
   const columns: DataTableColumn<PrescriptionResponse>[] = [
     { key: 'prescriptionDate', label: 'Date', width: 140, render: (row) => row.prescriptionDate },
     { key: 'patientName', label: 'Patient', width: 200, render: (row) => row.patientName },
@@ -92,12 +119,17 @@ export default function PrescriptionsPage() {
     {
       key: 'actions',
       label: '',
-      width: 110,
+      width: 150,
       render: (row) => (
         <Box className={styles.rowActions}>
           <Tooltip title="Edit prescription">
             <IconButton size="small" onClick={() => openEdit(row)}>
               <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete prescription">
+            <IconButton size="small" className={styles.deleteAction} onClick={() => openConfirmDelete(row)}>
+              <DeleteOutlineIcon fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="View details">
@@ -137,6 +169,19 @@ export default function PrescriptionsPage() {
           )}
         </Drawer>
       )}
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Delete prescription"
+        message={deleteTarget
+          ? `Delete the prescription for ${deleteTarget.patientName} written on ${deleteTarget.prescriptionDate}? The patient will no longer see it.`
+          : ''}
+        confirmLabel="Delete"
+        confirmColor="error"
+        error={deleteError}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteId(null)}
+      />
     </Box>
   );
 }

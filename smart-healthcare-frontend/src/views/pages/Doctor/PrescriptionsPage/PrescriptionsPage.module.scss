@@ -1,3 +1,5 @@
+@use '../../../../styles/variables' as *;
+
 .page { display: flex; flex-direction: column; gap: 20px; }
 .headerRow { display: flex; align-items: center; justify-content: space-between; }
 
@@ -7,4 +9,9 @@
   justify-content: flex-end;
   flex-wrap: nowrap;
   gap: 4px;
+}
+
+.deleteAction {
+  color: $color-text-secondary;
+  &:hover { color: $color-error; background-color: rgba(239, 68, 68, 0.1); }
 }

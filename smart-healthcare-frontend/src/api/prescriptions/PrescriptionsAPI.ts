@@ -29,6 +29,10 @@ export async function updatePrescription(id: string, data: PrescriptionRequest):
   return response.data;
 }
 
+export async function deletePrescription(id: string): Promise<void> {
+  await httpClient.delete(`/prescriptions/${id}`);
+}
+
 export async function getPrescriptionByAppointment(appointmentId: number): Promise<PrescriptionResponse> {
   const response = await httpClient.get<PrescriptionResponse>('/prescriptions/appointment', {
     params: { appointmentId },

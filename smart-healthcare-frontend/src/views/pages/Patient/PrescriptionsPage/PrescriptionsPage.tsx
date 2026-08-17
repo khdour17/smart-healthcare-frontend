@@ -23,14 +23,11 @@ import {
 } from '../../../../components/DataTable/DataTable';
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
+import { byNewestFirst } from '../../../../utils/byNewestFirst';
 import {
   PrescriptionDetails,
 } from '../../../shared/PrescriptionDetails/PrescriptionDetails';
 import styles from './PrescriptionsPage.module.scss';
-
-function byNewestFirst(a: PrescriptionResponse, b: PrescriptionResponse) {
-  return b.prescriptionDate.localeCompare(a.prescriptionDate);
-}
 
 export default function PrescriptionsPage() {
   const auth = useContext(AuthContext);
@@ -40,7 +37,8 @@ export default function PrescriptionsPage() {
 
   const refreshPrescriptions = useCallback(() => {
     if (patientId !== null) {
-      getPatientPrescriptions(patientId).then((data) => setPrescriptions([...data].sort(byNewestFirst)));
+      getPatientPrescriptions(patientId)
+        .then((data) => setPrescriptions([...data].sort(byNewestFirst((item) => item.prescriptionDate))));
     }
   }, [patientId]);
 

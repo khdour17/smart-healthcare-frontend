@@ -24,6 +24,7 @@ import {
 } from '../../../../components/DataTable/DataTable';
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
+import { byNewestFirst } from '../../../../utils/byNewestFirst';
 import {
   PrescriptionDetails,
 } from '../../../shared/PrescriptionDetails/PrescriptionDetails';
@@ -31,10 +32,6 @@ import {
   PrescriptionForm,
 } from '../../../shared/PrescriptionForm/PrescriptionForm';
 import styles from './PrescriptionsPage.module.scss';
-
-function byNewestFirst(a: PrescriptionResponse, b: PrescriptionResponse) {
-  return b.prescriptionDate.localeCompare(a.prescriptionDate);
-}
 
 type DrawerType = 'details' | 'edit';
 
@@ -52,7 +49,8 @@ export default function PrescriptionsPage() {
 
   const refreshPrescriptions = useCallback(() => {
     if (doctorId !== null) {
-      getDoctorPrescriptions(doctorId).then((data) => setPrescriptions([...data].sort(byNewestFirst)));
+      getDoctorPrescriptions(doctorId)
+        .then((data) => setPrescriptions([...data].sort(byNewestFirst((item) => item.prescriptionDate))));
     }
   }, [doctorId]);
 

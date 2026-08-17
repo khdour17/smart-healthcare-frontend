@@ -22,3 +22,8 @@ export async function getPatientPrescriptions(patientId: number): Promise<Prescr
   const response = await httpClient.get<PrescriptionResponse[]>(`/prescriptions/patient/${patientId}`);
   return response.data;
 }
+
+export async function getDoctorPrescriptions(doctorId: number): Promise<PrescriptionResponse[]> {
+  const response = await httpClient.get<PrescriptionResponse[]>(`/prescriptions/doctor/${doctorId}`);
+  return response.data;
+}

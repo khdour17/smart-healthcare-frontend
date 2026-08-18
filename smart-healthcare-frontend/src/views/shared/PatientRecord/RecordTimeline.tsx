@@ -127,7 +127,9 @@ export function RecordTimeline({
       </Box>
 
       {items.length === 0 ? (
-        <Typography className={styles.empty} color="textSecondary">Nothing recorded yet.</Typography>
+        <Typography className={styles.empty} color="textSecondary">
+          {filter === 'all' ? 'Nothing recorded yet.' : 'Nothing of this type recorded yet.'}
+        </Typography>
       ) : (
         <Box className={styles.stream}>
           {items.map((item) => {

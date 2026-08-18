@@ -22,16 +22,25 @@ export default function MedicalRecordsPage() {
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
   const [history, setHistory] = useState<PatientHistoryResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const refreshHistory = useCallback(() => {
-    if (patientId !== null) {
-      getPatientHistory(patientId).then(setHistory);
-    }
+    if (patientId === null) return;
+    getPatientHistory(patientId)
+      .then(setHistory)
+      .catch(() => setError('Could not load your medical record. Please try again later.'))
+      .finally(() => setIsLoading(false));
   }, [patientId]);
 
   useEffect(() => {
     refreshHistory();
   }, [refreshHistory]);
+
+  const isEmpty = history !== null
+    && history.entries.length === 0
+    && history.appointments.length === 0
+    && history.prescriptions.length === 0;
 
   return (
     <Box className={styles.page}>
@@ -39,7 +48,24 @@ export default function MedicalRecordsPage() {
         <Typography variant="h5">My Medical Record</Typography>
       </Box>
 
-      {history !== null && <PatientRecord history={history} />}
+      {isLoading && (
+        <Typography className={styles.message} color="textSecondary">Loading your record...</Typography>
+      )}
+
+      {!isLoading && error !== null && (
+        <Typography className={styles.message} color="error">{error}</Typography>
+      )}
+
+      {!isLoading && error === null && isEmpty && (
+        <Typography className={styles.message} color="textSecondary">
+          Nothing has been recorded yet. Your appointments, prescriptions and any notes your doctor
+          writes will appear here.
+        </Typography>
+      )}
+
+      {!isLoading && error === null && !isEmpty && history !== null && (
+        <PatientRecord history={history} />
+      )}
     </Box>
   );
 }

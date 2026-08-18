@@ -6,14 +6,8 @@ import {
 import { Box } from '@mui/material';
 
 import type {
-  AppointmentResponse,
-} from '../../../api/appointments/AppointmentsAPI';
-import type {
   PatientHistoryResponse,
 } from '../../../api/medicalRecords/MedicalRecordsAPI';
-import type {
-  PrescriptionResponse,
-} from '../../../api/prescriptions/PrescriptionsAPI';
 import { Drawer } from '../../../components/Drawer/Drawer';
 import {
   AppointmentDetails,
@@ -25,18 +19,30 @@ import { RecordSummary } from './RecordSummary';
 import { RecordTimeline } from './RecordTimeline';
 import styles from './PatientRecord.module.scss';
 
+interface DetailsTarget {
+  type: 'appointment' | 'prescription';
+  id: string;
+  title: string;
+}
+
 interface PatientRecordProps {
   history: PatientHistoryResponse;
   entryActions?: (entryId: string) => ReactNode;
 }
 
 export function PatientRecord({ history, entryActions }: PatientRecordProps) {
-  const [appointment, setAppointment] = useState<AppointmentResponse | null>(null);
-  const [prescription, setPrescription] = useState<PrescriptionResponse | null>(null);
+  const [details, setDetails] = useState<DetailsTarget | null>(null);
 
-  function closeDrawers() {
-    setAppointment(null);
-    setPrescription(null);
+  const appointment = details?.type === 'appointment'
+    ? history.appointments.find((item) => String(item.id) === details.id) ?? null
+    : null;
+
+  const prescription = details?.type === 'prescription'
+    ? history.prescriptions.find((item) => item.id === details.id) ?? null
+    : null;
+
+  function closeDetails() {
+    setDetails(null);
   }
 
   return (
@@ -45,20 +51,27 @@ export function PatientRecord({ history, entryActions }: PatientRecordProps) {
 
       <RecordTimeline
         history={history}
-        onOpenAppointment={setAppointment}
-        onOpenPrescription={setPrescription}
+        onOpenAppointment={(item) => setDetails({
+          type: 'appointment',
+          id: String(item.id),
+          title: 'Appointment Details',
+        })}
+        onOpenPrescription={(item) => setDetails({
+          type: 'prescription',
+          id: item.id,
+          title: 'Prescription Details',
+        })}
         entryActions={entryActions}
       />
 
-      {appointment !== null && (
-        <Drawer open onClose={closeDrawers} title="Appointment Details">
-          <AppointmentDetails appointment={appointment} heading={appointment.doctorName} />
-        </Drawer>
-      )}
-
-      {prescription !== null && (
-        <Drawer open onClose={closeDrawers} title="Prescription Details">
-          <PrescriptionDetails prescription={prescription} heading={prescription.doctorName} />
+      {details !== null && (appointment !== null || prescription !== null) && (
+        <Drawer open onClose={closeDetails} title={details.title}>
+          {appointment !== null && (
+            <AppointmentDetails appointment={appointment} heading={appointment.doctorName} />
+          )}
+          {prescription !== null && (
+            <PrescriptionDetails prescription={prescription} heading={prescription.doctorName} />
+          )}
         </Drawer>
       )}
     </Box>

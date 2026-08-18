@@ -39,7 +39,7 @@ type DrawerDetails =
 
 export default function MedicalRecordsPage() {
   const [patients, setPatients] = useState<PatientResponse[]>([]);
-  const [patient, setPatient] = useState<PatientResponse | null>(null);
+  const [patientId, setPatientId] = useState<number | null>(null);
   const [history, setHistory] = useState<PatientHistoryResponse | null>(null);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -49,16 +49,18 @@ export default function MedicalRecordsPage() {
     getAllPatients().then(setPatients);
   }, []);
 
-  function loadHistory(patientId: number) {
-    getPatientHistory(patientId).then(setHistory);
+  function loadHistory(id: number) {
+    getPatientHistory(id).then(setHistory);
   }
 
+  const patient = patients.find((item) => item.id === patientId) ?? null;
+
   function refreshHistory() {
-    if (patient !== null) loadHistory(patient.id);
+    if (patientId !== null) loadHistory(patientId);
   }
 
   function handlePatientChange(_: unknown, next: PatientResponse | null) {
-    setPatient(next);
+    setPatientId(next?.id ?? null);
     setHistory(null);
     if (next) loadHistory(next.id);
   }
@@ -87,23 +89,28 @@ export default function MedicalRecordsPage() {
       setDeleteId(null);
       refreshHistory();
     } catch {
-      setDeleteError('Could not delete this note. Please try again.');
+      setDeleteError('Could not delete this entry. Please try again.');
     }
+  }
+
+  function openConfirmDelete(entryId: string) {
+    setDeleteError(null);
+    setDeleteId(entryId);
   }
 
   function entryActions(entryId: string) {
     return (
       <Box className={styles.entryActions}>
-        <Tooltip title="Edit note">
-          <IconButton size="small" onClick={() => setDrawerDetails({ type: 'edit', entryId, title: 'Edit Note' })}>
+        <Tooltip title="Edit entry">
+          <IconButton size="small" onClick={() => setDrawerDetails({ type: 'edit', entryId, title: 'Edit Entry' })}>
             <EditIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Delete note">
+        <Tooltip title="Delete entry">
           <IconButton
             size="small"
             className={styles.deleteAction}
-            onClick={() => { setDeleteError(null); setDeleteId(entryId); }}
+            onClick={() => openConfirmDelete(entryId)}
           >
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
@@ -130,9 +137,9 @@ export default function MedicalRecordsPage() {
             variant="contained"
             startIcon={<AddIcon />}
             disabled={patient === null}
-            onClick={() => setDrawerDetails({ type: 'create', title: 'Add Note' })}
+            onClick={() => setDrawerDetails({ type: 'create', title: 'Add Entry' })}
           >
-            Add Note
+            Add Entry
           </Button>
         </Box>
       </Box>
@@ -158,7 +165,7 @@ export default function MedicalRecordsPage() {
 
       <ConfirmDialog
         open={deleteTarget !== null}
-        title="Delete note"
+        title="Delete entry"
         message={deleteTarget ? `Delete "${deleteTarget.title}" from this patient's record? This cannot be undone.` : ''}
         confirmLabel="Delete"
         confirmColor="error"

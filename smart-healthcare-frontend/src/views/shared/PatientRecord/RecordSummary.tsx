@@ -27,7 +27,7 @@ export function RecordSummary({ history }: RecordSummaryProps) {
     { label: 'Visits', value: String(completed.length) },
     { label: 'Upcoming', value: String(upcoming.length) },
     { label: 'Prescriptions', value: String(history.prescriptions.length) },
-    { label: 'Notes', value: String(history.entries.length) },
+    { label: 'Entries', value: String(history.entries.length) },
   ];
 
   return (

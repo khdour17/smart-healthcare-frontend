@@ -1,2 +1,17 @@
-.form { display: flex; flex-direction: column; gap: 16px; }
-.actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+.form { display: flex; flex-direction: column; gap: 16px; height: 100%; }
+
+.description {
+  flex: 1;
+
+  :global(.MuiInputBase-root) {
+    height: 100%;
+    align-items: flex-start;
+  }
+
+  :global(.MuiInputBase-input) {
+    height: 100% !important;
+    overflow: auto !important;
+  }
+}
+
+.actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: auto; }

@@ -50,7 +50,7 @@ export function AppRouter() {
               <Route element={<RequireRole roles={['PATIENT']} />}>
                 <Route path="appointments" element={<AppointmentsPage />} />
                 <Route path="prescriptions" element={<PrescriptionsPage />} />
-                <Route path="medical-records" element={<MedicalRecordsPage />} />
+                <Route path="medical-record" element={<MedicalRecordsPage />} />
               </Route>
             </Route>
           </Route>

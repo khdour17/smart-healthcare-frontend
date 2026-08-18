@@ -4,6 +4,7 @@ import httpClient from '../../utils/httpClient';
 
 export interface MedicalRecordRequest {
   patientId: number;
+  recordDate: string;
   title: string;
   description?: string;
 }

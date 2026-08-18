@@ -63,7 +63,7 @@ const markerStyles: Record<ItemType, string> = {
 
 const filters: { value: ItemType | 'all'; label: string }[] = [
   { value: 'all', label: 'All' },
-  { value: 'entry', label: 'Notes' },
+  { value: 'entry', label: 'Entries' },
   { value: 'appointment', label: 'Visits' },
   { value: 'prescription', label: 'Prescriptions' },
 ];
@@ -82,7 +82,7 @@ export function RecordTimeline({
       type: 'entry' as const,
       date: entry.recordDate,
       title: entry.title,
-      subtitle: `Note by ${entry.doctorName}`,
+      subtitle: `Recorded by ${entry.doctorName}`,
       body: entry.description ?? undefined,
       aside: entryActions?.(entry.id),
     })),

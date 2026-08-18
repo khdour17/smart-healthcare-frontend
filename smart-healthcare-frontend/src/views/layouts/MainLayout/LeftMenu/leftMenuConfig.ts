@@ -19,7 +19,7 @@ const dashboard: LeftMenuItem = { key: 'dashboard', label: 'Dashboard', path: '/
 const appointments: LeftMenuItem = { key: 'appointments', label: 'Appointments', path: '/dashboard/appointments', icon: EventIcon };
 const doctors: LeftMenuItem = { key: 'doctors', label: 'Doctors', path: '/dashboard/doctors', icon: LocalHospitalIcon };
 const patients: LeftMenuItem = { key: 'patients', label: 'Patients', path: '/dashboard/patients', icon: PeopleIcon };
-const medicalRecords: LeftMenuItem = { key: 'medicalRecords', label: 'Medical Records', path: '/dashboard/medical-records', icon: DescriptionIcon };
+const medicalRecord: LeftMenuItem = { key: 'medicalRecord', label: 'Medical Record', path: '/dashboard/medical-record', icon: DescriptionIcon };
 const prescriptions: LeftMenuItem = { key: 'prescriptions', label: 'Prescriptions', path: '/dashboard/prescriptions', icon: MedicationIcon };
 const profile: LeftMenuItem = { key: 'profile', label: 'Profile', path: '/dashboard/profile', icon: PersonIcon };
 const settings: LeftMenuItem = { key: 'settings', label: 'Settings', path: '/dashboard/settings', icon: SettingsIcon };
@@ -32,7 +32,7 @@ const prescribed: LeftMenuItem = { key: 'prescribed', label: 'Prescriptions', pa
 const itemsByRole: Record<UserRole, LeftMenuItem[]> = {
   ADMIN: [doctors, patients, admins, settings],
   DOCTOR: [schedule, workHours, prescribed, patientRecords, profile, settings],
-  PATIENT: [appointments, prescriptions, medicalRecords, profile, settings],
+  PATIENT: [appointments, prescriptions, medicalRecord, profile, settings],
 };
 
 export function getLeftMenuItems(role: UserRole): LeftMenuItem[] {

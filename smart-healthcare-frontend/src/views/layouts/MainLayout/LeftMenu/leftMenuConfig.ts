@@ -26,11 +26,12 @@ const settings: LeftMenuItem = { key: 'settings', label: 'Settings', path: '/das
 const admins: LeftMenuItem = { key: 'admins', label: 'Admins', path: '/dashboard/admins', icon: AdminPanelSettingsIcon };
 const workHours: LeftMenuItem = { key: 'workHours', label: 'Work Hours', path: '/dashboard/availability', icon: ScheduleIcon };
 const schedule: LeftMenuItem = { key: 'schedule', label: 'Appointments', path: '/dashboard/schedule', icon: EventIcon };
+const patientRecords: LeftMenuItem = { key: 'patientRecords', label: 'Medical Records', path: '/dashboard/records', icon: DescriptionIcon };
 const prescribed: LeftMenuItem = { key: 'prescribed', label: 'Prescriptions', path: '/dashboard/prescribed', icon: MedicationIcon };
 
 const itemsByRole: Record<UserRole, LeftMenuItem[]> = {
   ADMIN: [doctors, patients, admins, settings],
-  DOCTOR: [schedule, workHours, prescribed, medicalRecords, profile, settings],
+  DOCTOR: [schedule, workHours, prescribed, patientRecords, profile, settings],
   PATIENT: [appointments, prescriptions, medicalRecords, profile, settings],
 };
 

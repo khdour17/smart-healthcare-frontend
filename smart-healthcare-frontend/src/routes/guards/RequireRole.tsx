@@ -1,5 +1,3 @@
-// RequireRole.tsx — not wired into the router yet; ready for e.g. an
-// Admin-only "/dashboard/doctors" management route in a later phase.
 import { useContext } from 'react';
 
 import {

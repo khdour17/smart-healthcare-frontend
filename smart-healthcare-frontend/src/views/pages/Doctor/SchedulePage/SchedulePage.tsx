@@ -6,6 +6,7 @@ import {
 } from 'react';
 
 import InfoIcon from '@mui/icons-material/InfoOutlined';
+import MedicationIcon from '@mui/icons-material/MedicationOutlined';
 import TaskAltIcon from '@mui/icons-material/TaskAltOutlined';
 import {
   Box,
@@ -19,6 +20,9 @@ import {
   type AppointmentResponse,
   getDoctorAppointments,
 } from '../../../../api/appointments/AppointmentsAPI';
+import {
+  getDoctorPrescriptions,
+} from '../../../../api/prescriptions/PrescriptionsAPI';
 import {
   DataTable,
   type DataTableColumn,
@@ -34,11 +38,14 @@ import {
   AppointmentStatusChip,
 } from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import {
+  PrescriptionForm,
+} from '../../../shared/PrescriptionForm/PrescriptionForm';
+import {
   CompleteAppointmentForm,
 } from './CompleteAppointmentForm/CompleteAppointmentForm';
 import styles from './SchedulePage.module.scss';
 
-type DrawerType = 'complete' | 'details';
+type DrawerType = 'complete' | 'details' | 'prescribe';
 
 interface DrawerDetails {
   appointmentId: number;
@@ -50,6 +57,7 @@ export default function SchedulePage() {
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
+  const [prescribedIds, setPrescribedIds] = useState<Set<number>>(new Set());
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
 
   const refreshAppointments = useCallback(() => {
@@ -58,9 +66,17 @@ export default function SchedulePage() {
     }
   }, [doctorId]);
 
+  const refreshPrescribedIds = useCallback(() => {
+    if (doctorId !== null) {
+      getDoctorPrescriptions(doctorId)
+        .then((data) => setPrescribedIds(new Set(data.map((prescription) => prescription.appointmentId))));
+    }
+  }, [doctorId]);
+
   useEffect(() => {
     refreshAppointments();
-  }, [refreshAppointments]);
+    refreshPrescribedIds();
+  }, [refreshAppointments, refreshPrescribedIds]);
 
   const drawerAppointment = drawerDetails
     ? appointments.find((appointment) => appointment.id === drawerDetails.appointmentId) ?? null
@@ -74,6 +90,10 @@ export default function SchedulePage() {
     setDrawerDetails({ appointmentId: appointment.id, type: 'details', title: 'Appointment Details' });
   }
 
+  function openPrescribe(appointment: AppointmentResponse) {
+    setDrawerDetails({ appointmentId: appointment.id, type: 'prescribe', title: 'Add Prescription' });
+  }
+
   function closeDrawer() {
     setDrawerDetails(null);
   }
@@ -81,6 +101,11 @@ export default function SchedulePage() {
   function handleCompleted() {
     closeDrawer();
     refreshAppointments();
+  }
+
+  function handlePrescribed() {
+    closeDrawer();
+    refreshPrescribedIds();
   }
 
   const columns: DataTableColumn<AppointmentResponse>[] = [
@@ -118,13 +143,20 @@ export default function SchedulePage() {
     {
       key: 'actions',
       label: '',
-      width: 110,
+      width: 150,
       render: (row) => (
         <Box className={styles.rowActions}>
           {row.status === 'SCHEDULED' && (
             <Tooltip title="Complete appointment">
               <IconButton size="small" className={styles.completeAction} onClick={() => openComplete(row)}>
                 <TaskAltIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+          {row.status === 'COMPLETED' && !prescribedIds.has(row.id) && (
+            <Tooltip title="Add prescription">
+              <IconButton size="small" onClick={() => openPrescribe(row)}>
+                <MedicationIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           )}
@@ -153,13 +185,21 @@ export default function SchedulePage() {
 
       {drawerDetails !== null && drawerAppointment !== null && (
         <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
-          {drawerDetails.type === 'complete' ? (
+          {drawerDetails.type === 'complete' && (
             <CompleteAppointmentForm
               appointment={drawerAppointment}
               onSuccess={handleCompleted}
               onCancel={closeDrawer}
             />
-          ) : (
+          )}
+          {drawerDetails.type === 'prescribe' && (
+            <PrescriptionForm
+              appointmentId={drawerAppointment.id}
+              onSuccess={handlePrescribed}
+              onCancel={closeDrawer}
+            />
+          )}
+          {drawerDetails.type === 'details' && (
             <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.patientName} />
           )}
         </Drawer>

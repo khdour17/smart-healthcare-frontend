@@ -1,0 +1,71 @@
+@use '../../../styles/variables' as *;
+
+.timeline { display: flex; flex-direction: column; gap: 16px; }
+
+.filters { display: flex; }
+
+.stream { display: flex; flex-direction: column; }
+
+.item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  padding-bottom: 18px;
+  position: relative;
+}
+
+.item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 42px;
+  bottom: 0;
+  width: 2px;
+  background-color: $color-border;
+}
+
+.marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-surface-3;
+  border: 1px solid $color-border;
+  color: $color-text-secondary;
+}
+
+.markerEntry { color: $color-text-primary; }
+.markerAppointment { color: $color-primary; }
+.markerPrescription { color: $color-success; }
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: $radius-base;
+  background-color: $color-surface-2;
+  border: 1px solid $color-border;
+}
+
+.clickable {
+  transition: background-color 0.15s ease;
+  &:hover { background-color: $color-surface-3; }
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.body { white-space: pre-wrap; }
+
+.empty { padding: 24px; text-align: center; }

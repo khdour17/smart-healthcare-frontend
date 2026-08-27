@@ -1,8 +1,8 @@
 import { expect, test as base } from '@playwright/test';
 
 import { DashboardPage } from '../pages/DashboardPage';
-import { Header } from '../pages/Header';
-import { LeftMenu } from '../pages/LeftMenu';
+import { Header } from '../pages/layouts/Header';
+import { LeftMenu } from '../pages/layouts/LeftMenu';
 import { LoginPage } from '../pages/LoginPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 

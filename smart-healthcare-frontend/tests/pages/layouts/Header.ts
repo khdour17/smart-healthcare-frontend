@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 
-import { greetingText, USER_MENU_ITEMS } from '../config/messages';
-import { HEADER } from '../selectors/header.selectors';
+import { greetingText, USER_MENU_ITEMS } from '../../config/messages';
+import { HEADER } from '../../selectors/layouts/header.selectors';
 
 export class Header {
   readonly page: Page;

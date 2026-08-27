@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 
-import { LEFT_MENU, menuItemByLabel } from '../selectors/leftMenu.selectors';
+import { LEFT_MENU, menuItemByLabel } from '../../selectors/layouts/leftMenu.selectors';
 
 export class LeftMenu {
   readonly page: Page;

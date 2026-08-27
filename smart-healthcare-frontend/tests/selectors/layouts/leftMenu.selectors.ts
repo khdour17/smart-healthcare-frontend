@@ -1,4 +1,4 @@
-import { MUI } from './common.selectors';
+import { MUI } from '../common.selectors';
 
 export const LEFT_MENU = {
   ROOT: MUI.LIST,

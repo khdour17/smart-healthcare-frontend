@@ -1,4 +1,4 @@
-import { MUI } from './common.selectors';
+import { MUI } from '../common.selectors';
 
 export const HEADER = {
   ROOT: 'header',

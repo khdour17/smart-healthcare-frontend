@@ -6,6 +6,7 @@ import {
   WRONG_PASSWORD,
 } from '../config/testData';
 import { expect, test } from '../fixtures/testFixtures';
+import { isMarkedRequired } from '../helpers/formHelper';
 import { urlContaining, urlEndingWith } from '../helpers/urlHelper';
 import {
   createAdmin,
@@ -69,7 +70,7 @@ test.describe('Verify Login', () => {
     await loginPage.open();
     await loginPage.submit();
 
-    expect(await loginPage.isUsernameMarkedRequired()).toBe(true);
+    expect(await isMarkedRequired(loginPage.usernameInput)).toBe(true);
     await expect(page).toHaveURL(urlEndingWith(ROUTES.LOGIN));
   });
 });

@@ -5,6 +5,6 @@ export const MUI = {
   MENU_ITEM: '[role="menuitem"]',
 };
 
-export function requiredFieldLabel(label: string): RegExp {
+export function fieldLabel(label: string): RegExp {
   return new RegExp(`^${label}`);
 }

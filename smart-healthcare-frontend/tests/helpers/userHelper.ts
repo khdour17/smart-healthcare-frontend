@@ -15,12 +15,17 @@ import type {
   PatientUser,
 } from '../types';
 import {
-  createUser,
-  deleteUser,
-  findUserId,
+  deletePath,
+  getJson,
   openAdminSession,
+  postJson,
 } from './apiHelper';
-import { makeCreatedId, withCreatedId } from './createdIdHelper';
+import { makeCreatedId } from './createdIdHelper';
+
+type ListedUser = {
+  id: number;
+  username: string;
+};
 
 type CreatedUser = {
   listPath: string;
@@ -32,19 +37,23 @@ const createdUsers: CreatedUser[] = [];
 let adminSession: APIRequestContext | null = null;
 
 async function getAdminSession(): Promise<APIRequestContext> {
-  if (!adminSession) {
-    adminSession = await openAdminSession();
-  }
+  adminSession ??= await openAdminSession();
 
   return adminSession;
 }
 
 function uniqueUsername(prefix: string): string {
-  return withCreatedId(prefix, makeCreatedId());
+  return `${prefix}_${makeCreatedId()}`;
 }
 
 function emailFor(username: string): string {
   return `${username}@${EMAIL_DOMAIN}`;
+}
+
+async function findUserId(api: APIRequestContext, listPath: string, username: string): Promise<number | null> {
+  const users = await getJson<ListedUser[]>(api, listPath);
+
+  return users.find((user) => user.username === username)?.id ?? null;
 }
 
 async function registerUser<T extends { username: string }>(
@@ -55,7 +64,7 @@ async function registerUser<T extends { username: string }>(
   const api = await getAdminSession();
 
   createdUsers.push({ listPath, username: user.username });
-  await createUser(api, registerPath, user);
+  await postJson(api, registerPath, user);
 
   return user;
 }
@@ -120,7 +129,10 @@ export async function deleteCreatedUsers(): Promise<void> {
   for (const user of users) {
     try {
       const id = await findUserId(api, user.listPath, user.username);
-      await deleteUser(api, user.listPath, id);
+
+      if (id !== null) {
+        await deletePath(api, `${user.listPath}/${id}`);
+      }
     } catch (error) {
       failures.push(error instanceof Error ? error.message : String(error));
     }

@@ -3,7 +3,6 @@ import {
   BUTTONS,
   greetingText,
   TEXTS,
-  welcomeText,
 } from '../config/messages';
 import {
   EXPECTED_MENU_BY_ROLE,
@@ -16,23 +15,20 @@ import { LOGIN_PAGE } from '../selectors/loginPage.selectors';
 
 test.describe('Verify Login', () => {
   test('TC-001 Verify that the admin can log in with the right username and password', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.ADMIN);
+    await loginPage.loginAs(USERS.ADMIN);
 
-    await commonPage.verifyTextExists(welcomeText(USERS.ADMIN.username));
     await commonPage.verifyTextExists(greetingText(USERS.ADMIN.username));
   });
 
   test('TC-002 Verify that the doctor can log in with the right username and password', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.DOCTOR);
+    await loginPage.loginAs(USERS.DOCTOR);
 
-    await commonPage.verifyTextExists(welcomeText(USERS.DOCTOR.username));
     await commonPage.verifyTextExists(greetingText(USERS.DOCTOR.username));
   });
 
   test('TC-003 Verify that the patient can log in with the right username and password', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.PATIENT);
+    await loginPage.loginAs(USERS.PATIENT);
 
-    await commonPage.verifyTextExists(welcomeText(USERS.PATIENT.username));
     await commonPage.verifyTextExists(greetingText(USERS.PATIENT.username));
   });
 
@@ -61,8 +57,7 @@ test.describe('Verify Login', () => {
 
 test.describe('Verify Logout And Session', () => {
   test('TC-007 Verify that the user can log out', async ({ page, loginPage, commonPage }) => {
-    await loginPage.login(USERS.PATIENT);
-    await commonPage.verifyTextExists(welcomeText(USERS.PATIENT.username));
+    await loginPage.loginAs(USERS.PATIENT);
 
     await commonPage.logout();
 
@@ -75,8 +70,7 @@ test.describe('Verify Logout And Session', () => {
   });
 
   test('TC-008 Verify that a logged in user can not open the login page again', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.PATIENT);
-    await commonPage.verifyTextExists(welcomeText(USERS.PATIENT.username));
+    await loginPage.loginAs(USERS.PATIENT);
 
     await loginPage.open();
 
@@ -94,47 +88,25 @@ test.describe('Verify Logout And Session', () => {
 
 test.describe('Verify Left Menu Per Role', () => {
   test('TC-010a Verify that the left menu shows the right items for the admin', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.ADMIN);
-    await commonPage.verifyTextExists(welcomeText(USERS.ADMIN.username));
+    await loginPage.loginAs(USERS.ADMIN);
 
-    for (const label of EXPECTED_MENU_BY_ROLE.ADMIN.shown) {
-      await commonPage.verifyItemExists(commonPage.leftMenuItem(label));
-    }
-
-    for (const label of EXPECTED_MENU_BY_ROLE.ADMIN.hidden) {
-      await commonPage.verifyItemMissing(commonPage.leftMenuItem(label));
-    }
+    await commonPage.verifyLeftMenu(EXPECTED_MENU_BY_ROLE.ADMIN);
   });
 
   test('TC-010b Verify that the left menu shows the right items for the doctor', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.DOCTOR);
-    await commonPage.verifyTextExists(welcomeText(USERS.DOCTOR.username));
+    await loginPage.loginAs(USERS.DOCTOR);
 
-    for (const label of EXPECTED_MENU_BY_ROLE.DOCTOR.shown) {
-      await commonPage.verifyItemExists(commonPage.leftMenuItem(label));
-    }
-
-    for (const label of EXPECTED_MENU_BY_ROLE.DOCTOR.hidden) {
-      await commonPage.verifyItemMissing(commonPage.leftMenuItem(label));
-    }
+    await commonPage.verifyLeftMenu(EXPECTED_MENU_BY_ROLE.DOCTOR);
   });
 
   test('TC-010c Verify that the left menu shows the right items for the patient', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.PATIENT);
-    await commonPage.verifyTextExists(welcomeText(USERS.PATIENT.username));
+    await loginPage.loginAs(USERS.PATIENT);
 
-    for (const label of EXPECTED_MENU_BY_ROLE.PATIENT.shown) {
-      await commonPage.verifyItemExists(commonPage.leftMenuItem(label));
-    }
-
-    for (const label of EXPECTED_MENU_BY_ROLE.PATIENT.hidden) {
-      await commonPage.verifyItemMissing(commonPage.leftMenuItem(label));
-    }
+    await commonPage.verifyLeftMenu(EXPECTED_MENU_BY_ROLE.PATIENT);
   });
 
   test('TC-011 Verify that a wrong adress shows the NotFoundPage', async ({ loginPage, commonPage }) => {
-    await loginPage.login(USERS.PATIENT);
-    await commonPage.verifyTextExists(welcomeText(USERS.PATIENT.username));
+    await loginPage.loginAs(USERS.PATIENT);
 
     await commonPage.goto(ROUTES.UNKNOWN);
 

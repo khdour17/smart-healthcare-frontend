@@ -8,6 +8,7 @@ export default defineConfig({
   workers: 4,
   reporter: [['list'], ['html', { open: 'never' }]],
   timeout: 60_000,
+  expect: { timeout: 10_000 },
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',

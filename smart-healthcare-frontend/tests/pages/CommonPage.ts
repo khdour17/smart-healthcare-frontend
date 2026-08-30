@@ -3,9 +3,10 @@ import { expect, type Page } from '@playwright/test';
 import { USER_MENU_ITEMS } from '../config/messages';
 import {
   COMMON,
-  withExactChildText,
-  withExactText,
+  leftMenuItem,
+  userMenuItem,
 } from '../selectors/common.selectors';
+import type { MenuExpectation } from '../types';
 
 export class CommonPage {
   readonly page: Page;
@@ -31,7 +32,7 @@ export class CommonPage {
   }
 
   async verifyItemExists(selector: string): Promise<void> {
-    await expect(this.page.locator(selector).first()).toBeVisible();
+    await expect(this.page.locator(selector)).toBeVisible();
   }
 
   async verifyItemMissing(selector: string): Promise<void> {
@@ -62,16 +63,19 @@ export class CommonPage {
     expect(isEmpty).toBe(true);
   }
 
-  leftMenuItem(label: string): string {
-    return withExactChildText(COMMON.LEFT_MENU_ITEM, label);
+  async verifyLeftMenu(expected: MenuExpectation): Promise<void> {
+    for (const label of expected.shown) {
+      await this.verifyItemExists(leftMenuItem(label));
+    }
+
+    for (const label of expected.hidden) {
+      await this.verifyItemMissing(leftMenuItem(label));
+    }
   }
 
-  async openMenuItem(label: string): Promise<void> {
-    await this.clickOnItem(this.leftMenuItem(label));
-  }
 
   async logout(): Promise<void> {
     await this.clickOnItem(COMMON.AVATAR_BUTTON);
-    await this.clickOnItem(withExactText(COMMON.USER_MENU_ITEM, USER_MENU_ITEMS.LOGOUT));
+    await this.clickOnItem(userMenuItem(USER_MENU_ITEMS.LOGOUT));
   }
 }

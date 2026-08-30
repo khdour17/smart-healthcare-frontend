@@ -30,5 +30,4 @@ test-cases
 *.sln
 *.sw?
 
-# Report evidence
-.evidence/
+screenshots

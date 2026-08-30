@@ -1,17 +1,5 @@
 export const BASE_URL = 'http://localhost:5173';
 
-export const API_URL = 'http://localhost:8080';
-
-export const API_PATHS = {
-  LOGIN: '/api/auth/login',
-  REGISTER_ADMIN: '/api/auth/register/admin',
-  REGISTER_DOCTOR: '/api/auth/register/doctor',
-  REGISTER_PATIENT: '/api/auth/register/patient',
-  ADMINS: '/api/admin',
-  DOCTORS: '/api/doctors',
-  PATIENTS: '/api/patients',
-};
-
 export const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/dashboard',

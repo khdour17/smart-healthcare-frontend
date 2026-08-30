@@ -5,36 +5,10 @@ import type {
 } from '../types';
 import { MENU_ITEMS } from './messages';
 
-export const BOOTSTRAP_ADMIN: Credentials = {
-  username: 'admin',
-  password: 'admin123',
-};
-
-export const DEFAULT_PASSWORD = 'Test1234';
-
-export const EMAIL_DOMAIN = 'e2e.test';
-
-export const USERNAME_PREFIXES = {
-  ADMIN: 'admin',
-  DOCTOR: 'doctor',
-  PATIENT: 'patient',
-};
-
-export const BASE_ADMIN = {
-  name: 'TestAdmin',
-  department: 'IT',
-};
-
-export const BASE_DOCTOR = {
-  name: 'TestDoctor',
-  specialty: 'Cardiology',
-};
-
-export const BASE_PATIENT = {
-  name: 'TestPatient',
-  dateOfBirth: '1990-01-01',
-  phone: '0790000000',
-  address: 'Hebron, Palestine',
+export const USERS: Record<UserRole, Credentials> = {
+  ADMIN: { username: 'admin', password: 'admin123' },
+  DOCTOR: { username: 'dr_smith', password: 'doctor123' },
+  PATIENT: { username: 'john_doe', password: 'patient123' },
 };
 
 export const UNKNOWN_USER: Credentials = {

@@ -29,3 +29,6 @@ test-cases
 *.njsproj
 *.sln
 *.sw?
+
+# Report evidence
+.evidence/

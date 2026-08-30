@@ -1,8 +1,3 @@
-export const FIELD_LABELS = {
-  USERNAME: 'Username',
-  PASSWORD: 'Password',
-};
-
 export const BUTTONS = {
   BACK_TO_DASHBOARD: 'Back to Dashboard',
 };
@@ -28,6 +23,7 @@ export const MENU_ITEMS = {
 export const TEXTS = {
   GREETING_PREFIX: 'Hello',
   WELCOME_PREFIX: 'Welcome,',
+  LOGIN_ERROR_MESSAGE: 'Invalid username or password.',
   NOT_FOUND_TITLE: '404',
   NOT_FOUND_MESSAGE: "This page doesn't exist.",
 };

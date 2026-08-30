@@ -1,10 +1,14 @@
-export const MUI = {
+export const COMMON = {
   ALERT: '[role="alert"]',
-  LIST: '.MuiList-root',
-  LIST_ITEM_BUTTON: '.MuiListItemButton-root',
-  MENU_ITEM: '[role="menuitem"]',
+  AVATAR_BUTTON: 'header button',
+  LEFT_MENU_ITEM: '.MuiListItemButton-root',
+  USER_MENU_ITEM: '[role="menuitem"]',
 };
 
-export function fieldLabel(label: string): RegExp {
-  return new RegExp(`^${label}`);
+export function withExactText(selector: string, text: string): string {
+  return `${selector}:text-is("${text}")`;
+}
+
+export function withExactChildText(selector: string, text: string): string {
+  return `${selector}:has(:text-is("${text}"))`;
 }

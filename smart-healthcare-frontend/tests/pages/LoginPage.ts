@@ -1,39 +1,20 @@
-import type { Locator, Page } from '@playwright/test';
-
 import { ROUTES } from '../config/app.config';
-import { FIELD_LABELS } from '../config/messages';
-import { fieldLabel } from '../selectors/common.selectors';
 import { LOGIN_PAGE } from '../selectors/loginPage.selectors';
 import type { Credentials } from '../types';
+import { CommonPage } from './CommonPage';
 
-export class LoginPage {
-  readonly page: Page;
-
-  readonly usernameInput: Locator;
-  readonly passwordInput: Locator;
-  readonly signInButton: Locator;
-  readonly errorAlert: Locator;
-
-  constructor(page: Page) {
-    this.page = page;
-
-    this.usernameInput = page.getByLabel(fieldLabel(FIELD_LABELS.USERNAME));
-    this.passwordInput = page.getByLabel(fieldLabel(FIELD_LABELS.PASSWORD));
-    this.signInButton = page.locator(LOGIN_PAGE.SUBMIT_BUTTON);
-    this.errorAlert = page.locator(LOGIN_PAGE.ERROR_ALERT);
-  }
-
+export class LoginPage extends CommonPage {
   async open(): Promise<void> {
-    await this.page.goto(ROUTES.LOGIN);
+    await this.goto(ROUTES.LOGIN);
   }
 
   async fillCredentials(credentials: Credentials): Promise<void> {
-    await this.usernameInput.fill(credentials.username);
-    await this.passwordInput.fill(credentials.password);
+    await this.fillItem(LOGIN_PAGE.USERNAME_INPUT, credentials.username);
+    await this.fillItem(LOGIN_PAGE.PASSWORD_INPUT, credentials.password);
   }
 
   async submit(): Promise<void> {
-    await this.signInButton.click();
+    await this.clickOnItem(LOGIN_PAGE.SUBMIT_BUTTON);
   }
 
   async login(credentials: Credentials): Promise<void> {

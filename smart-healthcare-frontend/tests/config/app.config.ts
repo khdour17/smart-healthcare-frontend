@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:5173';
+export const BASE_URL = process.env.BASE_URL ?? 'http://localhost:5173';
 
 export const ROUTES = {
   LOGIN: '/login',

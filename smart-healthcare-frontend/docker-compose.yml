@@ -18,6 +18,42 @@ services:
       retries: 5
       start_period: 10s
 
+  # ══════════════ Playwright UI ══════════════
+  # docker compose up -d tests-ui   →  http://localhost:9323
+  tests-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    container_name: healthcare-tests-ui
+    environment:
+      BASE_URL: http://web               # The app container, not a dev server
+    ports:
+      - "9323:9323"                      # http://localhost:9323
+    command: ["npx", "playwright", "test", "--ui", "--ui-host=0.0.0.0", "--ui-port=9323"]
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - healthcare-network
+
+  # ══════════════ Test Run ══════════════
+  # docker compose run --rm tests   →  runs the suite once and exits 0 or 1
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    container_name: healthcare-tests
+    environment:
+      BASE_URL: http://web
+    volumes:
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - healthcare-network
+
 # The backend stack creates this network, so it must be up first.
 # Joining it lets nginx reach the backend as healthcare-app:8080.
 networks:

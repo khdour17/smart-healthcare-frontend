@@ -1,0 +1,23 @@
+# ══════════════ END TO END TESTS ══════════════
+# Uses the official Playwright image so the browsers are already installed
+# The tag matches the @playwright/test version in package.json — a mismatch
+# makes Playwright ask for browsers the image does not carry
+FROM mcr.microsoft.com/playwright:v1.62.1-noble
+
+WORKDIR /app
+
+# Copy the package files first — Docker caches this layer
+# Dependencies only re-install when package-lock.json changes
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copy only what the tests need — no src, the app has its own container
+COPY playwright.config.ts tsconfig.tests.json ./
+COPY tests ./tests
+
+# Document that the Playwright UI is served on this port
+EXPOSE 9323
+
+# Run the whole suite once and exit with the result
+# The UI service overrides this with its own command
+CMD ["npx", "playwright", "test"]

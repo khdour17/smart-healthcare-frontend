@@ -2,7 +2,7 @@ export const COMMON = {
   ALERT: '[role="alert"]',
   AVATAR_BUTTON: 'header button',
   PAGE_HEADING: '.MuiTypography-h5',
-  ADD_BUTTON: '.MuiButton-contained',
+  ADD_BUTTON: 'main .MuiButton-contained',
   TABLE_ROW: '.MuiTableBody-root .MuiTableRow-root',
   DELETE_SELECTED_BUTTON: '[data-testid="DeleteOutlinedIcon"]',
   DRAWER: '.MuiDrawer-paper',

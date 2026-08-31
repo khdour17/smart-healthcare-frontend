@@ -1,0 +1,26 @@
+services:
+
+  # ══════════════ Frontend App ══════════════
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: healthcare-web
+    restart: unless-stopped
+    ports:
+      - "5173:80"                        # http://localhost:5173
+    networks:
+      - healthcare-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+# The backend stack creates this network, so it must be up first.
+# Joining it lets nginx reach the backend as healthcare-app:8080.
+networks:
+  healthcare-network:
+    external: true
+    name: smart-healthcare-appointment-system_healthcare-network

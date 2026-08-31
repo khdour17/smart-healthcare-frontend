@@ -4,7 +4,7 @@ export const COMMON = {
   PAGE_HEADING: '.MuiTypography-h5',
   ADD_BUTTON: 'main .MuiButton-contained',
   TABLE_ROW: '.MuiTableBody-root .MuiTableRow-root',
-  DELETE_SELECTED_BUTTON: '[data-testid="DeleteOutlinedIcon"]',
+  DELETE_SELECTED_BUTTON: 'button[aria-label="Delete selected"]',
   DRAWER: '.MuiDrawer-paper',
   DRAWER_ALERT: '.MuiDrawer-paper [role="alert"]',
   DIALOG: '[role="dialog"]',

@@ -6,13 +6,13 @@ import {
   selectedCountText,
   TEXTS,
 } from '../config/messages';
+import { USERS } from '../config/testData';
+import { test } from '../fixtures/testFixtures';
 import {
   newAdmin,
   newDoctor,
   newPatient,
-  USERS,
-} from '../config/testData';
-import { test } from '../fixtures/testFixtures';
+} from '../helpers/userData';
 import {
   COMMON,
   dialogButton,

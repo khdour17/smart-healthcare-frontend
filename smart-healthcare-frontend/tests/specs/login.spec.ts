@@ -11,6 +11,7 @@ import {
   WRONG_PASSWORD,
 } from '../config/testData';
 import { test } from '../fixtures/testFixtures';
+import { COMMON } from '../selectors/common.selectors';
 import { LOGIN_PAGE } from '../selectors/loginPage.selectors';
 
 test.describe('Verify Login', () => {
@@ -35,14 +36,14 @@ test.describe('Verify Login', () => {
   test('TC-004 Verify that login fails when the password is wrong', async ({ loginPage, commonPage }) => {
     await loginPage.login({ username: USERS.PATIENT.username, password: WRONG_PASSWORD });
 
-    await commonPage.verifyAlert(TEXTS.LOGIN_ERROR_MESSAGE);
+    await commonPage.verifyAlert(COMMON.ALERT, TEXTS.LOGIN_ERROR_MESSAGE);
     await commonPage.verifyUrl(ROUTES.LOGIN);
   });
 
   test('TC-005 Verify that login fails when the user does not exist', async ({ loginPage, commonPage }) => {
     await loginPage.login(UNKNOWN_USER);
 
-    await commonPage.verifyAlert(TEXTS.LOGIN_ERROR_MESSAGE);
+    await commonPage.verifyAlert(COMMON.ALERT, TEXTS.LOGIN_ERROR_MESSAGE);
     await commonPage.verifyUrl(ROUTES.LOGIN);
   });
 

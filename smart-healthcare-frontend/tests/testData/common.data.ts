@@ -11,6 +11,11 @@ export const USERS: Record<UserRole, Credentials> = {
   PATIENT: { username: 'john_doe', password: 'patient123' },
 };
 
+export const PEOPLE = {
+  DOCTOR_NAME: 'Dr. Sarah Smith',
+  PATIENT_NAME: 'John Doe',
+};
+
 export const UNKNOWN_USER: Credentials = {
   username: 'ghost_user',
   password: 'anything',

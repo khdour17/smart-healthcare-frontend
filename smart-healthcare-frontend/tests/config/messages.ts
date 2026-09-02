@@ -5,6 +5,10 @@ export const BUTTONS = {
   CREATE_DOCTOR: 'Create Doctor',
   CREATE_PATIENT: 'Create Patient',
   CREATE_ADMIN: 'Create Admin',
+  SAVE: 'Save',
+  SAVE_CHANGES: 'Save Changes',
+  ADD_ENTRY: 'Add Entry',
+  THIS_WEEK: 'This week',
 };
 
 export const USER_MENU_ITEMS = {
@@ -41,12 +45,22 @@ export const ICON_BUTTONS = {
   LIST_VIEW: 'List view',
   PREVIOUS_WEEK: 'Previous week',
   NEXT_WEEK: 'Next week',
+  CLOSE: 'Close',
 };
 
 export const PAGE_TITLES = {
   DOCTORS: 'Doctors',
   PATIENTS: 'Patients',
   ADMINS: 'Admins',
+  WORK_HOURS: 'Work Hours',
+  APPOINTMENTS: 'Appointments',
+  MEDICAL_RECORDS: 'Medical Records',
+  PRESCRIPTIONS: 'Prescriptions',
+  MY_APPOINTMENTS: 'My Appointments',
+  MY_PRESCRIPTIONS: 'My Prescriptions',
+  MY_MEDICAL_RECORD: 'My Medical Record',
+  PROFILE: 'Profile',
+  SETTINGS: 'Settings',
 };
 
 export const FIELD_LABELS = {
@@ -84,6 +98,15 @@ export const TEXTS = {
   NOT_FOUND_MESSAGE: "This page doesn't exist.",
   CREATE_DOCTOR_ERROR: 'Could not create doctor. Check the details and try again.',
   DELETE_OWN_ADMIN_ERROR: 'You can not delete your own admin account',
+  WORK_HOURS_SAVED: 'Work hours saved.',
+  WORK_HOURS_REMOVED: 'Work hours removed.',
+  RECORD_ENTRY_SAVED: 'Record entry saved.',
+  RECORD_ENTRY_DELETED: 'Record entry deleted.',
+  PROFILE_SAVED: 'Profile saved.',
+  APPOINTMENT_BOOKED: 'Appointment booked.',
+  APPOINTMENT_CANCELLED: 'Appointment cancelled.',
+  APPOINTMENT_DETAILS: 'Appointment Details',
+  PRESCRIPTION_DETAILS: 'Prescription Details',
 };
 
 export function greetingText(username: string): string {

@@ -59,7 +59,7 @@ export class CommonPage {
   }
 
   async verifyItemExists(selector: string): Promise<void> {
-    await expect(this.page.locator(selector)).toBeVisible();
+    await expect(this.page.locator(selector).first()).toBeVisible();
   }
 
   async verifyItemMissing(selector: string): Promise<void> {
@@ -67,7 +67,27 @@ export class CommonPage {
   }
 
   async verifyItemContainsText(selector: string, text: string): Promise<void> {
-    await expect(this.page.locator(selector)).toContainText(text);
+    await expect(this.page.locator(selector).first()).toContainText(text);
+  }
+
+  async verifyItemHasCount(selector: string, count: number): Promise<void> {
+    await expect(this.page.locator(selector)).toHaveCount(count);
+  }
+
+  async verifyItemHasNotText(selector: string, text: string): Promise<void> {
+    await expect(this.page.locator(selector).first()).not.toHaveText(text);
+  }
+
+  async verifyItemIsDisabled(selector: string): Promise<void> {
+    await expect(this.page.locator(selector).first()).toBeDisabled();
+  }
+
+  async readText(selector: string): Promise<string> {
+    return this.page.locator(selector).first().innerText();
+  }
+
+  async countItems(selector: string): Promise<number> {
+    return this.page.locator(selector).count();
   }
 
   async verifyItemHasValue(selector: string, value: string): Promise<void> {

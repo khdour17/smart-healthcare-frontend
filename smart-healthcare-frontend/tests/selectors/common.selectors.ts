@@ -12,6 +12,9 @@ export const COMMON = {
   TOAST: '.MuiSnackbar-root',
   CALENDAR_ITEM: 'main [class*="item_"]',
   CALENDAR_DAY: 'main [class*="dayLabel"]',
+  WEEK_LABEL: 'main [class*="weekLabel"]',
+  PATIENT_PICKER: 'main .MuiFormControl-root:has(.MuiFormLabel-root:text-is("Patient")) input',
+  TIMELINE_ENTRY: 'main [class*="item_"]',
 };
 
 export function leftMenuItem(label: string): string {
@@ -31,11 +34,11 @@ export function tableRowCheckbox(cellText: string): string {
 }
 
 export function formField(label: string): string {
-  return `${COMMON.DRAWER} .MuiFormControl-root:has(label:text-is("${label}")) input`;
+  return `${COMMON.DRAWER} .MuiFormControl-root:has(.MuiFormLabel-root:text-is("${label}")) .MuiInputBase-input:not([aria-hidden="true"])`;
 }
 
 export function selectField(label: string): string {
-  return `${COMMON.DRAWER} .MuiFormControl-root:has(label:text-is("${label}")) [role="combobox"]`;
+  return `${COMMON.DRAWER} .MuiFormControl-root:has(.MuiFormLabel-root:text-is("${label}")) [role="combobox"]`;
 }
 
 export function listOption(label: string): string {
@@ -56,6 +59,10 @@ export function iconButton(label: string): string {
 
 export function rowAction(cellText: string, actionLabel: string): string {
   return `${tableRow(cellText)} button[aria-label="${actionLabel}"]`;
+}
+
+export function firstRowAction(actionLabel: string): string {
+  return `${COMMON.TABLE_ROW}:first-child button[aria-label="${actionLabel}"]`;
 }
 
 export function calendarItem(text: string): string {

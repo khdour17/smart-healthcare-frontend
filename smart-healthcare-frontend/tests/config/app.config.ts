@@ -13,5 +13,7 @@ export const ROUTES = {
   PATIENT_APPOINTMENTS: '/dashboard/appointments',
   PATIENT_PRESCRIPTIONS: '/dashboard/prescriptions',
   PATIENT_MEDICAL_RECORD: '/dashboard/medical-record',
+  PROFILE: '/dashboard/profile',
+  SETTINGS: '/dashboard/settings',
   UNKNOWN: '/dashboard/some-random-page',
 };

@@ -1,3 +1,4 @@
+@use '../../../../styles/mixins' as *;
 @use '../../../../styles/variables' as *;
 
 .page { display: flex; flex-direction: column; gap: 20px; }
@@ -25,3 +26,5 @@
   font: inherit;
   cursor: pointer;
 }
+
+@include view-row;

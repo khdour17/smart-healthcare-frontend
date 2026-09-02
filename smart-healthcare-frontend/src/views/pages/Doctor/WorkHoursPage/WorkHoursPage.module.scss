@@ -1,3 +1,4 @@
+@use '../../../../styles/mixins' as *;
 @use '../../../../styles/variables' as *;
 
 .page { display: flex; flex-direction: column; gap: 20px; }
@@ -5,3 +6,5 @@
   color: $color-error;
   &:hover { background-color: rgba(239, 68, 68, 0.1); }
 }
+
+@include view-row;

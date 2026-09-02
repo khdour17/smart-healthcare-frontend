@@ -127,7 +127,6 @@ export default function WorkHoursPage() {
     title: `${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`,
     subtitle: `${slot.slotDurationMinutes} min slots`,
     tone: 'primary',
-    onClick: () => openConfirmDelete(slot.id),
   }));
 
   return (
@@ -136,14 +135,15 @@ export default function WorkHoursPage() {
         title="Work Hours"
         subtitle="The hours you are open for appointments each week."
         actions={(
-          <>
-            <ViewToggle view={view} onChange={changeView} />
-            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
-              Add Availability
-            </Button>
-          </>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
+            Add Availability
+          </Button>
         )}
       />
+
+      <Box className={`${styles.viewRow} ${styles.viewRowEnd}`}>
+        <ViewToggle view={view} onChange={changeView} />
+      </Box>
 
       {view === 'calendar' ? (
         <WeekCalendar

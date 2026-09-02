@@ -48,3 +48,15 @@
     box-shadow: $shadow-card;
   }
 }
+
+@mixin view-row {
+  .viewRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .viewRowEnd { justify-content: flex-end; }
+}

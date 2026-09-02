@@ -32,6 +32,7 @@ import { Drawer } from '../../../../components/Drawer/Drawer';
 import { PatientRecord } from '../../../shared/PatientRecord/PatientRecord';
 import { MedicalRecordForm } from './MedicalRecordForm/MedicalRecordForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../../utils/useToast';
 import styles from './MedicalRecordsPage.module.scss';
 
 type DrawerDetails =
@@ -39,6 +40,7 @@ type DrawerDetails =
   | { type: 'edit'; entryId: string; title: string };
 
 export default function MedicalRecordsPage() {
+  const showToast = useToast();
   const [patients, setPatients] = useState<PatientResponse[]>([]);
   const [patientId, setPatientId] = useState<number | null>(null);
   const [history, setHistory] = useState<PatientHistoryResponse | null>(null);
@@ -85,6 +87,7 @@ export default function MedicalRecordsPage() {
   }
 
   function handleSaved() {
+    showToast('Record entry saved.');
     closeDrawer();
     refreshHistory();
   }
@@ -93,6 +96,7 @@ export default function MedicalRecordsPage() {
     if (deleteId === null) return;
     try {
       await deleteMedicalRecord(deleteId);
+      showToast('Record entry deleted.');
       setDeleteId(null);
       refreshHistory();
     } catch {

@@ -36,6 +36,7 @@ import {
   PrescriptionForm,
 } from '../../../shared/PrescriptionForm/PrescriptionForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../../utils/useToast';
 import styles from './PrescriptionsPage.module.scss';
 
 type DrawerType = 'details' | 'edit';
@@ -47,6 +48,7 @@ interface DrawerDetails {
 }
 
 export default function PrescriptionsPage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [prescriptions, setPrescriptions] = useState<PrescriptionResponse[]>([]);
@@ -89,6 +91,7 @@ export default function PrescriptionsPage() {
   }
 
   function handleSaved() {
+    showToast('Prescription saved.');
     closeDrawer();
     refreshPrescriptions();
   }
@@ -103,6 +106,7 @@ export default function PrescriptionsPage() {
     try {
       await deletePrescription(deleteId);
       setDeleteId(null);
+      showToast('Prescription deleted.');
       refreshPrescriptions();
     } catch {
       setDeleteError('Could not delete this prescription. Please try again.');

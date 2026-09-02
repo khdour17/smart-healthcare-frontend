@@ -224,16 +224,21 @@ export default function SchedulePage() {
       <PageHeader
         title="Appointments"
         subtitle="Everyone booked in with you."
-        actions={<ViewToggle view={view} onChange={changeView} />}
       />
 
-      {view === 'calendar' ? (
-        <>
+      <Box className={`${styles.viewRow} ${view === 'list' ? styles.viewRowEnd : ''}`}>
+        {view === 'calendar' && (
           <WeekNav
             weekStart={weekStart}
             onChange={setWeekStart}
             onToday={() => setWeekStart(startOfWeek(new Date()))}
           />
+        )}
+        <ViewToggle view={view} onChange={changeView} />
+      </Box>
+
+      {view === 'calendar' ? (
+        <>
           <WeekCalendar
             days={weekDays(weekStart)}
             items={calendarItems}

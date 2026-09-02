@@ -56,6 +56,7 @@ import {
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
 import { WeekNav } from '../../../../components/WeekNav/WeekNav';
+import { useToast } from '../../../../utils/useToast';
 import styles from './AppointmentsPage.module.scss';
 
 type DrawerDetails =
@@ -80,6 +81,7 @@ function appointmentTone(status: AppointmentResponse['status']): CalendarItem['t
 }
 
 export default function AppointmentsPage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
@@ -127,6 +129,7 @@ export default function AppointmentsPage() {
   }
 
   function handleBooked() {
+    showToast('Appointment booked.');
     closeDrawer();
     refreshAppointments();
   }
@@ -162,6 +165,7 @@ export default function AppointmentsPage() {
       if (type === 'cancel') await cancelAppointment(appointmentId);
       else await deleteAppointment(appointmentId);
       setConfirmDetails(null);
+      showToast(type === 'cancel' ? 'Appointment cancelled.' : 'Appointment deleted.');
       refreshAppointments();
     } catch {
       setConfirmError(`Could not ${type} this appointment. Please try again.`);
@@ -231,22 +235,25 @@ export default function AppointmentsPage() {
         title="My Appointments"
         subtitle="Everything you have booked, past and upcoming."
         actions={(
-          <>
-            <ViewToggle view={view} onChange={changeView} />
-            <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
-              Book Appointment
-            </Button>
-          </>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
+            Book Appointment
+          </Button>
         )}
       />
 
-      {view === 'calendar' ? (
-        <>
+      <Box className={`${styles.viewRow} ${view === 'list' ? styles.viewRowEnd : ''}`}>
+        {view === 'calendar' && (
           <WeekNav
             weekStart={weekStart}
             onChange={setWeekStart}
             onToday={() => setWeekStart(startOfWeek(new Date()))}
           />
+        )}
+        <ViewToggle view={view} onChange={changeView} />
+      </Box>
+
+      {view === 'calendar' ? (
+        <>
           <WeekCalendar
             days={weekDays(weekStart)}
             items={calendarItems}

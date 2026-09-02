@@ -41,6 +41,7 @@ import {
   type CalendarItem,
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
+import { useToast } from '../../../../utils/useToast';
 import styles from './WorkHoursPage.module.scss';
 
 const WEEK_DAYS = [
@@ -54,6 +55,7 @@ const WEEK_DAYS = [
 ];
 
 export default function WorkHoursPage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [slots, setSlots] = useState<DoctorAvailabilityResponse[]>([]);
@@ -76,6 +78,7 @@ export default function WorkHoursPage() {
   }, [refreshSlots]);
 
   function handleCreated() {
+    showToast('Work hours saved.');
     setIsDrawerOpen(false);
     refreshSlots();
   }
@@ -90,6 +93,7 @@ export default function WorkHoursPage() {
     try {
       await deleteAvailability(deleteTargetId);
       setDeleteTargetId(null);
+      showToast('Work hours removed.');
       refreshSlots();
     } catch {
       setDeleteError('Could not delete this availability slot.');

@@ -8,9 +8,9 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 
+import { EmptyState } from '../EmptyState/EmptyState';
 import styles from './DataTable.module.scss';
 
 export interface DataTableColumn<T> {
@@ -101,9 +101,7 @@ export function DataTable<T>({
           })}
         </TableBody>
       </Table>
-      {rows.length === 0 && (
-        <Typography className={styles.emptyMessage} color="textSecondary">{emptyMessage}</Typography>
-      )}
+      {rows.length === 0 && <EmptyState message={emptyMessage} />}
     </Paper>
   );
 }

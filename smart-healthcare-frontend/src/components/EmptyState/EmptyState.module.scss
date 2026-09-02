@@ -1,0 +1,24 @@
+@use '../../styles/variables' as *;
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.iconRing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: $color-text-muted;
+  background-color: $color-surface-3;
+  border: 1px solid $color-border;
+}
+
+.message { color: $color-text-secondary; }

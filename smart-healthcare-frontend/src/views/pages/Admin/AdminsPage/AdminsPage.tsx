@@ -30,6 +30,7 @@ import {
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AddAdminForm } from './AddAdminForm/AddAdminForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../../utils/useToast';
 import styles from './AdminsPage.module.scss';
 
 const columns: DataTableColumn<AdminResponse>[] = [
@@ -40,6 +41,7 @@ const columns: DataTableColumn<AdminResponse>[] = [
 ];
 
 export default function AdminsPage() {
+  const showToast = useToast();
   const [admins, setAdmins] = useState<AdminResponse[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
@@ -55,6 +57,7 @@ export default function AdminsPage() {
   }, []);
 
   function handleCreated() {
+    showToast('Admin created.');
     setIsDrawerOpen(false);
     fetchAdmins();
   }
@@ -69,6 +72,7 @@ export default function AdminsPage() {
       await deleteAdmins(Array.from(selectedKeys).map(Number));
       setIsConfirmOpen(false);
       setSelectedKeys(new Set());
+      showToast('Deleted from admins.');
       fetchAdmins();
     } catch (error) {
       const message = isAxiosError(error) ? error.response?.data?.message : null;

@@ -35,6 +35,7 @@ import {
   type ProfileField,
 } from './EditProfileForm/EditProfileForm';
 import { PageHeader } from '../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../utils/useToast';
 import styles from './ProfilePage.module.scss';
 
 interface Profile {
@@ -105,6 +106,7 @@ async function saveProfile(user: AuthUser, values: Record<string, string>): Prom
 }
 
 export default function ProfilePage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const user = auth?.user ?? null;
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -128,6 +130,7 @@ export default function ProfilePage() {
   }, [refreshProfile]);
 
   function handleSaved() {
+    showToast('Profile saved.');
     setIsDrawerOpen(false);
     refreshProfile();
   }

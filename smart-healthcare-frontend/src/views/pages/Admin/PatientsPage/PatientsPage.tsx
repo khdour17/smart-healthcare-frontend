@@ -29,6 +29,7 @@ import {
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AddPatientForm } from './AddPatientForm/AddPatientForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../../utils/useToast';
 import styles from './PatientsPage.module.scss';
 
 const columns: DataTableColumn<PatientResponse>[] = [
@@ -40,6 +41,7 @@ const columns: DataTableColumn<PatientResponse>[] = [
 ];
 
 export default function PatientsPage() {
+  const showToast = useToast();
   const [patients, setPatients] = useState<PatientResponse[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
@@ -55,6 +57,7 @@ export default function PatientsPage() {
   }, []);
 
   function handleCreated() {
+    showToast('Patient created.');
     setIsDrawerOpen(false);
     fetchPatients();
   }
@@ -69,6 +72,7 @@ export default function PatientsPage() {
       await deletePatients(Array.from(selectedKeys).map(Number));
       setIsConfirmOpen(false);
       setSelectedKeys(new Set());
+      showToast('Deleted from patients.');
       fetchPatients();
     } catch {
       setDeleteError('Could not delete one or more patients. They may have existing appointments or records.');

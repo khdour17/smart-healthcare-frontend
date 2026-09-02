@@ -58,6 +58,7 @@ import {
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
 import { WeekNav } from '../../../../components/WeekNav/WeekNav';
+import { useToast } from '../../../../utils/useToast';
 import styles from './SchedulePage.module.scss';
 
 type DrawerType = 'complete' | 'details' | 'prescribe';
@@ -75,6 +76,7 @@ function appointmentTone(status: AppointmentResponse['status']): CalendarItem['t
 }
 
 export default function SchedulePage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
@@ -133,11 +135,13 @@ export default function SchedulePage() {
   }
 
   function handleCompleted() {
+    showToast('Appointment completed.');
     closeDrawer();
     refreshAppointments();
   }
 
   function handlePrescribed() {
+    showToast('Prescription saved.');
     closeDrawer();
     refreshPrescribedIds();
   }

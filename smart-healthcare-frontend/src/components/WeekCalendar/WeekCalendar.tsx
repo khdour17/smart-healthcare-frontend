@@ -4,6 +4,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { EmptyState } from '../EmptyState/EmptyState';
 import styles from './WeekCalendar.module.scss';
 
 export type CalendarTone = 'primary' | 'success' | 'muted';
@@ -98,6 +99,7 @@ function placeDay(dayItems: CalendarItem[], firstHour: number, lastHour: number)
 }
 
 export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.' }: WeekCalendarProps) {
+  const shownItems = items.filter((item) => days.some((day) => day.key === item.dayKey));
   const { firstHour, lastHour } = hourRange(items);
   const hours = Array.from({ length: lastHour - firstHour }, (_, index) => firstHour + index);
 
@@ -159,8 +161,8 @@ export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.
         })}
       </Box>
 
-      {items.length === 0 && (
-        <Typography variant="body2" color="textSecondary" className={styles.empty}>{emptyMessage}</Typography>
+      {shownItems.length === 0 && (
+        <Box className={styles.empty}><EmptyState message={emptyMessage} /></Box>
       )}
     </Box>
   );

@@ -21,19 +21,19 @@ import {
 } from '../testData/common.data';
 
 test.describe('Verify Dashboard Per Role', () => {
-  test('TC-065 Verify that the admin lands on the admin dashboard', async ({ loginPage, commonPage }) => {
+  test('TC-072 Verify that the admin lands on the admin dashboard', async ({ loginPage, commonPage }) => {
     await loginPage.loginAs(USERS.ADMIN);
 
     await commonPage.verifyItemContainsText(COMMON.PAGE_HEADING, DASHBOARD_TITLES.ADMIN);
   });
 
-  test('TC-066 Verify that the doctor lands on the doctor dashboard', async ({ loginPage, commonPage }) => {
+  test('TC-073 Verify that the doctor lands on the doctor dashboard', async ({ loginPage, commonPage }) => {
     await loginPage.loginAs(USERS.DOCTOR);
 
     await commonPage.verifyItemContainsText(COMMON.PAGE_HEADING, DASHBOARD_TITLES.DOCTOR);
   });
 
-  test('TC-067 Verify that the patient lands on the patient dashboard', async ({ loginPage, commonPage }) => {
+  test('TC-074 Verify that the patient lands on the patient dashboard', async ({ loginPage, commonPage }) => {
     await loginPage.loginAs(USERS.PATIENT);
 
     await commonPage.verifyItemContainsText(COMMON.PAGE_HEADING, DASHBOARD_TITLES.PATIENT);
@@ -41,7 +41,7 @@ test.describe('Verify Dashboard Per Role', () => {
 });
 
 test.describe('Verify Shared Profile', () => {
-  test('TC-068 Verify that an admin can not edit his own profile', async ({ loginPage, commonPage }) => {
+  test('TC-075 Verify that an admin can not edit his own profile', async ({ loginPage, commonPage }) => {
     await loginPage.loginAs(USERS.ADMIN);
     await commonPage.goto(ROUTES.PROFILE);
 
@@ -51,7 +51,7 @@ test.describe('Verify Shared Profile', () => {
     await commonPage.verifyItemMissing(COMMON.ADD_BUTTON);
   });
 
-  test('TC-069 Verify that the profile form does not save without a full name', async ({ loginPage, commonPage }) => {
+  test('TC-076 Verify that the profile form does not save without a full name', async ({ loginPage, commonPage }) => {
     await loginPage.loginAs(USERS.PATIENT);
     await commonPage.goto(ROUTES.PROFILE);
     await commonPage.clickOnItem(COMMON.ADD_BUTTON);
@@ -68,7 +68,7 @@ test.describe('Verify Shared Profile', () => {
 });
 
 test.describe('Verify Shared Settings', () => {
-  test('TC-070 Verify that the settings page shows who is signed in', async ({ loginPage, commonPage }) => {
+  test('TC-077 Verify that the settings page shows who is signed in', async ({ loginPage, commonPage }) => {
     await loginPage.loginAs(USERS.DOCTOR);
     await commonPage.goto(ROUTES.SETTINGS);
 
@@ -81,7 +81,7 @@ test.describe('Verify Shared Settings', () => {
     await commonPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.PROFILE);
   });
 
-  test('TC-071 Verify that a collapsed side menu is still collapsed after a reload', async ({ loginPage, commonPage, page }) => {
+  test('TC-078 Verify that a collapsed side menu is still collapsed after a reload', async ({ loginPage, commonPage, page }) => {
     await loginPage.loginAs(USERS.PATIENT);
     await commonPage.goto(ROUTES.SETTINGS);
 

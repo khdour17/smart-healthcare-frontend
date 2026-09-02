@@ -28,7 +28,7 @@ import {
 } from '../testData/patient.data';
 
 test.describe('Verify A Visit From Booking To Prescription', () => {
-  test('TC-072 Verify that a booked visit can be completed and prescribed for and shows up in the record', async ({
+  test('TC-079 Verify that a booked visit can be completed and prescribed for and shows up in the record', async ({
     loginPage,
     doctorPage,
     patientPage,

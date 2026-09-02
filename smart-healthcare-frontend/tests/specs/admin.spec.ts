@@ -30,7 +30,7 @@ test.beforeEach(async ({ loginPage }) => {
 });
 
 test.describe('Verify Admin Access', () => {
-  test('TC-012 Verify that an admin can not open a patient page', async ({ commonPage }) => {
+  test('TC-017 Verify that an admin can not open a patient page', async ({ commonPage }) => {
     await commonPage.goto(ROUTES.PATIENT_APPOINTMENTS);
 
     await commonPage.verifyUrl(ROUTES.DASHBOARD);
@@ -38,7 +38,7 @@ test.describe('Verify Admin Access', () => {
 });
 
 test.describe('Verify Admin Doctors', () => {
-  test('TC-013 Verify that the admin can see the list of doctors', async ({ adminPage }) => {
+  test('TC-018 Verify that the admin can see the list of doctors', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -53,7 +53,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-014 Verify that the admin can add a new doctor', async ({ adminPage }) => {
+  test('TC-019 Verify that the admin can add a new doctor', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -66,7 +66,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-015 Verify that a doctor can not be added with a username that is taken', async ({ adminPage }) => {
+  test('TC-020 Verify that a doctor can not be added with a username that is taken', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -86,7 +86,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-016 Verify that a doctor can not be added with an email that is taken', async ({ adminPage }) => {
+  test('TC-021 Verify that a doctor can not be added with an email that is taken', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -106,7 +106,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-017 Verify that the required fields must be filled in the form', async ({ adminPage }) => {
+  test('TC-022 Verify that the required fields must be filled in the form', async ({ adminPage }) => {
     await adminPage.goto(ROUTES.ADMIN_DOCTORS);
     await adminPage.addUser(
       newDoctor({ [FIELD_LABELS.USERNAME]: '' }),
@@ -117,7 +117,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemExists(COMMON.DRAWER);
   });
 
-  test('TC-018 Verify that Cancel throws away what was typed', async ({ adminPage }) => {
+  test('TC-023 Verify that Cancel throws away what was typed', async ({ adminPage }) => {
     await adminPage.goto(ROUTES.ADMIN_DOCTORS);
     await adminPage.clickOnItem(COMMON.ADD_BUTTON);
     await adminPage.fillForm(newDoctor());
@@ -132,7 +132,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemHasValue(formField(FIELD_LABELS.SPECIALTY), '');
   });
 
-  test('TC-019 Verify that the admin can delete one doctor', async ({ adminPage }) => {
+  test('TC-024 Verify that the admin can delete one doctor', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -145,7 +145,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemMissing(tableRow(username));
   });
 
-  test('TC-020 Verify that the admin can delete more than one doctor at the same time', async ({ adminPage }) => {
+  test('TC-025 Verify that the admin can delete more than one doctor at the same time', async ({ adminPage }) => {
     const firstDoctor = newDoctor();
     const secondDoctor = newDoctor();
     const firstUsername = firstDoctor[FIELD_LABELS.USERNAME];
@@ -167,7 +167,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemMissing(tableRow(secondUsername));
   });
 
-  test('TC-021 Verify that Cancel in the ConfirmDialog keeps the doctor', async ({ adminPage }) => {
+  test('TC-026 Verify that Cancel in the ConfirmDialog keeps the doctor', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -184,7 +184,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-076 Verify that the header checkbox selects every doctor and Clear selection undoes it', async ({ adminPage }) => {
+  test('TC-027 Verify that the header checkbox selects every doctor and Clear selection undoes it', async ({ adminPage }) => {
     await adminPage.goto(ROUTES.ADMIN_DOCTORS);
     await adminPage.verifyItemExists(COMMON.TABLE_ROW);
 
@@ -200,7 +200,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemContainsText(COMMON.ADD_BUTTON, BUTTONS.ADD_DOCTOR);
   });
 
-  test('TC-077 Verify that the delete dialog says how many doctors will be removed', async ({ adminPage }) => {
+  test('TC-028 Verify that the delete dialog says how many doctors will be removed', async ({ adminPage }) => {
     const doctor = newDoctor();
     const username = doctor[FIELD_LABELS.USERNAME];
 
@@ -221,7 +221,7 @@ test.describe('Verify Admin Doctors', () => {
 });
 
 test.describe('Verify Admin Patients', () => {
-  test('TC-022 Verify that the admin can see the list of patients', async ({ adminPage }) => {
+  test('TC-029 Verify that the admin can see the list of patients', async ({ adminPage }) => {
     const patient = newPatient();
     const username = patient[FIELD_LABELS.USERNAME];
 
@@ -236,7 +236,7 @@ test.describe('Verify Admin Patients', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-023 Verify that the admin can add a new patient with and without the optional fields', async ({ adminPage }) => {
+  test('TC-030 Verify that the admin can add a new patient with and without the optional fields', async ({ adminPage }) => {
     const fullPatient = newPatient();
     const minimalPatient = newPatient({
       [FIELD_LABELS.PHONE]: '',
@@ -261,7 +261,7 @@ test.describe('Verify Admin Patients', () => {
 });
 
 test.describe('Verify Admin Admins', () => {
-  test('TC-024 Verify that the admin can see the list of admins', async ({ adminPage }) => {
+  test('TC-031 Verify that the admin can see the list of admins', async ({ adminPage }) => {
     const admin = newAdmin();
     const username = admin[FIELD_LABELS.USERNAME];
 
@@ -275,7 +275,7 @@ test.describe('Verify Admin Admins', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-025 Verify that the admin can add another admin', async ({ adminPage, loginPage }) => {
+  test('TC-032 Verify that the admin can add another admin', async ({ adminPage, loginPage }) => {
     const admin = newAdmin();
     const username = admin[FIELD_LABELS.USERNAME];
 
@@ -293,7 +293,7 @@ test.describe('Verify Admin Admins', () => {
     await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
-  test('TC-026 Verify that the admin can delete another admin', async ({ adminPage }) => {
+  test('TC-033 Verify that the admin can delete another admin', async ({ adminPage }) => {
     const admin = newAdmin();
     const username = admin[FIELD_LABELS.USERNAME];
 
@@ -306,7 +306,7 @@ test.describe('Verify Admin Admins', () => {
     await adminPage.verifyItemMissing(tableRow(username));
   });
 
-  test('TC-027 Verify that the admin can not delete himself', async ({ adminPage }) => {
+  test('TC-034 Verify that the admin can not delete himself', async ({ adminPage }) => {
     await adminPage.goto(ROUTES.ADMIN_ADMINS);
     await adminPage.deleteRows([USERS.ADMIN.username], BUTTONS.DELETE);
 

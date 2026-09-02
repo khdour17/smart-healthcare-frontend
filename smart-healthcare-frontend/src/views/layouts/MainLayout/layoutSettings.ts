@@ -1,6 +1,6 @@
 import { useOutletContext } from 'react-router-dom';
 
-export interface LayoutSettings {
+interface LayoutSettings {
   isMenuCollapsed: boolean;
   setMenuCollapsed: (collapsed: boolean) => void;
 }

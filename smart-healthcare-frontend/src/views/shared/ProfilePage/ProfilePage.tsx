@@ -34,6 +34,8 @@ import {
   EditProfileForm,
   type ProfileField,
 } from './EditProfileForm/EditProfileForm';
+import { PageHeader } from '../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../utils/useToast';
 import styles from './ProfilePage.module.scss';
 
 interface Profile {
@@ -104,6 +106,7 @@ async function saveProfile(user: AuthUser, values: Record<string, string>): Prom
 }
 
 export default function ProfilePage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const user = auth?.user ?? null;
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -127,6 +130,7 @@ export default function ProfilePage() {
   }, [refreshProfile]);
 
   function handleSaved() {
+    showToast('Profile saved.');
     setIsDrawerOpen(false);
     refreshProfile();
   }
@@ -141,12 +145,13 @@ export default function ProfilePage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Profile</Typography>
-        {canEdit && (
+      <PageHeader
+        title="Profile"
+        subtitle="Your account and the details linked to it."
+        actions={canEdit && (
           <Button variant="contained" startIcon={<EditIcon />} onClick={() => setIsDrawerOpen(true)}>Edit Profile</Button>
         )}
-      </Box>
+      />
 
       <Box className={styles.section}>
         <Typography variant="h6">Account</Typography>

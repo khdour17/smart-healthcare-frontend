@@ -1,0 +1,13 @@
+@use '../../styles/variables' as *;
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 40px;
+}
+
+.titleBlock { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }

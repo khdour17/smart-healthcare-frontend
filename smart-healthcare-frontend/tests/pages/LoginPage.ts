@@ -1,5 +1,4 @@
 import { ROUTES } from '../config/app.config';
-import { welcomeText } from '../config/messages';
 import { LOGIN_PAGE } from '../selectors/loginPage.selectors';
 import type { Credentials } from '../types';
 import { CommonPage } from './CommonPage';
@@ -26,6 +25,6 @@ export class LoginPage extends CommonPage {
 
   async loginAs(credentials: Credentials): Promise<void> {
     await this.login(credentials);
-    await this.verifyTextExists(welcomeText(credentials.username));
+    await this.verifyUrl(ROUTES.DASHBOARD);
   }
 }

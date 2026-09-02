@@ -10,7 +10,7 @@ export interface AuthUser {
   roleEntityId: number;
 }
 
-export interface AuthContextValue {
+interface AuthContextValue {
   user: AuthUser | null;
   setUser: (user: AuthUser | null) => void;
 }

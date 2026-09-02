@@ -1,7 +1,7 @@
+@use '../../../../styles/mixins' as *;
 @use '../../../../styles/variables' as *;
 
 .page { display: flex; flex-direction: column; gap: 20px; }
-.headerRow { display: flex; align-items: center; justify-content: space-between; }
 
 .rowActions {
   display: flex;
@@ -26,3 +26,4 @@
   font: inherit;
   cursor: pointer;
 }
+

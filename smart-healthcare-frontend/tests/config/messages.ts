@@ -45,7 +45,6 @@ export const FIELD_LABELS = {
 
 export const TEXTS = {
   GREETING_PREFIX: 'Hello',
-  WELCOME_PREFIX: 'Welcome,',
   LOGIN_ERROR_MESSAGE: 'Invalid username or password.',
   NOT_FOUND_TITLE: '404',
   NOT_FOUND_MESSAGE: "This page doesn't exist.",
@@ -55,10 +54,6 @@ export const TEXTS = {
 
 export function greetingText(username: string): string {
   return `${TEXTS.GREETING_PREFIX} ${username}`;
-}
-
-export function welcomeText(username: string): string {
-  return `${TEXTS.WELCOME_PREFIX} ${username}`;
 }
 
 export function selectedCountText(count: number): string {

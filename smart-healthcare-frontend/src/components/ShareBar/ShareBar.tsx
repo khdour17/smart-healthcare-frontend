@@ -6,7 +6,7 @@ import {
 
 import styles from './ShareBar.module.scss';
 
-export type ShareSlot = 'one' | 'two' | 'three';
+type ShareSlot = 'one' | 'two' | 'three' | 'muted';
 
 export interface ShareBarSegment {
   label: string;
@@ -23,6 +23,7 @@ const slotClass: Record<ShareSlot, string> = {
   one: styles.slotOne,
   two: styles.slotTwo,
   three: styles.slotThree,
+  muted: styles.slotMuted,
 };
 
 export function ShareBar({ segments, emptyMessage = 'Nothing to show yet.' }: ShareBarProps) {

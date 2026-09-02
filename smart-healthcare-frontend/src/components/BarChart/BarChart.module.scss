@@ -3,7 +3,7 @@
 .chart {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 10px;
   height: 190px;
   padding-top: 4px;
   border-bottom: 1px solid $color-chart-baseline;
@@ -28,14 +28,17 @@
   display: flex;
   align-items: flex-end;
   width: 100%;
-  max-width: 46px;
+  max-width: 44px;
   height: 100%;
 }
 
 .fill {
   width: 100%;
-  border-radius: 4px 4px 0 0;
+  border-radius: 5px 5px 0 0;
   background-color: $color-series-1;
+  transition: filter 0.15s ease;
+
+  &:hover { filter: brightness(1.15); }
 }
 
 .label {

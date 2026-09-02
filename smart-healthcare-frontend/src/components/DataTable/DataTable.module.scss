@@ -1,11 +1,23 @@
-.paper { width: 100%; overflow: hidden; }
-.table { table-layout: fixed; }
-.row { transition: background-color 0.15s ease; &:hover { background-color: rgba(255, 255, 255, 0.03); } }
+@use '../../styles/variables' as *;
+
+.paper { width: 100%; overflow-x: auto; }
+
+.table {
+  table-layout: fixed;
+  min-width: 680px;
+}
+
+.row {
+  transition: background-color 0.15s ease;
+  &:hover { background-color: rgba(255, 255, 255, 0.03); }
+}
+
 .cell {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: $color-border;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .checkboxCell { width: 48px; }
-.emptyMessage { padding: 24px; text-align: center; }
+.empty { padding: 32px 24px; text-align: center; }

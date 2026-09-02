@@ -8,9 +8,9 @@
 }
 
 @mixin glass-panel {
-  background: rgba(24, 24, 27, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(39, 39, 42, 0.8);
+  background: rgba(15, 20, 28, 0.88);
+  backdrop-filter: blur(14px);
+  border: 1px solid $color-border;
 }
 
 @mixin selection-bar {
@@ -20,7 +20,7 @@
     gap: 4px;
     padding: 4px 6px 4px 16px;
     border-radius: 999px;
-    background-color: $color-surface-2;
+    background-color: $color-surface-3;
     border: 1px solid $color-border;
   }
 
@@ -32,7 +32,7 @@
 
   .selectionDelete {
     color: $color-error;
-    &:hover { background-color: rgba(239, 68, 68, 0.1); }
+    &:hover { background-color: rgba(248, 113, 113, 0.12); }
   }
 }
 
@@ -45,5 +45,7 @@
     border-radius: $radius-base;
     background-color: $color-surface-2;
     border: 1px solid $color-border;
+    box-shadow: $shadow-card;
   }
 }
+

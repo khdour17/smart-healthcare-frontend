@@ -24,17 +24,23 @@ const COLLAPSED_WIDTH = 76;
 interface LeftMenuProps {
   items: LeftMenuItem[];
   collapsed: boolean;
-  onToggle: () => void;
+  onToggle?: () => void;
+  onNavigate?: () => void;
 }
 
 function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-export function LeftMenu({ items, collapsed, onToggle }: LeftMenuProps) {
+export function LeftMenu({ items, collapsed, onToggle, onNavigate }: LeftMenuProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const width = collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
+
+  function goTo(path: string) {
+    navigate(path);
+    onNavigate?.();
+  }
 
   return (
     <Box className={styles.root} style={{ width }}>
@@ -46,7 +52,7 @@ export function LeftMenu({ items, collapsed, onToggle }: LeftMenuProps) {
             <ListItemButton
               key={item.key}
               selected={isActive}
-              onClick={() => navigate(item.path)}
+              onClick={() => goTo(item.path)}
               className={cx(styles.item, collapsed && styles.itemCollapsed, isActive && styles.itemActive)}
             >
               <ListItemIcon className={cx(styles.icon, collapsed && styles.iconCollapsed, isActive && styles.iconActive)}>
@@ -63,9 +69,15 @@ export function LeftMenu({ items, collapsed, onToggle }: LeftMenuProps) {
           return collapsed ? <Tooltip key={item.key} title={item.label} placement="right">{button}</Tooltip> : button;
         })}
       </List>
-      <IconButton className={styles.toggleButton} onClick={onToggle}>
-        {collapsed ? <ChevronRightIcon fontSize="small" /> : <ChevronLeftIcon fontSize="small" />}
-      </IconButton>
+      {onToggle && (
+        <IconButton
+          className={styles.toggleButton}
+          onClick={onToggle}
+          aria-label={collapsed ? 'Expand the menu' : 'Collapse the menu'}
+        >
+          {collapsed ? <ChevronRightIcon fontSize="small" /> : <ChevronLeftIcon fontSize="small" />}
+        </IconButton>
+      )}
     </Box>
   );
 }

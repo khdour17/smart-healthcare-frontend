@@ -12,12 +12,9 @@ import {
 import { getAllAdmins } from '../../../../api/admin/AdminAPI';
 import {
   type AppointmentResponse,
-  getDoctorAppointments,
+  getAllAppointments,
 } from '../../../../api/appointments/AppointmentsAPI';
-import {
-  type DoctorResponse,
-  getAllDoctors,
-} from '../../../../api/doctors/DoctorsAPI';
+import { getAllDoctors } from '../../../../api/doctors/DoctorsAPI';
 import { getAllPatients } from '../../../../api/patients/PatientsAPI';
 import {
   type BarChartPoint,
@@ -47,16 +44,12 @@ interface Overview {
 }
 
 async function loadOverview(): Promise<Overview> {
-  const [doctors, patients, admins] = await Promise.all([
+  const [doctors, patients, admins, appointments] = await Promise.all([
     getAllDoctors(),
     getAllPatients(),
     getAllAdmins(),
+    getAllAppointments(),
   ]);
-
-  const perDoctor = await Promise.all(
-    doctors.map((doctor: DoctorResponse) => getDoctorAppointments(doctor.id)),
-  );
-  const appointments = perDoctor.flat();
 
   return {
     tiles: [

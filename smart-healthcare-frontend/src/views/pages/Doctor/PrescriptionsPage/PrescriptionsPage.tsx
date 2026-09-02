@@ -12,7 +12,6 @@ import {
   Box,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -36,6 +35,8 @@ import {
 import {
   PrescriptionForm,
 } from '../../../shared/PrescriptionForm/PrescriptionForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../../utils/useToast';
 import styles from './PrescriptionsPage.module.scss';
 
 type DrawerType = 'details' | 'edit';
@@ -47,10 +48,12 @@ interface DrawerDetails {
 }
 
 export default function PrescriptionsPage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [prescriptions, setPrescriptions] = useState<PrescriptionResponse[]>([]);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -75,17 +78,20 @@ export default function PrescriptionsPage() {
 
   function openDetails(prescription: PrescriptionResponse) {
     setDrawerDetails({ prescriptionId: prescription.id, type: 'details', title: 'Prescription Details' });
+    setIsDrawerOpen(true);
   }
 
   function openEdit(prescription: PrescriptionResponse) {
     setDrawerDetails({ prescriptionId: prescription.id, type: 'edit', title: 'Edit Prescription' });
+    setIsDrawerOpen(true);
   }
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function handleSaved() {
+    showToast('Prescription saved.');
     closeDrawer();
     refreshPrescriptions();
   }
@@ -100,6 +106,7 @@ export default function PrescriptionsPage() {
     try {
       await deletePrescription(deleteId);
       setDeleteId(null);
+      showToast('Prescription deleted.');
       refreshPrescriptions();
     } catch {
       setDeleteError('Could not delete this prescription. Please try again.');
@@ -144,9 +151,7 @@ export default function PrescriptionsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Prescriptions</Typography>
-      </Box>
+      <PageHeader title="Prescriptions" subtitle="Every prescription you have written." />
 
       <DataTable
         columns={columns}
@@ -155,9 +160,9 @@ export default function PrescriptionsPage() {
         emptyMessage="You have not written any prescriptions yet."
       />
 
-      {drawerDetails !== null && drawerPrescription !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
-          {drawerDetails.type === 'edit' ? (
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {drawerPrescription !== null && (
+          drawerDetails?.type === 'edit' ? (
             <PrescriptionForm
               appointmentId={drawerPrescription.appointmentId}
               prescription={drawerPrescription}
@@ -166,9 +171,9 @@ export default function PrescriptionsPage() {
             />
           ) : (
             <PrescriptionDetails prescription={drawerPrescription} heading={drawerPrescription.patientName} />
-          )}
-        </Drawer>
-      )}
+          )
+        )}
+      </Drawer>
 
       <ConfirmDialog
         open={deleteTarget !== null}

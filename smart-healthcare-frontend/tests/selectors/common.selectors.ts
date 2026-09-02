@@ -15,7 +15,9 @@ export const COMMON = {
   CALENDAR_DAY: 'main [class*="dayLabel"]',
   WEEK_LABEL: 'main [class*="weekLabel"]',
   PATIENT_PICKER: 'main .MuiFormControl-root:has(.MuiFormLabel-root:text-is("Patient")) input',
-  TIMELINE_ENTRY: 'main [class*="item_"]',
+  TIMELINE_ENTRY: 'main [class*="stream"] [class*="item_"]',
+  FIRST_TIMELINE_ENTRY: 'main [class*="stream"] [class*="item_"]:first-child',
+  MENU_SWITCH: 'main .MuiSwitch-root input',
 };
 
 export function leftMenuItem(label: string): string {
@@ -40,6 +42,10 @@ export function formField(label: string): string {
 
 export function selectField(label: string): string {
   return `${COMMON.DRAWER} .MuiFormControl-root:has(.MuiFormLabel-root:text-is("${label}")) [role="combobox"]`;
+}
+
+export function fieldHelperText(label: string): string {
+  return `${COMMON.DRAWER} .MuiFormControl-root:has(.MuiFormLabel-root:text-is("${label}")) .MuiFormHelperText-root`;
 }
 
 export function listOption(label: string): string {
@@ -70,6 +76,10 @@ export function firstRowAction(actionLabel: string): string {
   return `${COMMON.TABLE_ROW}:first-child button[aria-label="${actionLabel}"]`;
 }
 
-export function calendarItem(text: string): string {
-  return `${COMMON.CALENDAR_ITEM}:has-text("${text}")`;
+export function timelineEntry(text: string): string {
+  return `${COMMON.TIMELINE_ENTRY}:has-text("${text}")`;
+}
+
+export function recordFilter(label: string): string {
+  return `main .MuiToggleButton-root:text-is("${label}")`;
 }

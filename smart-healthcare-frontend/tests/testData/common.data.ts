@@ -23,6 +23,11 @@ export const UNKNOWN_USER: Credentials = {
 
 export const WRONG_PASSWORD = 'wrongpass';
 
+export function uniqueText(prefix: string): string {
+  const unique = `${Date.now().toString().slice(-7)}${Math.floor(Math.random() * 100)}`;
+  return `${prefix} ${unique}`;
+}
+
 export const EXPECTED_MENU_BY_ROLE: Record<UserRole, MenuExpectation> = {
   ADMIN: {
     shown: [

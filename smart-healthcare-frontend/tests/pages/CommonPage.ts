@@ -1,11 +1,13 @@
 import { expect, type Page } from '@playwright/test';
 
 import {
+  BUTTONS,
   ICON_BUTTONS,
   USER_MENU_ITEMS,
 } from '../config/messages';
 import {
   COMMON,
+  drawerButton,
   formField,
   iconButton,
   leftMenuItem,
@@ -43,6 +45,14 @@ export class CommonPage {
     await this.page.locator(selector).check();
   }
 
+  async uncheckItem(selector: string): Promise<void> {
+    await this.page.locator(selector).uncheck();
+  }
+
+  async pressKey(key: string): Promise<void> {
+    await this.page.keyboard.press(key);
+  }
+
   async fillForm(fields: Record<string, string>): Promise<void> {
     for (const [label, value] of Object.entries(fields)) {
       await this.fillItem(formField(label), value);
@@ -65,6 +75,12 @@ export class CommonPage {
 
   async showListView(): Promise<void> {
     await this.clickOnItem(iconButton(ICON_BUTTONS.LIST_VIEW));
+  }
+
+  async editProfile(fields: Record<string, string>): Promise<void> {
+    await this.clickOnItem(COMMON.ADD_BUTTON);
+    await this.fillForm(fields);
+    await this.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
   }
 
   async clickRowAction(cellText: string, actionLabel: string): Promise<void> {
@@ -101,6 +117,14 @@ export class CommonPage {
 
   async verifyItemIsEnabled(selector: string): Promise<void> {
     await expect(this.page.locator(selector).first()).toBeEnabled();
+  }
+
+  async verifyItemIsChecked(selector: string): Promise<void> {
+    await expect(this.page.locator(selector)).toBeChecked();
+  }
+
+  async verifyItemIsNotChecked(selector: string): Promise<void> {
+    await expect(this.page.locator(selector)).not.toBeChecked();
   }
 
   async readText(selector: string): Promise<string> {

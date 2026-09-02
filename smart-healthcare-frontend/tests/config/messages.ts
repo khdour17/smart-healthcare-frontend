@@ -9,6 +9,12 @@ export const BUTTONS = {
   SAVE_CHANGES: 'Save Changes',
   ADD_ENTRY: 'Add Entry',
   THIS_WEEK: 'This week',
+  BOOK_APPOINTMENT: 'Book Appointment',
+  CANCEL_APPOINTMENT: 'Cancel appointment',
+  KEEP_IT: 'Keep it',
+  COMPLETE: 'Complete',
+  SAVE_PRESCRIPTION: 'Save Prescription',
+  GO_TO_PROFILE: 'Go to Profile',
 };
 
 export const USER_MENU_ITEMS = {
@@ -85,10 +91,26 @@ export const FIELD_LABELS = {
   DESCRIPTION: 'Description',
   DATE: 'Date',
   DOCTOR: 'Doctor',
-  SPECIALTY_FILTER: 'Specialty',
   TIME: 'Time',
   REASON: 'Reason',
   PATIENT: 'Patient',
+};
+
+export const STATUSES = {
+  SCHEDULED: 'Scheduled',
+  COMPLETED: 'Completed',
+  CANCELLED: 'Cancelled',
+};
+
+export const RECORD_FILTERS = {
+  ALL: 'All',
+  ENTRIES: 'Entries',
+  VISITS: 'Visits',
+  PRESCRIPTIONS: 'Prescriptions',
+};
+
+export const SWITCHES = {
+  COLLAPSED_MENU: 'Keep the side menu collapsed',
 };
 
 export const TEXTS = {
@@ -107,7 +129,23 @@ export const TEXTS = {
   APPOINTMENT_CANCELLED: 'Appointment cancelled.',
   APPOINTMENT_DETAILS: 'Appointment Details',
   PRESCRIPTION_DETAILS: 'Prescription Details',
+  APPOINTMENT_DELETED: 'Appointment deleted.',
+  APPOINTMENT_COMPLETED: 'Appointment completed.',
+  PRESCRIPTION_SAVED: 'Prescription saved.',
+  PRESCRIPTION_DELETED: 'Prescription deleted.',
+  NOTHING_OF_THIS_TYPE: 'Nothing of this type recorded yet.',
+  ADMIN_PROFILE_HINT: 'An admin account is changed by another admin from the Admins page.',
+  APPOINTMENT_WITH: 'Appointment with',
+  PRESCRIPTION_FROM: 'Prescription from',
 };
+
+export function doctorNotAvailableMessage(dayName: string): string {
+  return `Doctor not available on ${dayName}`;
+}
+
+export function cancelAppointmentMessage(doctorName: string, date: string, startTime: string): string {
+  return `Cancel your appointment with ${doctorName} on ${date} at ${startTime}?`;
+}
 
 export function greetingText(username: string): string {
   return `${TEXTS.GREETING_PREFIX} ${username}`;

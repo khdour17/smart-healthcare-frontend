@@ -19,13 +19,15 @@ import {
 } from '../selectors/common.selectors';
 import {
   PEOPLE,
+  uniqueText,
   USERS,
 } from '../testData/common.data';
 import {
+  EXISTING_DIAGNOSIS,
   FREE_DAYS,
   newRecordEntry,
   REPLACED_WORK_HOURS,
-  uniqueTitle,
+  SPECIALTY,
   WORK_HOURS,
 } from '../testData/doctor.data';
 
@@ -158,7 +160,7 @@ test.describe('Verify Doctor Appointments', () => {
 
 test.describe('Verify Doctor Medical Records', () => {
   test('TC-039 Verify that the doctor can write an entry in a patient record', async ({ doctorPage }) => {
-    const title = uniqueTitle('Checkup');
+    const title = uniqueText('Checkup');
 
     await doctorPage.goto(ROUTES.DOCTOR_MEDICAL_RECORDS);
     await doctorPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.MEDICAL_RECORDS);
@@ -174,8 +176,8 @@ test.describe('Verify Doctor Medical Records', () => {
   });
 
   test('TC-040 Verify that the doctor can change an entry he already wrote', async ({ doctorPage }) => {
-    const title = uniqueTitle('First');
-    const changed = uniqueTitle('Changed');
+    const title = uniqueText('First');
+    const changed = uniqueText('Changed');
 
     await doctorPage.goto(ROUTES.DOCTOR_MEDICAL_RECORDS);
     await doctorPage.pickPatient(PEOPLE.PATIENT_NAME);
@@ -223,7 +225,26 @@ test.describe('Verify Doctor Prescriptions', () => {
     await doctorPage.verifyItemMissing(COMMON.DRAWER);
   });
 
-  test('TC-044 Verify that Cancel in the ConfirmDialog keeps the prescription', async ({ doctorPage }) => {
+  test('TC-044 Verify that the doctor can change a prescription he already wrote', async ({ doctorPage }) => {
+    const diagnosis = uniqueText(EXISTING_DIAGNOSIS);
+
+    await doctorPage.goto(ROUTES.DOCTOR_PRESCRIPTIONS);
+    await doctorPage.clickRowAction(EXISTING_DIAGNOSIS, ICON_BUTTONS.EDIT_PRESCRIPTION);
+    await doctorPage.fillItem(formField(FIELD_LABELS.DIAGNOSIS), diagnosis);
+    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
+
+    await doctorPage.verifyToast(TEXTS.PRESCRIPTION_SAVED);
+    await doctorPage.verifyItemExists(tableRow(diagnosis));
+
+    await doctorPage.clickRowAction(diagnosis, ICON_BUTTONS.EDIT_PRESCRIPTION);
+    await doctorPage.fillItem(formField(FIELD_LABELS.DIAGNOSIS), EXISTING_DIAGNOSIS);
+    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
+
+    await doctorPage.verifyItemMissing(tableRow(diagnosis));
+    await doctorPage.verifyItemExists(tableRow(EXISTING_DIAGNOSIS));
+  });
+
+  test('TC-045 Verify that Cancel in the ConfirmDialog keeps the prescription', async ({ doctorPage }) => {
     await doctorPage.goto(ROUTES.DOCTOR_PRESCRIPTIONS);
     await doctorPage.verifyItemExists(COMMON.TABLE_ROW);
     const before = await doctorPage.countItems(COMMON.TABLE_ROW);
@@ -237,21 +258,19 @@ test.describe('Verify Doctor Prescriptions', () => {
 });
 
 test.describe('Verify Doctor Profile', () => {
-  test('TC-045 Verify that the doctor can change his own specialty', async ({ doctorPage }) => {
-    const specialty = uniqueTitle('Cardiology');
+  test('TC-046 Verify that the doctor can change his own specialty', async ({ doctorPage }) => {
+    const changed = uniqueText(SPECIALTY);
 
     await doctorPage.goto(ROUTES.PROFILE);
-    await doctorPage.clickOnItem(COMMON.ADD_BUTTON);
-    await doctorPage.fillItem(formField(FIELD_LABELS.SPECIALTY), specialty);
-    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
+    await doctorPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.PROFILE);
+
+    await doctorPage.editProfile({ [FIELD_LABELS.SPECIALTY]: changed });
 
     await doctorPage.verifyToast(TEXTS.PROFILE_SAVED);
-    await doctorPage.verifyTextExists(specialty);
+    await doctorPage.verifyTextExists(changed);
 
-    await doctorPage.clickOnItem(COMMON.ADD_BUTTON);
-    await doctorPage.fillItem(formField(FIELD_LABELS.SPECIALTY), 'Cardiology');
-    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
+    await doctorPage.editProfile({ [FIELD_LABELS.SPECIALTY]: SPECIALTY });
 
-    await doctorPage.verifyTextExists('Cardiology');
+    await doctorPage.verifyTextExists(SPECIALTY);
   });
 });

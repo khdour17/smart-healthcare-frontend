@@ -17,20 +17,17 @@ export const REPLACED_WORK_HOURS = {
   SLOT_MINUTES: '60',
 };
 
+export const SPECIALTY = 'Cardiology';
+
 export const VISIT_NOTES = 'Patient seen, everything looks fine.';
 
-export function uniqueTitle(prefix: string): string {
-  const unique = `${Date.now().toString().slice(-7)}${Math.floor(Math.random() * 100)}`;
-  return `${prefix} ${unique}`;
-}
+export const PRESCRIPTION = {
+  MEDICINE: 'Paracetamol 500mg',
+  DIAGNOSIS: 'Chest infection',
+  INSTRUCTIONS: 'One tablet every eight hours for three days.',
+};
 
-export function newPrescription(): Record<string, string> {
-  return {
-    [FIELD_LABELS.MEDICINES]: 'Paracetamol 500mg',
-    [FIELD_LABELS.DIAGNOSIS]: 'Seasonal flu',
-    [FIELD_LABELS.INSTRUCTIONS]: 'One tablet every eight hours for three days.',
-  };
-}
+export const EXISTING_DIAGNOSIS = 'Seasonal flu';
 
 export function newRecordEntry(title: string): Record<string, string> {
   return {

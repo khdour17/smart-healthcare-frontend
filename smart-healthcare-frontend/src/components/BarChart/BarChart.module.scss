@@ -1,0 +1,47 @@
+@use '../../styles/variables' as *;
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 190px;
+  padding-top: 4px;
+  border-bottom: 1px solid $color-chart-baseline;
+}
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  min-width: 0;
+}
+
+.value {
+  color: $color-text-secondary;
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 46px;
+  height: 100%;
+}
+
+.fill {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background-color: $color-series-1;
+}
+
+.label {
+  overflow: hidden;
+  color: $color-text-secondary;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}

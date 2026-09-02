@@ -1,0 +1,15 @@
+@use '../../../styles/mixins' as *;
+
+.page { display: flex; flex-direction: column; gap: 20px; }
+.headerRow { display: flex; align-items: center; justify-content: space-between; }
+
+.setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.settingText { display: flex; flex-direction: column; gap: 2px; }
+
+@include panel-section;

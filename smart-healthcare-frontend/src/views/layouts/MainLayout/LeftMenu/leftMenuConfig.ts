@@ -30,7 +30,7 @@ const patientRecords: LeftMenuItem = { key: 'patientRecords', label: 'Medical Re
 const prescribed: LeftMenuItem = { key: 'prescribed', label: 'Prescriptions', path: '/dashboard/prescribed', icon: MedicationIcon };
 
 const itemsByRole: Record<UserRole, LeftMenuItem[]> = {
-  ADMIN: [doctors, patients, admins, settings],
+  ADMIN: [doctors, patients, admins, profile, settings],
   DOCTOR: [schedule, workHours, prescribed, patientRecords, profile, settings],
   PATIENT: [appointments, prescriptions, medicalRecord, profile, settings],
 };

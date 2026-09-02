@@ -28,6 +28,11 @@ export function Header() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+  function goTo(path: string) {
+    setAnchorEl(null);
+    navigate(path);
+  }
+
   function handleLogout() {
     setAnchorEl(null);
     clearSession();
@@ -52,9 +57,8 @@ export function Header() {
             <Avatar className={styles.avatar}>{getInitials(auth?.user?.username)}</Avatar>
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-            <MenuItem onClick={() => setAnchorEl(null)}>Profile</MenuItem>
-            <MenuItem onClick={() => setAnchorEl(null)}>Change Password</MenuItem>
-            <MenuItem onClick={() => setAnchorEl(null)}>Settings</MenuItem>
+            <MenuItem onClick={() => goTo('/dashboard/profile')}>Profile</MenuItem>
+            <MenuItem onClick={() => goTo('/dashboard/settings')}>Settings</MenuItem>
             <Divider />
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>

@@ -37,3 +37,11 @@ export function isTokenExpired(token: string): boolean {
     return true;
   }
 }
+export function getSessionExpiry(token: string): Date | null {
+  try {
+    const decoded = jwtDecode<{ exp: number }>(token);
+    return new Date(decoded.exp * 1000);
+  } catch {
+    return null;
+  }
+}

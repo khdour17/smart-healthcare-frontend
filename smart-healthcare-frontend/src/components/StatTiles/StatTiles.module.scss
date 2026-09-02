@@ -1,0 +1,23 @@
+@use '../../styles/variables' as *;
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: $radius-base;
+  background-color: $color-surface-3;
+  border: 1px solid $color-border;
+}
+
+.value {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}

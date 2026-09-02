@@ -25,3 +25,22 @@ export async function deletePatients(ids: number[]): Promise<void> {
     data: ids,
   });
 }
+
+export async function getPatientById(id: number): Promise<PatientResponse> {
+  const response = await httpClient.get<PatientResponse>('/patients/search', {
+    params: { id },
+  });
+  return response.data;
+}
+
+export interface PatientProfileRequest {
+  name: string;
+  dateOfBirth: string;
+  phone?: string;
+  address?: string;
+}
+
+export async function updatePatient(id: number, request: PatientProfileRequest): Promise<PatientResponse> {
+  const response = await httpClient.put<PatientResponse>(`/patients/${id}`, request);
+  return response.data;
+}

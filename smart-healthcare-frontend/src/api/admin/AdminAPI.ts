@@ -23,3 +23,10 @@ export async function deleteAdmins(ids: number[]): Promise<void> {
     data: ids,
   });
 }
+
+export async function getAdminById(id: number): Promise<AdminResponse> {
+  const response = await httpClient.get<AdminResponse>('/admin/search', {
+    params: { id },
+  });
+  return response.data;
+}

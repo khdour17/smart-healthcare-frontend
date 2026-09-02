@@ -30,3 +30,20 @@ export async function deleteDoctors(ids: number[]): Promise<void> {
     data: ids,
   });
 }
+
+export async function getDoctorById(id: number): Promise<DoctorResponse> {
+  const response = await httpClient.get<DoctorResponse>('/doctors/search', {
+    params: { id },
+  });
+  return response.data;
+}
+
+export interface DoctorProfileRequest {
+  name: string;
+  specialty: string;
+}
+
+export async function updateDoctor(id: number, request: DoctorProfileRequest): Promise<DoctorResponse> {
+  const response = await httpClient.put<DoctorResponse>(`/doctors/${id}`, request);
+  return response.data;
+}

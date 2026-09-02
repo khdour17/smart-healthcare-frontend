@@ -1,36 +1,11 @@
 import {
-  useEffect,
-  useState,
-} from 'react';
-
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAltOutlined';
-import {
-  Box,
-  Button,
-  IconButton,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-
-import {
   deleteDoctors,
   type DoctorResponse,
   getAllDoctors,
 } from '../../../../api/doctors/DoctorsAPI';
-import {
-  ConfirmDialog,
-} from '../../../../components/ConfirmDialog/ConfirmDialog';
-import {
-  DataTable,
-  type DataTableColumn,
-} from '../../../../components/DataTable/DataTable';
-import { Drawer } from '../../../../components/Drawer/Drawer';
+import type { DataTableColumn } from '../../../../components/DataTable/DataTable';
+import { UserListPage } from '../../../shared/UserListPage/UserListPage';
 import { AddDoctorForm } from './AddDoctorForm/AddDoctorForm';
-import { PageHeader } from '../../../../components/PageHeader/PageHeader';
-import { useToast } from '../../../../utils/useToast';
-import styles from './DoctorsPage.module.scss';
 
 const columns: DataTableColumn<DoctorResponse>[] = [
   { key: 'name', label: 'Name', width: 220, render: (row) => row.name },
@@ -40,86 +15,16 @@ const columns: DataTableColumn<DoctorResponse>[] = [
 ];
 
 export default function DoctorsPage() {
-  const showToast = useToast();
-  const [doctors, setDoctors] = useState<DoctorResponse[]>([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-
-  function fetchDoctors() {
-    getAllDoctors().then(setDoctors);
-  }
-
-  useEffect(() => {
-    fetchDoctors();
-  }, []);
-
-  function handleCreated() {
-    showToast('Doctor created.');
-    setIsDrawerOpen(false);
-    fetchDoctors();
-  }
-
-  function openConfirmDelete() {
-    setDeleteError(null);
-    setIsConfirmOpen(true);
-  }
-
-  async function handleConfirmDelete() {
-    try {
-      await deleteDoctors(Array.from(selectedKeys).map(Number));
-      setIsConfirmOpen(false);
-      setSelectedKeys(new Set());
-      showToast('Deleted from doctors.');
-      fetchDoctors();
-    } catch {
-      setDeleteError('Could not delete one or more doctors. They may have existing appointments or records.');
-    }
-  }
-
-  const hasSelection = selectedKeys.size > 0;
-
   return (
-    <Box className={styles.page}>
-      <PageHeader
-        title="Doctors"
-        subtitle="Everyone who takes appointments."
-        actions={hasSelection ? (
-            <Box className={styles.selectionBar}>
-              <Typography variant="body2" className={styles.selectionCount}>{selectedKeys.size} selected</Typography>
-              <Tooltip title="Delete selected">
-                <IconButton size="small" className={styles.selectionDelete} onClick={openConfirmDelete}>
-                  <DeleteOutlineIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Clear selection">
-                <IconButton size="small" onClick={() => setSelectedKeys(new Set())}>
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          ) : (
-            <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>Add Doctor</Button>
-        )}
-      />
-
-      <DataTable columns={columns} rows={doctors} getRowKey={(row) => row.id} emptyMessage="No doctors found." selectable selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} />
-
-      <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Add Doctor">
-        <AddDoctorForm onSuccess={handleCreated} onCancel={() => setIsDrawerOpen(false)} />
-      </Drawer>
-
-      <ConfirmDialog
-        open={isConfirmOpen}
-        title="Delete doctors"
-        message={`Delete ${selectedKeys.size} doctor${selectedKeys.size === 1 ? '' : 's'}? This action cannot be undone.`}
-        confirmLabel="Delete"
-        confirmColor="error"
-        error={deleteError}
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setIsConfirmOpen(false)}
-      />
-    </Box>
+    <UserListPage
+      title="Doctors"
+      subtitle="Everyone who takes appointments."
+      one="Doctor"
+      many="doctors"
+      columns={columns}
+      loadAll={getAllDoctors}
+      deleteMany={deleteDoctors}
+      renderAddForm={({ onSuccess, onCancel }) => <AddDoctorForm onSuccess={onSuccess} onCancel={onCancel} />}
+    />
   );
 }

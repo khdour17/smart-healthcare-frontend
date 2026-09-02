@@ -1,5 +1,0 @@
-@use '../../../../styles/mixins' as *;
-
-.page { display: flex; flex-direction: column; gap: 20px; }
-
-@include selection-bar;

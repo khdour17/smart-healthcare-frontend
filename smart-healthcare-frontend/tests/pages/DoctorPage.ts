@@ -9,6 +9,7 @@ import {
   drawerButton,
   formField,
   iconButton,
+  listOption,
   tableRow,
 } from '../selectors/common.selectors';
 import { CommonPage } from './CommonPage';
@@ -20,14 +21,6 @@ interface WorkHours {
 }
 
 export class DoctorPage extends CommonPage {
-  async showCalendarView(): Promise<void> {
-    await this.clickOnItem(iconButton(ICON_BUTTONS.CALENDAR_VIEW));
-  }
-
-  async showListView(): Promise<void> {
-    await this.clickOnItem(iconButton(ICON_BUTTONS.LIST_VIEW));
-  }
-
   async addWorkHours(day: string, hours: WorkHours): Promise<void> {
     await this.clickOnItem(COMMON.ADD_BUTTON);
     await this.chooseOption(FIELD_LABELS.DAY_OF_WEEK, day);
@@ -45,7 +38,7 @@ export class DoctorPage extends CommonPage {
 
   async pickPatient(patientName: string): Promise<void> {
     await this.clickOnItem(COMMON.PATIENT_PICKER);
-    await this.clickOnItem(`[role="option"]:text-is("${patientName}")`);
+    await this.clickOnItem(listOption(patientName));
   }
 
   async addRecordEntry(fields: Record<string, string>): Promise<void> {

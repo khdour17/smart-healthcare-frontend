@@ -10,6 +10,7 @@ export const COMMON = {
   DIALOG_ALERT: '[role="dialog"] [role="alert"]',
   DIALOG_MESSAGE: '.MuiDialogContentText-root',
   TOAST: '.MuiSnackbar-root',
+  FIRST_LIST_OPTION: '[role="listbox"] [role="option"]:first-child',
   CALENDAR_ITEM: 'main [class*="item_"]',
   CALENDAR_DAY: 'main [class*="dayLabel"]',
   WEEK_LABEL: 'main [class*="weekLabel"]',
@@ -43,6 +44,10 @@ export function selectField(label: string): string {
 
 export function listOption(label: string): string {
   return `[role="option"]:text-is("${label}")`;
+}
+
+export function listOptionContaining(label: string): string {
+  return `[role="option"]:has-text("${label}")`;
 }
 
 export function drawerButton(label: string): string {

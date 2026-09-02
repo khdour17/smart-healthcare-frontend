@@ -1,9 +1,13 @@
 import { expect, type Page } from '@playwright/test';
 
-import { USER_MENU_ITEMS } from '../config/messages';
+import {
+  ICON_BUTTONS,
+  USER_MENU_ITEMS,
+} from '../config/messages';
 import {
   COMMON,
   formField,
+  iconButton,
   leftMenuItem,
   listOption,
   rowAction,
@@ -50,6 +54,19 @@ export class CommonPage {
     await this.clickOnItem(listOption(optionLabel));
   }
 
+  async chooseFirstOption(fieldLabel: string): Promise<void> {
+    await this.clickOnItem(selectField(fieldLabel));
+    await this.clickOnItem(COMMON.FIRST_LIST_OPTION);
+  }
+
+  async showCalendarView(): Promise<void> {
+    await this.clickOnItem(iconButton(ICON_BUTTONS.CALENDAR_VIEW));
+  }
+
+  async showListView(): Promise<void> {
+    await this.clickOnItem(iconButton(ICON_BUTTONS.LIST_VIEW));
+  }
+
   async clickRowAction(cellText: string, actionLabel: string): Promise<void> {
     await this.clickOnItem(rowAction(cellText, actionLabel));
   }
@@ -80,6 +97,10 @@ export class CommonPage {
 
   async verifyItemIsDisabled(selector: string): Promise<void> {
     await expect(this.page.locator(selector).first()).toBeDisabled();
+  }
+
+  async verifyItemIsEnabled(selector: string): Promise<void> {
+    await expect(this.page.locator(selector).first()).toBeEnabled();
   }
 
   async readText(selector: string): Promise<string> {

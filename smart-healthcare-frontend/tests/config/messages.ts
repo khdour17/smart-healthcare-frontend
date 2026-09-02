@@ -106,8 +106,6 @@ export const STATUSES = {
 };
 
 export const RECORD_FILTERS = {
-  ALL: 'All',
-  ENTRIES: 'Entries',
   VISITS: 'Visits',
   PRESCRIPTIONS: 'Prescriptions',
 };
@@ -132,7 +130,6 @@ export const TEXTS = {
   APPOINTMENT_COMPLETED: 'Appointment completed.',
   PRESCRIPTION_SAVED: 'Prescription saved.',
   PRESCRIPTION_DELETED: 'Prescription deleted.',
-  NOTHING_OF_THIS_TYPE: 'Nothing of this type recorded yet.',
   ADMIN_PROFILE_HINT: 'An admin account is changed by another admin from the Admins page.',
   APPOINTMENT_WITH: 'Appointment with',
   PRESCRIPTION_FROM: 'Prescription from',

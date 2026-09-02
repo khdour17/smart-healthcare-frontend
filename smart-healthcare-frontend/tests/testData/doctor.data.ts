@@ -27,8 +27,6 @@ export const PRESCRIPTION = {
   INSTRUCTIONS: 'One tablet every eight hours for three days.',
 };
 
-export const EXISTING_DIAGNOSIS = 'Seasonal flu';
-
 export function newRecordEntry(title: string): Record<string, string> {
   return {
     [FIELD_LABELS.TITLE]: title,

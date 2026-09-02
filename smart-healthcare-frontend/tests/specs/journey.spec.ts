@@ -1,6 +1,7 @@
 import { ROUTES } from '../config/app.config';
 import {
   BUTTONS,
+  FIELD_LABELS,
   ICON_BUTTONS,
   RECORD_FILTERS,
   STATUSES,
@@ -9,6 +10,8 @@ import {
 import { test } from '../fixtures/testFixtures';
 import {
   COMMON,
+  drawerButton,
+  formField,
   recordFilter,
   tableRow,
   timelineEntry,
@@ -28,13 +31,14 @@ import {
 } from '../testData/patient.data';
 
 test.describe('Verify A Visit From Booking To Prescription', () => {
-  test('TC-079 Verify that a booked visit can be completed and prescribed for and shows up in the record', async ({
+  test('TC-078 Verify that a booked visit can be completed and prescribed for and shows up in the record', async ({
     loginPage,
     doctorPage,
     patientPage,
   }) => {
     const reason = uniqueText(BOOKING_REASON);
     const diagnosis = uniqueText(PRESCRIPTION.DIAGNOSIS);
+    const changedDiagnosis = uniqueText(PRESCRIPTION.DIAGNOSIS);
 
     await loginPage.loginAs(USERS.PATIENT);
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -76,10 +80,18 @@ test.describe('Verify A Visit From Booking To Prescription', () => {
 
     await loginPage.loginAs(USERS.DOCTOR);
     await doctorPage.goto(ROUTES.DOCTOR_PRESCRIPTIONS);
-    await doctorPage.deletePrescription(diagnosis);
+    await doctorPage.clickRowAction(diagnosis, ICON_BUTTONS.EDIT_PRESCRIPTION);
+    await doctorPage.fillItem(formField(FIELD_LABELS.DIAGNOSIS), changedDiagnosis);
+    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
+
+    await doctorPage.verifyToast(TEXTS.PRESCRIPTION_SAVED);
+    await doctorPage.verifyItemExists(tableRow(changedDiagnosis));
+    await doctorPage.verifyItemMissing(tableRow(diagnosis));
+
+    await doctorPage.deletePrescription(changedDiagnosis);
 
     await doctorPage.verifyToast(TEXTS.PRESCRIPTION_DELETED);
-    await doctorPage.verifyItemMissing(tableRow(diagnosis));
+    await doctorPage.verifyItemMissing(tableRow(changedDiagnosis));
     await doctorPage.verifyItemMissing(COMMON.DIALOG);
   });
 });

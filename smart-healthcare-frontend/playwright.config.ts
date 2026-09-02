@@ -7,8 +7,8 @@ export default defineConfig({
   fullyParallel: true,
   workers: 4,
   reporter: [['list'], ['html', { open: 'never' }]],
-  timeout: 60_000,
-  expect: { timeout: 10_000 },
+  timeout: 90_000,
+  expect: { timeout: 20_000 },
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',

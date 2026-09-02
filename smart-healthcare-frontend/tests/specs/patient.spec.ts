@@ -42,13 +42,13 @@ test.beforeEach(async ({ loginPage }) => {
 });
 
 test.describe('Verify Patient Access', () => {
-  test('TC-054 Verify that a patient can not open an admin page', async ({ commonPage }) => {
+  test('TC-053 Verify that a patient can not open an admin page', async ({ commonPage }) => {
     await commonPage.goto(ROUTES.ADMIN_DOCTORS);
 
     await commonPage.verifyUrl(ROUTES.DASHBOARD);
   });
 
-  test('TC-055 Verify that a patient can not open a doctor page', async ({ commonPage }) => {
+  test('TC-054 Verify that a patient can not open a doctor page', async ({ commonPage }) => {
     await commonPage.goto(ROUTES.DOCTOR_WORK_HOURS);
 
     await commonPage.verifyUrl(ROUTES.DASHBOARD);
@@ -56,7 +56,7 @@ test.describe('Verify Patient Access', () => {
 });
 
 test.describe('Verify Patient Appointments', () => {
-  test('TC-056 Verify that the patient can book an appointment, cancel it and delete it', async ({ patientPage }) => {
+  test('TC-055 Verify that the patient can book an appointment, cancel it and delete it', async ({ patientPage }) => {
     const reason = uniqueText(BOOKING_REASON);
 
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -81,7 +81,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.verifyItemMissing(tableRow(reason));
   });
 
-  test('TC-057 Verify that the booking form does not book before a doctor and a date are picked', async ({ patientPage }) => {
+  test('TC-056 Verify that the booking form does not book before a doctor and a date are picked', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
     await patientPage.openBookingForm();
 
@@ -92,7 +92,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.verifyItemMissing(COMMON.DRAWER);
   });
 
-  test('TC-058 Verify that a day the doctor does not work offers no times', async ({ patientPage }) => {
+  test('TC-057 Verify that a day the doctor does not work offers no times', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
     await patientPage.openBookingForm();
     await patientPage.pickDoctorAndDate(PEOPLE.DOCTOR_NAME, BOOKING_DATES.DAY_OFF);
@@ -104,7 +104,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.verifyItemIsDisabled(drawerButton(BUTTONS.BOOK_APPOINTMENT));
   });
 
-  test('TC-059 Verify that Cancel throws away what was typed in the booking form', async ({ patientPage }) => {
+  test('TC-058 Verify that Cancel throws away what was typed in the booking form', async ({ patientPage }) => {
     const reason = uniqueText(BOOKING_REASON);
 
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -119,7 +119,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.verifyItemHasValue(formField(FIELD_LABELS.REASON), '');
   });
 
-  test('TC-060 Verify that Keep it in the ConfirmDialog keeps the appointment', async ({ patientPage }) => {
+  test('TC-059 Verify that Keep it in the ConfirmDialog keeps the appointment', async ({ patientPage }) => {
     const reason = uniqueText(BOOKING_REASON);
 
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -140,7 +140,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.removeAppointment(reason);
   });
 
-  test('TC-061 Verify that a time that is already booked is not offered again', async ({ patientPage }) => {
+  test('TC-060 Verify that a time that is already booked is not offered again', async ({ patientPage }) => {
     const reason = uniqueText(BOOKING_REASON);
 
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -159,7 +159,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.removeAppointment(reason);
   });
 
-  test('TC-062 Verify that the appointments calendar shows a column for every day of the week', async ({ patientPage }) => {
+  test('TC-061 Verify that the appointments calendar shows a column for every day of the week', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
     await patientPage.showCalendarView();
 
@@ -167,7 +167,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.verifyItemExists(COMMON.WEEK_LABEL);
   });
 
-  test('TC-063 Verify that the patient can walk to the next week and come back', async ({ patientPage }) => {
+  test('TC-062 Verify that the patient can walk to the next week and come back', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
     await patientPage.showCalendarView();
     const thisWeek = await patientPage.readText(COMMON.WEEK_LABEL);
@@ -181,7 +181,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.verifyItemContainsText(COMMON.WEEK_LABEL, thisWeek);
   });
 
-  test('TC-064 Verify that the patient can open the details of an appointment', async ({ patientPage }) => {
+  test('TC-063 Verify that the patient can open the details of an appointment', async ({ patientPage }) => {
     const reason = uniqueText(BOOKING_REASON);
 
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -200,7 +200,7 @@ test.describe('Verify Patient Appointments', () => {
     await patientPage.removeAppointment(reason);
   });
 
-  test('TC-065 Verify that the view the patient picked is still there after a reload', async ({ patientPage, page }) => {
+  test('TC-064 Verify that the view the patient picked is still there after a reload', async ({ patientPage, page }) => {
     await patientPage.goto(ROUTES.PATIENT_APPOINTMENTS);
     await patientPage.showListView();
 
@@ -212,14 +212,14 @@ test.describe('Verify Patient Appointments', () => {
 });
 
 test.describe('Verify Patient Prescriptions', () => {
-  test('TC-066 Verify that the patient can see the prescriptions written for him', async ({ patientPage }) => {
+  test('TC-065 Verify that the patient can see the prescriptions written for him', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_PRESCRIPTIONS);
 
     await patientPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.MY_PRESCRIPTIONS);
     await patientPage.verifyItemExists(COMMON.TABLE_ROW);
   });
 
-  test('TC-067 Verify that the patient can open the details of a prescription', async ({ patientPage }) => {
+  test('TC-066 Verify that the patient can open the details of a prescription', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_PRESCRIPTIONS);
     await patientPage.clickOnItem(firstRowAction(ICON_BUTTONS.VIEW_DETAILS));
 
@@ -232,7 +232,7 @@ test.describe('Verify Patient Prescriptions', () => {
 });
 
 test.describe('Verify Patient Medical Record', () => {
-  test('TC-068 Verify that the patient can see his own medical record', async ({ patientPage }) => {
+  test('TC-067 Verify that the patient can see his own medical record', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_MEDICAL_RECORD);
 
     await patientPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.MY_MEDICAL_RECORD);
@@ -240,7 +240,7 @@ test.describe('Verify Patient Medical Record', () => {
     await patientPage.verifyItemExists(COMMON.TIMELINE_ENTRY);
   });
 
-  test('TC-069 Verify that the record can be filtered down to one kind of item', async ({ patientPage }) => {
+  test('TC-068 Verify that the record can be filtered down to one kind of item', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_MEDICAL_RECORD);
     await patientPage.clickOnItem(recordFilter(RECORD_FILTERS.VISITS));
 
@@ -251,7 +251,7 @@ test.describe('Verify Patient Medical Record', () => {
     await patientPage.verifyItemContainsText(COMMON.TIMELINE_ENTRY, TEXTS.PRESCRIPTION_FROM);
   });
 
-  test('TC-070 Verify that the patient can open a visit from his record', async ({ patientPage }) => {
+  test('TC-069 Verify that the patient can open a visit from his record', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PATIENT_MEDICAL_RECORD);
     await patientPage.clickOnItem(recordFilter(RECORD_FILTERS.VISITS));
     await patientPage.clickOnItem(COMMON.FIRST_TIMELINE_ENTRY);
@@ -265,7 +265,7 @@ test.describe('Verify Patient Medical Record', () => {
 });
 
 test.describe('Verify Patient Profile', () => {
-  test('TC-071 Verify that the patient can change his phone and address', async ({ patientPage }) => {
+  test('TC-070 Verify that the patient can change his phone and address', async ({ patientPage }) => {
     await patientPage.goto(ROUTES.PROFILE);
 
     await patientPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.PROFILE);

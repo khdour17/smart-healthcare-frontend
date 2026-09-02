@@ -23,7 +23,6 @@ import {
   USERS,
 } from '../testData/common.data';
 import {
-  EXISTING_DIAGNOSIS,
   FREE_DAYS,
   newRecordEntry,
   REPLACED_WORK_HOURS,
@@ -225,26 +224,7 @@ test.describe('Verify Doctor Prescriptions', () => {
     await doctorPage.verifyItemMissing(COMMON.DRAWER);
   });
 
-  test('TC-051 Verify that the doctor can change a prescription he already wrote', async ({ doctorPage }) => {
-    const diagnosis = uniqueText(EXISTING_DIAGNOSIS);
-
-    await doctorPage.goto(ROUTES.DOCTOR_PRESCRIPTIONS);
-    await doctorPage.clickRowAction(EXISTING_DIAGNOSIS, ICON_BUTTONS.EDIT_PRESCRIPTION);
-    await doctorPage.fillItem(formField(FIELD_LABELS.DIAGNOSIS), diagnosis);
-    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
-
-    await doctorPage.verifyToast(TEXTS.PRESCRIPTION_SAVED);
-    await doctorPage.verifyItemExists(tableRow(diagnosis));
-
-    await doctorPage.clickRowAction(diagnosis, ICON_BUTTONS.EDIT_PRESCRIPTION);
-    await doctorPage.fillItem(formField(FIELD_LABELS.DIAGNOSIS), EXISTING_DIAGNOSIS);
-    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_CHANGES));
-
-    await doctorPage.verifyItemMissing(tableRow(diagnosis));
-    await doctorPage.verifyItemExists(tableRow(EXISTING_DIAGNOSIS));
-  });
-
-  test('TC-052 Verify that Cancel in the ConfirmDialog keeps the prescription', async ({ doctorPage }) => {
+  test('TC-051 Verify that Cancel in the ConfirmDialog keeps the prescription', async ({ doctorPage }) => {
     await doctorPage.goto(ROUTES.DOCTOR_PRESCRIPTIONS);
     await doctorPage.verifyItemExists(COMMON.TABLE_ROW);
     const before = await doctorPage.countItems(COMMON.TABLE_ROW);
@@ -258,7 +238,7 @@ test.describe('Verify Doctor Prescriptions', () => {
 });
 
 test.describe('Verify Doctor Profile', () => {
-  test('TC-053 Verify that the doctor can change his own specialty', async ({ doctorPage }) => {
+  test('TC-052 Verify that the doctor can change his own specialty', async ({ doctorPage }) => {
     const changed = uniqueText(SPECIALTY);
 
     await doctorPage.goto(ROUTES.PROFILE);

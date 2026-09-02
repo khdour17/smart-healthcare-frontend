@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import {
   Checkbox,
   Paper,
+  Typography,
   Table,
   TableBody,
   TableCell,
@@ -10,7 +11,6 @@ import {
   TableRow,
 } from '@mui/material';
 
-import { EmptyState } from '../EmptyState/EmptyState';
 import styles from './DataTable.module.scss';
 
 export interface DataTableColumn<T> {
@@ -101,7 +101,9 @@ export function DataTable<T>({
           })}
         </TableBody>
       </Table>
-      {rows.length === 0 && <EmptyState message={emptyMessage} />}
+      {rows.length === 0 && (
+        <Typography variant="body2" color="textSecondary" className={styles.empty}>{emptyMessage}</Typography>
+      )}
     </Paper>
   );
 }

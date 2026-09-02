@@ -50,12 +50,11 @@ import {
 } from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import { BookAppointmentForm } from './BookAppointmentForm/BookAppointmentForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
-import { ViewToggle } from '../../../../components/ViewToggle/ViewToggle';
+import { CalendarToolbar } from '../../../../components/CalendarToolbar/CalendarToolbar';
 import {
   type CalendarItem,
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
-import { WeekNav } from '../../../../components/WeekNav/WeekNav';
 import { useToast } from '../../../../utils/useToast';
 import styles from './AppointmentsPage.module.scss';
 
@@ -241,16 +240,12 @@ export default function AppointmentsPage() {
         )}
       />
 
-      <Box className={`${styles.viewRow} ${view === 'list' ? styles.viewRowEnd : ''}`}>
-        {view === 'calendar' && (
-          <WeekNav
-            weekStart={weekStart}
-            onChange={setWeekStart}
-            onToday={() => setWeekStart(startOfWeek(new Date()))}
-          />
-        )}
-        <ViewToggle view={view} onChange={changeView} />
-      </Box>
+      <CalendarToolbar
+        view={view}
+        onViewChange={changeView}
+        weekStart={weekStart}
+        onWeekChange={setWeekStart}
+      />
 
       {view === 'calendar' ? (
         <>

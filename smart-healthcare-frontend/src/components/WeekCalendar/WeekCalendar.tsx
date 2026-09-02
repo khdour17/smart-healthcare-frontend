@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import { EmptyState } from '../EmptyState/EmptyState';
 import styles from './WeekCalendar.module.scss';
 
 type CalendarTone = 'primary' | 'success' | 'muted';
@@ -177,7 +176,7 @@ export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.
       </Box>
 
       {shownItems.length === 0 && (
-        <Box className={styles.empty}><EmptyState message={emptyMessage} /></Box>
+        <Typography variant="body2" color="textSecondary" className={styles.empty}>{emptyMessage}</Typography>
       )}
     </Box>
   );

@@ -36,7 +36,7 @@ import {
 } from '../../../../utils/preferences';
 import { AddAvailabilityForm } from './AddAvailabilityForm/AddAvailabilityForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
-import { ViewToggle } from '../../../../components/ViewToggle/ViewToggle';
+import { CalendarToolbar } from '../../../../components/CalendarToolbar/CalendarToolbar';
 import {
   type CalendarItem,
   WeekCalendar,
@@ -141,9 +141,7 @@ export default function WorkHoursPage() {
         )}
       />
 
-      <Box className={`${styles.viewRow} ${styles.viewRowEnd}`}>
-        <ViewToggle view={view} onChange={changeView} />
-      </Box>
+      <CalendarToolbar view={view} onViewChange={changeView} />
 
       {view === 'calendar' ? (
         <WeekCalendar

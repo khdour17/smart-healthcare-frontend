@@ -1,5 +1,6 @@
 import {
   Box,
+  Paper,
   Typography,
 } from '@mui/material';
 
@@ -18,10 +19,10 @@ export function StatTiles({ tiles }: StatTilesProps) {
   return (
     <Box className={styles.tiles}>
       {tiles.map((tile) => (
-        <Box key={tile.label} className={styles.tile}>
+        <Paper key={tile.label} variant="outlined" className={styles.tile}>
           <Typography variant="body2" color="textSecondary">{tile.label}</Typography>
           <Typography variant="h6" className={styles.value}>{tile.value}</Typography>
-        </Box>
+        </Paper>
       ))}
     </Box>
   );

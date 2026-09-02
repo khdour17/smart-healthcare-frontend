@@ -52,6 +52,8 @@ export const ICON_BUTTONS = {
   PREVIOUS_WEEK: 'Previous week',
   NEXT_WEEK: 'Next week',
   CLOSE: 'Close',
+  EXPAND_MENU: 'Expand the menu',
+  COLLAPSE_MENU: 'Collapse the menu',
 };
 
 export const PAGE_TITLES = {
@@ -107,10 +109,6 @@ export const RECORD_FILTERS = {
   ENTRIES: 'Entries',
   VISITS: 'Visits',
   PRESCRIPTIONS: 'Prescriptions',
-};
-
-export const SWITCHES = {
-  COLLAPSED_MENU: 'Keep the side menu collapsed',
 };
 
 export const TEXTS = {

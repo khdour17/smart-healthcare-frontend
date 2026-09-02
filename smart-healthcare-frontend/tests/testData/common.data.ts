@@ -16,6 +16,12 @@ export const PEOPLE = {
   PATIENT_NAME: 'John Doe',
 };
 
+export const DASHBOARD_TITLES: Record<UserRole, string> = {
+  ADMIN: 'Admin Dashboard',
+  DOCTOR: 'Doctor Dashboard',
+  PATIENT: 'My Dashboard',
+};
+
 export const UNKNOWN_USER: Credentials = {
   username: 'ghost_user',
   password: 'anything',

@@ -64,7 +64,7 @@ export function Header({ onOpenMenu }: HeaderProps) {
 
         <Box className={styles.userArea}>
           <Typography variant="body2" color="textSecondary" className={styles.greeting}>Hello {auth?.user?.username}</Typography>
-          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
+          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small" aria-label="Open the user menu">
             <Avatar className={styles.avatar}>{getInitials(auth?.user?.username)}</Avatar>
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)} transformOrigin={{ horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>

@@ -1,6 +1,6 @@
 export const COMMON = {
   ALERT: '[role="alert"]',
-  AVATAR_BUTTON: 'header button',
+  AVATAR_BUTTON: 'button[aria-label="Open the user menu"]',
   PAGE_HEADING: '.MuiTypography-h5',
   ADD_BUTTON: 'main .MuiButton-contained',
   TABLE_ROW: '.MuiTableBody-root .MuiTableRow-root',

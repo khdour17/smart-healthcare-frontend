@@ -23,6 +23,10 @@ import {
 } from '../../../api/patients/PatientsAPI';
 import { Drawer } from '../../../components/Drawer/Drawer';
 import {
+  type StatTile,
+  StatTiles,
+} from '../../../components/StatTiles/StatTiles';
+import {
   type AuthUser,
   AuthContext,
 } from '../../../contexts/AuthContext';
@@ -32,13 +36,8 @@ import {
 } from './EditProfileForm/EditProfileForm';
 import styles from './ProfilePage.module.scss';
 
-interface ProfileDetail {
-  label: string;
-  value: string;
-}
-
 interface Profile {
-  details: ProfileDetail[];
+  details: StatTile[];
   fields: ProfileField[];
 }
 
@@ -132,7 +131,7 @@ export default function ProfilePage() {
     refreshProfile();
   }
 
-  const accountDetails: ProfileDetail[] = user === null ? [] : [
+  const accountDetails: StatTile[] = user === null ? [] : [
     { label: 'Username', value: user.username },
     { label: 'Email', value: user.email },
     { label: 'Role', value: user.role },
@@ -151,14 +150,7 @@ export default function ProfilePage() {
 
       <Box className={styles.section}>
         <Typography variant="h6">Account</Typography>
-        <Box className={styles.details}>
-          {accountDetails.map((detail) => (
-            <Box key={detail.label} className={styles.detail}>
-              <Typography variant="body2" color="textSecondary">{detail.label}</Typography>
-              <Typography variant="body1" className={styles.detailValue}>{detail.value}</Typography>
-            </Box>
-          ))}
-        </Box>
+        <StatTiles tiles={accountDetails} />
       </Box>
 
       {isLoading && (
@@ -172,14 +164,7 @@ export default function ProfilePage() {
       {!isLoading && error === null && profile !== null && (
         <Box className={styles.section}>
           <Typography variant="h6">Details</Typography>
-          <Box className={styles.details}>
-            {profile.details.map((detail) => (
-              <Box key={detail.label} className={styles.detail}>
-                <Typography variant="body2" color="textSecondary">{detail.label}</Typography>
-                <Typography variant="body1" className={styles.detailValue}>{detail.value}</Typography>
-              </Box>
-            ))}
-          </Box>
+          <StatTiles tiles={profile.details} />
           {!canEdit && (
             <Typography variant="body2" color="textSecondary">
               An admin account is changed by another admin from the Admins page.

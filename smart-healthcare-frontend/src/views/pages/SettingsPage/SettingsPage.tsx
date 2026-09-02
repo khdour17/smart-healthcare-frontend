@@ -10,6 +10,10 @@ import {
   Typography,
 } from '@mui/material';
 
+import {
+  type StatTile,
+  StatTiles,
+} from '../../../components/StatTiles/StatTiles';
 import { AuthContext } from '../../../contexts/AuthContext';
 import {
   getSessionExpiry,
@@ -17,11 +21,6 @@ import {
 } from '../../../utils/authStorage';
 import { useLayoutSettings } from '../../layouts/MainLayout/layoutSettings';
 import styles from './SettingsPage.module.scss';
-
-interface SessionDetail {
-  label: string;
-  value: string;
-}
 
 function sessionEndsAt(): string {
   const token = getToken();
@@ -36,7 +35,7 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const { isMenuCollapsed, setMenuCollapsed } = useLayoutSettings();
 
-  const sessionDetails: SessionDetail[] = [
+  const sessionDetails: StatTile[] = [
     { label: 'Signed in as', value: auth?.user?.username ?? 'Unknown' },
     { label: 'Role', value: auth?.user?.role ?? 'Unknown' },
     { label: 'Email', value: auth?.user?.email ?? 'Unknown' },
@@ -68,14 +67,7 @@ export default function SettingsPage() {
 
       <Box className={styles.section}>
         <Typography variant="h6">Session</Typography>
-        <Box className={styles.details}>
-          {sessionDetails.map((detail) => (
-            <Box key={detail.label} className={styles.detail}>
-              <Typography variant="body2" color="textSecondary">{detail.label}</Typography>
-              <Typography variant="body1" className={styles.detailValue}>{detail.value}</Typography>
-            </Box>
-          ))}
-        </Box>
+        <StatTiles tiles={sessionDetails} />
         <Typography variant="body2" color="textSecondary">
           You are signed out automatically once the session ends. Use Logout in the header to sign out now.
         </Typography>

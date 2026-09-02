@@ -1,28 +1,6 @@
-@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
 
-.form { display: flex; flex-direction: column; gap: 16px; height: 100%; }
-.notes {
-  flex: 1;
+.notes { @include fill-height-field; }
+.summary { @include summary-card; }
 
-  :global(.MuiInputBase-root) {
-    height: 100%;
-    align-items: flex-start;
-  }
-
-  :global(.MuiInputBase-input) {
-    height: 100% !important;
-    overflow: auto !important;
-  }
-}
-
-.summary {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px;
-  border-radius: $radius-base;
-  background-color: $color-surface-3;
-  border: 1px solid $color-border;
-}
-
-.actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: auto; }
+@include tall-drawer-form;

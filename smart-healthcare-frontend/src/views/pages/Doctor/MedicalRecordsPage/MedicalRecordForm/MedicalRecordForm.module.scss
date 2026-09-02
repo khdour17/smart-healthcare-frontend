@@ -1,17 +1,5 @@
-.form { display: flex; flex-direction: column; gap: 16px; height: 100%; }
+@use '../../../../../styles/mixins' as *;
 
-.description {
-  flex: 1;
+.description { @include fill-height-field; }
 
-  :global(.MuiInputBase-root) {
-    height: 100%;
-    align-items: flex-start;
-  }
-
-  :global(.MuiInputBase-input) {
-    height: 100% !important;
-    overflow: auto !important;
-  }
-}
-
-.actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: auto; }
+@include tall-drawer-form;

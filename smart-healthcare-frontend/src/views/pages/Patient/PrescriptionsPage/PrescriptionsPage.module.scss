@@ -1,9 +1,4 @@
-.page { display: flex; flex-direction: column; gap: 20px; }
+@use '../../../../styles/mixins' as *;
 
-.rowActions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: nowrap;
-  gap: 4px;
-}
+@include page-column;
+@include row-actions;

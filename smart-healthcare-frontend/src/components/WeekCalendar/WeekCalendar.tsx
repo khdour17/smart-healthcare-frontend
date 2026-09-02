@@ -1,5 +1,6 @@
 import {
   Box,
+  Tooltip,
   Typography,
 } from '@mui/material';
 
@@ -42,6 +43,7 @@ interface PlacedItem {
 const DEFAULT_FIRST_HOUR = 8;
 const DEFAULT_LAST_HOUR = 18;
 const MINUTES_IN_HOUR = 60;
+const COMPACT_HEIGHT = 9;
 
 const toneClass: Record<CalendarTone, string> = {
   primary: styles.tonePrimary,
@@ -129,22 +131,27 @@ export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.
                 {hours.map((hour) => <Box key={hour} className={styles.hourCell} />)}
 
                 {placed.map(({ item, top, height, lane, lanes }) => (
-                  <Box
+                  <Tooltip
                     key={item.id}
-                    className={`${styles.item} ${toneClass[item.tone]} ${item.onClick ? styles.clickable : ''}`}
-                    style={{
-                      top: `${top}%`,
-                      height: `${height}%`,
-                      left: `${(lane / lanes) * 100}%`,
-                      width: `${100 / lanes}%`,
-                    }}
-                    onClick={item.onClick}
+                    title={item.subtitle ? `${item.title} - ${item.subtitle}` : item.title}
+                    placement="top"
                   >
-                    <Typography variant="caption" className={styles.itemTitle}>{item.title}</Typography>
-                    {item.subtitle && (
-                      <Typography variant="caption" className={styles.itemSubtitle}>{item.subtitle}</Typography>
-                    )}
-                  </Box>
+                    <Box
+                      className={`${styles.item} ${toneClass[item.tone]} ${item.onClick ? styles.clickable : ''}`}
+                      style={{
+                        top: `${top}%`,
+                        height: `${height}%`,
+                        left: `${(lane / lanes) * 100}%`,
+                        width: `${100 / lanes}%`,
+                      }}
+                      onClick={item.onClick}
+                    >
+                      <Typography variant="caption" className={styles.itemTitle}>{item.title}</Typography>
+                      {item.subtitle && height >= COMPACT_HEIGHT && (
+                        <Typography variant="caption" className={styles.itemSubtitle}>{item.subtitle}</Typography>
+                      )}
+                    </Box>
+                  </Tooltip>
                 ))}
               </Box>
             </Box>

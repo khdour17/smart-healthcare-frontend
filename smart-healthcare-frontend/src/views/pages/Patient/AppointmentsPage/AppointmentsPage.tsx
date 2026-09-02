@@ -34,6 +34,15 @@ import { AuthContext } from '../../../../contexts/AuthContext';
 import { bySoonestFirst } from '../../../../utils/bySoonestFirst';
 import { formatTime } from '../../../../utils/formatTime';
 import {
+  getPageView,
+  type PageView,
+  savePageView,
+} from '../../../../utils/preferences';
+import {
+  startOfWeek,
+  weekDays,
+} from '../../../../utils/weekDates';
+import {
   AppointmentDetails,
 } from '../../../shared/AppointmentDetails/AppointmentDetails';
 import {
@@ -41,6 +50,12 @@ import {
 } from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import { BookAppointmentForm } from './BookAppointmentForm/BookAppointmentForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { ViewToggle } from '../../../../components/ViewToggle/ViewToggle';
+import {
+  type CalendarItem,
+  WeekCalendar,
+} from '../../../../components/WeekCalendar/WeekCalendar';
+import { WeekNav } from '../../../../components/WeekNav/WeekNav';
 import styles from './AppointmentsPage.module.scss';
 
 type DrawerDetails =
@@ -58,12 +73,25 @@ interface ConfirmDetails {
   cancelLabel: string;
 }
 
+function appointmentTone(status: AppointmentResponse['status']): CalendarItem['tone'] {
+  if (status === 'COMPLETED') return 'success';
+  if (status === 'CANCELLED') return 'muted';
+  return 'primary';
+}
+
 export default function AppointmentsPage() {
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [view, setView] = useState<PageView>(() => getPageView('appointments'));
+  const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
+
+  function changeView(next: PageView) {
+    setView(next);
+    savePageView('appointments', next);
+  }
 
   function openDrawer(details: DrawerDetails) {
     setDrawerDetails(details);
@@ -186,24 +214,54 @@ export default function AppointmentsPage() {
     },
   ];
 
+  const calendarItems: CalendarItem[] = appointments.map((appointment) => ({
+    id: String(appointment.id),
+    dayKey: appointment.appointmentDate,
+    startTime: appointment.startTime,
+    endTime: appointment.endTime,
+    title: appointment.doctorName,
+    subtitle: `${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}`,
+    tone: appointmentTone(appointment.status),
+    onClick: () => openDetails(appointment),
+  }));
+
   return (
     <Box className={styles.page}>
       <PageHeader
         title="My Appointments"
         subtitle="Everything you have booked, past and upcoming."
         actions={(
-          <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
-            Book Appointment
-          </Button>
+          <>
+            <ViewToggle view={view} onChange={changeView} />
+            <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
+              Book Appointment
+            </Button>
+          </>
         )}
       />
 
-      <DataTable
-        columns={columns}
-        rows={appointments}
-        getRowKey={(row) => row.id}
-        emptyMessage="No appointments booked yet."
-      />
+      {view === 'calendar' ? (
+        <>
+          <WeekNav
+            weekStart={weekStart}
+            onChange={setWeekStart}
+            onToday={() => setWeekStart(startOfWeek(new Date()))}
+          />
+          <WeekCalendar
+            days={weekDays(weekStart)}
+            items={calendarItems}
+            emptyMessage="Nothing booked this week."
+          />
+        </>
+      ) : (
+
+        <DataTable
+          columns={columns}
+          rows={appointments}
+          getRowKey={(row) => row.id}
+          emptyMessage="No appointments booked yet."
+        />
+      )}
 
       <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
         {drawerDetails?.type === 'book' ? (

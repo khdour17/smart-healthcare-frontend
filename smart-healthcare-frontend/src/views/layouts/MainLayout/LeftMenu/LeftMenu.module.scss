@@ -8,31 +8,35 @@
   position: relative;
   border-right: 1px solid $color-border;
   background-color: $color-surface-1;
-  transition: width 0.2s ease;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.list { flex-grow: 1; padding: 16px 8px; }
+.list { flex-grow: 1; padding: 14px 10px; }
 
 .item {
   margin: 0 0 4px;
-  border-radius: $radius-base;
-  transition: background-color 0.15s ease;
-  &:hover { background-color: rgba(255, 255, 255, 0.04); }
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: $radius-small;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover { background-color: rgba(255, 255, 255, 0.05); }
 }
+
 .itemCollapsed { justify-content: center; }
+
 .itemActive {
   background-color: $color-primary-muted;
-  border-left: 3px solid $color-primary;
-  padding-left: 13px; // compensates for the 3px border so text doesn't shift
-  &:hover { background-color: rgba(59, 130, 246, 0.18); }
+  box-shadow: inset 3px 0 0 $color-primary;
+  &:hover { background-color: rgba(57, 135, 229, 0.22); }
 }
 
 .icon { min-width: 40px; justify-content: center; color: $color-text-secondary; }
 .iconCollapsed { min-width: 0; }
-.iconActive { color: $color-primary; }
+.iconActive { color: $color-primary-strong; }
 
-.label { font-size: 0.875rem; color: $color-text-primary; }
-.labelActive { font-weight: 600; }
+.label { font-size: 0.9rem; color: $color-text-secondary; }
+.labelActive { font-weight: 600; color: $color-text-primary; }
 
 .toggleButton {
   position: absolute;
@@ -43,5 +47,5 @@
   height: 28px;
   background-color: $color-surface-2;
   border: 1px solid $color-border;
-  &:hover { background-color: $color-surface-3; }
+  &:hover { background-color: $color-surface-hover; }
 }

@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 import {
   Box,
   Tooltip,
@@ -44,7 +46,9 @@ interface PlacedItem {
 const DEFAULT_FIRST_HOUR = 8;
 const DEFAULT_LAST_HOUR = 18;
 const MINUTES_IN_HOUR = 60;
-const COMPACT_HEIGHT = 9;
+const MIN_SLOT_HEIGHT = 46;
+const MIN_HOUR_HEIGHT = 56;
+const MAX_HOUR_HEIGHT = 160;
 
 const toneClass: Record<CalendarTone, string> = {
   primary: styles.tonePrimary,
@@ -55,6 +59,16 @@ const toneClass: Record<CalendarTone, string> = {
 function toMinutes(time: string): number {
   const [hours, minutes] = time.split(':').map(Number);
   return hours * MINUTES_IN_HOUR + minutes;
+}
+
+function hourHeight(items: CalendarItem[]): number {
+  if (items.length === 0) return MIN_HOUR_HEIGHT;
+
+  const shortest = Math.min(...items.map((item) => toMinutes(item.endTime) - toMinutes(item.startTime)));
+  if (shortest <= 0) return MIN_HOUR_HEIGHT;
+
+  const needed = (MINUTES_IN_HOUR / shortest) * MIN_SLOT_HEIGHT;
+  return Math.min(Math.max(Math.round(needed), MIN_HOUR_HEIGHT), MAX_HOUR_HEIGHT);
 }
 
 function hourRange(items: CalendarItem[]): { firstHour: number; lastHour: number } {
@@ -101,10 +115,11 @@ function placeDay(dayItems: CalendarItem[], firstHour: number, lastHour: number)
 export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.' }: WeekCalendarProps) {
   const shownItems = items.filter((item) => days.some((day) => day.key === item.dayKey));
   const { firstHour, lastHour } = hourRange(items);
+  const rowHeight = hourHeight(items);
   const hours = Array.from({ length: lastHour - firstHour }, (_, index) => firstHour + index);
 
   return (
-    <Box className={styles.calendar}>
+    <Box className={styles.calendar} style={{ '--hour-height': `${rowHeight}px` } as CSSProperties}>
       <Box className={styles.axis}>
         <Box className={styles.axisHead} />
         {hours.map((hour) => (
@@ -149,7 +164,7 @@ export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.
                       onClick={item.onClick}
                     >
                       <Typography variant="caption" className={styles.itemTitle}>{item.title}</Typography>
-                      {item.subtitle && height >= COMPACT_HEIGHT && (
+                      {item.subtitle && (
                         <Typography variant="caption" className={styles.itemSubtitle}>{item.subtitle}</Typography>
                       )}
                     </Box>

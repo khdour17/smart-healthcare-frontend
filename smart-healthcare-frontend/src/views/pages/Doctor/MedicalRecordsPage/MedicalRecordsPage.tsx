@@ -31,6 +31,7 @@ import {
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { PatientRecord } from '../../../shared/PatientRecord/PatientRecord';
 import { MedicalRecordForm } from './MedicalRecordForm/MedicalRecordForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './MedicalRecordsPage.module.scss';
 
 type DrawerDetails =
@@ -127,28 +128,31 @@ export default function MedicalRecordsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Medical Records</Typography>
-        <Box className={styles.headerTools}>
-          <Autocomplete
-            className={styles.picker}
-            options={patients}
-            value={patient}
-            onChange={handlePatientChange}
-            getOptionLabel={(option) => option.name}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => <TextField {...params} label="Patient" size="small" />}
-          />
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            disabled={patient === null}
-            onClick={() => openDrawer({ type: 'create', title: 'Add Entry' })}
-          >
-            Add Entry
-          </Button>
-        </Box>
-      </Box>
+      <PageHeader
+        title="Medical Records"
+        subtitle="Pick a patient to read and write their record."
+        actions={(
+          <Box className={styles.headerTools}>
+            <Autocomplete
+              className={styles.picker}
+              options={patients}
+              value={patient}
+              onChange={handlePatientChange}
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderInput={(params) => <TextField {...params} label="Patient" size="small" />}
+            />
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              disabled={patient === null}
+              onClick={() => openDrawer({ type: 'create', title: 'Add Entry' })}
+            >
+              Add Entry
+            </Button>
+          </Box>
+        )}
+      />
 
       {history !== null ? (
         <PatientRecord history={history} entryActions={entryActions} />

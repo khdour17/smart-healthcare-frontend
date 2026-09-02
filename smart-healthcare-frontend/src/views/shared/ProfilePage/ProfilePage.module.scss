@@ -1,7 +1,6 @@
 @use '../../../styles/mixins' as *;
 
 .page { display: flex; flex-direction: column; gap: 20px; }
-.headerRow { display: flex; align-items: center; justify-content: space-between; }
 .message { padding: 8px 2px; }
 
 @include panel-section;

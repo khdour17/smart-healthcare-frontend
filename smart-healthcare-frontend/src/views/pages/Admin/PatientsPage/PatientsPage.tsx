@@ -28,6 +28,7 @@ import {
 } from '../../../../components/DataTable/DataTable';
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AddPatientForm } from './AddPatientForm/AddPatientForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './PatientsPage.module.scss';
 
 const columns: DataTableColumn<PatientResponse>[] = [
@@ -78,26 +79,27 @@ export default function PatientsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Patients</Typography>
-        {hasSelection ? (
-          <Box className={styles.selectionBar}>
-            <Typography variant="body2" className={styles.selectionCount}>{selectedKeys.size} selected</Typography>
-            <Tooltip title="Delete selected">
-              <IconButton size="small" className={styles.selectionDelete} onClick={openConfirmDelete}>
-                <DeleteOutlineIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Clear selection">
-              <IconButton size="small" onClick={() => setSelectedKeys(new Set())}>
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        ) : (
-          <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>Add Patient</Button>
+      <PageHeader
+        title="Patients"
+        subtitle="Everyone registered in the system."
+        actions={hasSelection ? (
+            <Box className={styles.selectionBar}>
+              <Typography variant="body2" className={styles.selectionCount}>{selectedKeys.size} selected</Typography>
+              <Tooltip title="Delete selected">
+                <IconButton size="small" className={styles.selectionDelete} onClick={openConfirmDelete}>
+                  <DeleteOutlineIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Clear selection">
+                <IconButton size="small" onClick={() => setSelectedKeys(new Set())}>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          ) : (
+            <Button variant="contained" startIcon={<PersonAddAltIcon />} onClick={() => setIsDrawerOpen(true)}>Add Patient</Button>
         )}
-      </Box>
+      />
 
       <DataTable columns={columns} rows={patients} getRowKey={(row) => row.id} emptyMessage="No patients found." selectable selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} />
 

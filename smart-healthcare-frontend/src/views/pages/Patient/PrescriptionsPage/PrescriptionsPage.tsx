@@ -10,7 +10,6 @@ import {
   Box,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -27,6 +26,7 @@ import { byNewestFirst } from '../../../../utils/byNewestFirst';
 import {
   PrescriptionDetails,
 } from '../../../shared/PrescriptionDetails/PrescriptionDetails';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './PrescriptionsPage.module.scss';
 
 export default function PrescriptionsPage() {
@@ -79,9 +79,7 @@ export default function PrescriptionsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">My Prescriptions</Typography>
-      </Box>
+      <PageHeader title="My Prescriptions" subtitle="Everything your doctors have prescribed for you." />
 
       <DataTable
         columns={columns}

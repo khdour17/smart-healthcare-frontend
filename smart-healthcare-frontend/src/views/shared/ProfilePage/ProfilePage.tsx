@@ -34,6 +34,7 @@ import {
   EditProfileForm,
   type ProfileField,
 } from './EditProfileForm/EditProfileForm';
+import { PageHeader } from '../../../components/PageHeader/PageHeader';
 import styles from './ProfilePage.module.scss';
 
 interface Profile {
@@ -141,12 +142,13 @@ export default function ProfilePage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Profile</Typography>
-        {canEdit && (
+      <PageHeader
+        title="Profile"
+        subtitle="Your account and the details linked to it."
+        actions={canEdit && (
           <Button variant="contained" startIcon={<EditIcon />} onClick={() => setIsDrawerOpen(true)}>Edit Profile</Button>
         )}
-      </Box>
+      />
 
       <Box className={styles.section}>
         <Typography variant="h6">Account</Typography>

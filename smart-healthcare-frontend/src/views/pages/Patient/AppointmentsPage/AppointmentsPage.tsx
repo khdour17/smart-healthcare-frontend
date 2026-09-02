@@ -14,7 +14,6 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -41,6 +40,7 @@ import {
   AppointmentStatusChip,
 } from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import { BookAppointmentForm } from './BookAppointmentForm/BookAppointmentForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './AppointmentsPage.module.scss';
 
 type DrawerDetails =
@@ -188,12 +188,15 @@ export default function AppointmentsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">My Appointments</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
-          Book Appointment
-        </Button>
-      </Box>
+      <PageHeader
+        title="My Appointments"
+        subtitle="Everything you have booked, past and upcoming."
+        actions={(
+          <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
+            Book Appointment
+          </Button>
+        )}
+      />
 
       <DataTable
         columns={columns}

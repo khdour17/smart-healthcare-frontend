@@ -16,6 +16,7 @@ import {
 } from '../../../../api/medicalRecords/MedicalRecordsAPI';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { PatientRecord } from '../../../shared/PatientRecord/PatientRecord';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './MedicalRecordsPage.module.scss';
 
 export default function MedicalRecordsPage() {
@@ -44,9 +45,7 @@ export default function MedicalRecordsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">My Medical Record</Typography>
-      </Box>
+      <PageHeader title="My Medical Record" subtitle="Your visits, prescriptions and the notes your doctor wrote." />
 
       {isLoading && (
         <Typography className={styles.message} color="textSecondary">Loading your record...</Typography>

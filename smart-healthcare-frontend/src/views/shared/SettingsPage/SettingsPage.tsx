@@ -20,6 +20,7 @@ import {
   getToken,
 } from '../../../utils/authStorage';
 import { useLayoutSettings } from '../../layouts/MainLayout/layoutSettings';
+import { PageHeader } from '../../../components/PageHeader/PageHeader';
 import styles from './SettingsPage.module.scss';
 
 function sessionEndsAt(): string {
@@ -44,9 +45,7 @@ export default function SettingsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Settings</Typography>
-      </Box>
+      <PageHeader title="Settings" subtitle="Your session and how the app behaves." />
 
       <Box className={styles.section}>
         <Typography variant="h6">Appearance</Typography>

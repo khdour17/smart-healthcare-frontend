@@ -12,7 +12,6 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -31,6 +30,7 @@ import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { formatTime } from '../../../../utils/formatTime';
 import { AddAvailabilityForm } from './AddAvailabilityForm/AddAvailabilityForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './WorkHoursPage.module.scss';
 
 export default function WorkHoursPage() {
@@ -91,12 +91,15 @@ export default function WorkHoursPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Work Hours</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
-          Add Availability
-        </Button>
-      </Box>
+      <PageHeader
+        title="Work Hours"
+        subtitle="The hours you are open for appointments each week."
+        actions={(
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
+            Add Availability
+          </Button>
+        )}
+      />
 
       <DataTable columns={columns} rows={slots} getRowKey={(row) => row.id} emptyMessage="No work hours set yet." />
 

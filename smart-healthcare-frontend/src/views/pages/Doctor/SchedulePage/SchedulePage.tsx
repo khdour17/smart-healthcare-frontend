@@ -13,7 +13,6 @@ import {
   IconButton,
   Link,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -43,6 +42,7 @@ import {
 import {
   CompleteAppointmentForm,
 } from './CompleteAppointmentForm/CompleteAppointmentForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './SchedulePage.module.scss';
 
 type DrawerType = 'complete' | 'details' | 'prescribe';
@@ -178,9 +178,7 @@ export default function SchedulePage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Appointments</Typography>
-      </Box>
+      <PageHeader title="Appointments" subtitle="Everyone booked in with you." />
 
       <DataTable
         columns={columns}

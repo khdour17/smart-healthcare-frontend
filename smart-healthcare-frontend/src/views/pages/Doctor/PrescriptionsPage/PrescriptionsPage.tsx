@@ -12,7 +12,6 @@ import {
   Box,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -36,6 +35,7 @@ import {
 import {
   PrescriptionForm,
 } from '../../../shared/PrescriptionForm/PrescriptionForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
 import styles from './PrescriptionsPage.module.scss';
 
 type DrawerType = 'details' | 'edit';
@@ -147,9 +147,7 @@ export default function PrescriptionsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Prescriptions</Typography>
-      </Box>
+      <PageHeader title="Prescriptions" subtitle="Every prescription you have written." />
 
       <DataTable
         columns={columns}

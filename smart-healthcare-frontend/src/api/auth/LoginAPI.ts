@@ -1,9 +1,9 @@
 import type { UserRole } from '../../contexts/AuthContext';
 import httpClient from '../../utils/httpClient';
 
-export interface LoginRequest { username: string; password: string; }
+interface LoginRequest { username: string; password: string; }
 
-export interface LoginResponse {
+interface LoginResponse {
   token: string;
   type: string;
   id: number;

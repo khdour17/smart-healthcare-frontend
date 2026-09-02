@@ -23,7 +23,6 @@ import {
 import {
   type DoctorResponse,
   getAllDoctors,
-  getDoctorsBySpecialty,
 } from '../../../../../api/doctors/DoctorsAPI';
 import { formatTime } from '../../../../../utils/formatTime';
 import { openNativePicker } from '../../../../../utils/openNativePicker';
@@ -46,8 +45,7 @@ function messageFromError(error: unknown, fallback: string) {
 }
 
 export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppointmentFormProps) {
-  const [doctors, setDoctors] = useState<DoctorResponse[]>([]);
-  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [allDoctors, setAllDoctors] = useState<DoctorResponse[]>([]);
   const [specialty, setSpecialty] = useState('');
   const [formData, setFormData] = useState<AppointmentRequest>(initialFormData);
   const [slots, setSlots] = useState<AvailableSlotResponse[]>([]);
@@ -57,11 +55,11 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    getAllDoctors().then((data) => {
-      setDoctors(data);
-      setSpecialties([...new Set(data.map((doctor) => doctor.specialty))].sort());
-    });
+    getAllDoctors().then(setAllDoctors);
   }, []);
+
+  const specialties = [...new Set(allDoctors.map((doctor) => doctor.specialty))].sort();
+  const doctors = specialty ? allDoctors.filter((doctor) => doctor.specialty === specialty) : allDoctors;
 
   function loadSlots(nextDoctorId: number, nextDate: string) {
     if (!nextDoctorId || !nextDate) {
@@ -89,8 +87,6 @@ export function BookAppointmentForm({ patientId, onSuccess, onCancel }: BookAppo
     setFormData((prev) => ({ ...prev, doctorId: 0, startTime: '' }));
     setSlots([]);
     setSlotsMessage(null);
-    const request = value ? getDoctorsBySpecialty(value) : getAllDoctors();
-    request.then(setDoctors);
   }
 
   function handleDoctorChange(e: ChangeEvent<HTMLInputElement>) {

@@ -33,7 +33,7 @@ export async function getPatientById(id: number): Promise<PatientResponse> {
   return response.data;
 }
 
-export interface PatientProfileRequest {
+interface PatientProfileRequest {
   name: string;
   dateOfBirth: string;
   phone?: string;

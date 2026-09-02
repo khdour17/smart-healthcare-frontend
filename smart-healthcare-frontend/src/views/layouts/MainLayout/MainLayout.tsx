@@ -5,22 +5,26 @@ import {
 
 import { Outlet } from 'react-router-dom';
 
-import { Box } from '@mui/material';
+import {
+  Box,
+  Drawer as MuiDrawer,
+} from '@mui/material';
 
 import { AuthContext } from '../../../contexts/AuthContext';
-import { Header } from './Header/Header';
-import { LeftMenu } from './LeftMenu/LeftMenu';
-import { getLeftMenuItems } from './LeftMenu/leftMenuConfig';
 import {
   getMenuCollapsed,
   saveMenuCollapsed,
 } from '../../../utils/menuPreference';
+import { Header } from './Header/Header';
+import { LeftMenu } from './LeftMenu/LeftMenu';
+import { getLeftMenuItems } from './LeftMenu/leftMenuConfig';
 import styles from './MainLayout.module.scss';
 
 export default function MainLayout() {
   const auth = useContext(AuthContext);
   const items = auth?.user ? getLeftMenuItems(auth.user.role) : [];
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(getMenuCollapsed);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   function setMenuCollapsed(collapsed: boolean) {
     setIsMenuCollapsed(collapsed);
@@ -29,9 +33,25 @@ export default function MainLayout() {
 
   return (
     <Box className={styles.root}>
-      <Header />
+      <Header onOpenMenu={() => setIsMobileMenuOpen(true)} />
       <Box className={styles.body}>
-        <LeftMenu items={items} collapsed={isMenuCollapsed} onToggle={() => setMenuCollapsed(!isMenuCollapsed)} />
+        <Box className={styles.wideMenu}>
+          <LeftMenu
+            items={items}
+            collapsed={isMenuCollapsed}
+            onToggle={() => setMenuCollapsed(!isMenuCollapsed)}
+          />
+        </Box>
+
+        <MuiDrawer
+          anchor="left"
+          open={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          slotProps={{ paper: { className: styles.narrowMenuPaper } }}
+        >
+          <LeftMenu items={items} collapsed={false} onNavigate={() => setIsMobileMenuOpen(false)} />
+        </MuiDrawer>
+
         <Box component="main" className={styles.content}>
           <Outlet context={{ isMenuCollapsed, setMenuCollapsed }} />
         </Box>

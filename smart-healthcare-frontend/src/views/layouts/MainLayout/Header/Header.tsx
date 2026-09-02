@@ -17,13 +17,19 @@ import {
   Typography,
 } from '@mui/material';
 
+import MenuIcon from '@mui/icons-material/Menu';
+
 import logo from '../../../../assets/images/logo.png';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { clearSession } from '../../../../utils/authStorage';
 import { getInitials } from '../../../../utils/getInitials';
 import styles from './Header.module.scss';
 
-export function Header() {
+interface HeaderProps {
+  onOpenMenu: () => void;
+}
+
+export function Header({ onOpenMenu }: HeaderProps) {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -43,16 +49,21 @@ export function Header() {
   return (
     <AppBar position="static" elevation={0} className={styles.appBar}>
       <Toolbar className={styles.toolbar}>
-        <Box className={styles.brand} onClick={() => navigate('/dashboard')}>
-          <Box component="img" src={logo} alt="Smart Healthcare logo" className={styles.logo} />
-          <Box className={styles.brandText}>
-            <Typography variant="body2" className={styles.brandTitle}>Smart Healthcare</Typography>
-            <Typography variant="caption" color="textSecondary">Appointment System</Typography>
+        <Box className={styles.leftArea}>
+          <IconButton className={styles.menuButton} onClick={onOpenMenu} aria-label="Open the menu">
+            <MenuIcon fontSize="small" />
+          </IconButton>
+          <Box className={styles.brand} onClick={() => navigate('/dashboard')}>
+            <Box component="img" src={logo} alt="Smart Healthcare logo" className={styles.logo} />
+            <Box className={styles.brandText}>
+              <Typography variant="body2" className={styles.brandTitle}>Smart Healthcare</Typography>
+              <Typography variant="caption" color="textSecondary" className={styles.brandSubtitle}>Appointment System</Typography>
+            </Box>
           </Box>
         </Box>
 
         <Box className={styles.userArea}>
-          <Typography variant="body2" color="textSecondary">Hello {auth?.user?.username}</Typography>
+          <Typography variant="body2" color="textSecondary" className={styles.greeting}>Hello {auth?.user?.username}</Typography>
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
             <Avatar className={styles.avatar}>{getInitials(auth?.user?.username)}</Avatar>
           </IconButton>

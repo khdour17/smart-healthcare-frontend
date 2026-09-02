@@ -34,6 +34,7 @@ export default function PrescriptionsPage() {
   const patientId = auth?.user?.roleEntityId ?? null;
   const [prescriptions, setPrescriptions] = useState<PrescriptionResponse[]>([]);
   const [detailsId, setDetailsId] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const refreshPrescriptions = useCallback(() => {
     if (patientId !== null) {
@@ -67,7 +68,7 @@ export default function PrescriptionsPage() {
       render: (row) => (
         <Box className={styles.rowActions}>
           <Tooltip title="View details">
-            <IconButton size="small" onClick={() => setDetailsId(row.id)}>
+            <IconButton size="small" onClick={() => { setDetailsId(row.id); setIsDrawerOpen(true); }}>
               <InfoIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -89,11 +90,11 @@ export default function PrescriptionsPage() {
         emptyMessage="No prescriptions yet."
       />
 
-      {detailsPrescription !== null && (
-        <Drawer open onClose={() => setDetailsId(null)} title="Prescription Details">
+      <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Prescription Details">
+        {detailsPrescription !== null && (
           <PrescriptionDetails prescription={detailsPrescription} heading={detailsPrescription.doctorName} />
-        </Drawer>
-      )}
+        )}
+      </Drawer>
     </Box>
   );
 }

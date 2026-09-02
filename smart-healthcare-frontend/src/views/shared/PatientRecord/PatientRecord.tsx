@@ -32,6 +32,12 @@ interface PatientRecordProps {
 
 export function PatientRecord({ history, entryActions }: PatientRecordProps) {
   const [details, setDetails] = useState<DetailsTarget | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  function openDetails(target: DetailsTarget) {
+    setDetails(target);
+    setIsDrawerOpen(true);
+  }
 
   const appointment = details?.type === 'appointment'
     ? history.appointments.find((item) => String(item.id) === details.id) ?? null
@@ -42,7 +48,7 @@ export function PatientRecord({ history, entryActions }: PatientRecordProps) {
     : null;
 
   function closeDetails() {
-    setDetails(null);
+    setIsDrawerOpen(false);
   }
 
   return (
@@ -51,12 +57,12 @@ export function PatientRecord({ history, entryActions }: PatientRecordProps) {
 
       <RecordTimeline
         history={history}
-        onOpenAppointment={(item) => setDetails({
+        onOpenAppointment={(item) => openDetails({
           type: 'appointment',
           id: String(item.id),
           title: 'Appointment Details',
         })}
-        onOpenPrescription={(item) => setDetails({
+        onOpenPrescription={(item) => openDetails({
           type: 'prescription',
           id: item.id,
           title: 'Prescription Details',
@@ -64,16 +70,14 @@ export function PatientRecord({ history, entryActions }: PatientRecordProps) {
         entryActions={entryActions}
       />
 
-      {details !== null && (appointment !== null || prescription !== null) && (
-        <Drawer open onClose={closeDetails} title={details.title}>
-          {appointment !== null && (
-            <AppointmentDetails appointment={appointment} heading={appointment.doctorName} />
-          )}
-          {prescription !== null && (
-            <PrescriptionDetails prescription={prescription} heading={prescription.doctorName} />
-          )}
-        </Drawer>
-      )}
+      <Drawer open={isDrawerOpen} onClose={closeDetails} title={details?.title ?? ''}>
+        {appointment !== null && (
+          <AppointmentDetails appointment={appointment} heading={appointment.doctorName} />
+        )}
+        {prescription !== null && (
+          <PrescriptionDetails prescription={prescription} heading={prescription.doctorName} />
+        )}
+      </Drawer>
     </Box>
   );
 }

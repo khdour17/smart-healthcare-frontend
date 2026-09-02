@@ -11,7 +11,13 @@ import {
 
 import styles from './Drawer.module.scss';
 
-interface DrawerProps { open: boolean; onClose: () => void; title: string; children: ReactNode; footer?: ReactNode; }
+interface DrawerProps {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+  footer?: ReactNode;
+}
 
 export function Drawer({ open, onClose, title, children, footer }: DrawerProps) {
   return (
@@ -23,11 +29,16 @@ export function Drawer({ open, onClose, title, children, footer }: DrawerProps) 
     >
       <Box className={styles.header}>
         <Typography variant="h6">{title}</Typography>
-        <IconButton onClick={onClose} size="small"><CloseIcon fontSize="small" /></IconButton>
+        <IconButton onClick={onClose} size="small" aria-label="Close"><CloseIcon fontSize="small" /></IconButton>
       </Box>
       <Divider />
       <Box className={styles.body}>{children}</Box>
-      {footer && (<><Divider /><Box className={styles.footer}>{footer}</Box></>)}
+      {footer && (
+        <>
+          <Divider />
+          <Box className={styles.footer}>{footer}</Box>
+        </>
+      )}
     </MuiDrawer>
   );
 }

@@ -63,6 +63,12 @@ export default function AppointmentsPage() {
   const patientId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  function openDrawer(details: DrawerDetails) {
+    setDrawerDetails(details);
+    setIsDrawerOpen(true);
+  }
   const [confirmDetails, setConfirmDetails] = useState<ConfirmDetails | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
 
@@ -81,15 +87,15 @@ export default function AppointmentsPage() {
     : null;
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function openBook() {
-    setDrawerDetails({ type: 'book', title: 'Book Appointment' });
+    openDrawer({ type: 'book', title: 'Book Appointment' });
   }
 
   function openDetails(appointment: AppointmentResponse) {
-    setDrawerDetails({ type: 'details', title: 'Appointment Details', appointmentId: appointment.id });
+    openDrawer({ type: 'details', title: 'Appointment Details', appointmentId: appointment.id });
   }
 
   function handleBooked() {
@@ -196,19 +202,17 @@ export default function AppointmentsPage() {
         emptyMessage="No appointments booked yet."
       />
 
-      {drawerDetails !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
-          {drawerDetails.type === 'book' ? (
-            patientId !== null && (
-              <BookAppointmentForm patientId={patientId} onSuccess={handleBooked} onCancel={closeDrawer} />
-            )
-          ) : (
-            drawerAppointment !== null && (
-              <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.doctorName} />
-            )
-          )}
-        </Drawer>
-      )}
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {drawerDetails?.type === 'book' ? (
+          patientId !== null && (
+            <BookAppointmentForm patientId={patientId} onSuccess={handleBooked} onCancel={closeDrawer} />
+          )
+        ) : (
+          drawerAppointment !== null && (
+            <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.doctorName} />
+          )
+        )}
+      </Drawer>
 
       <ConfirmDialog
         open={confirmDetails !== null}

@@ -51,6 +51,7 @@ export default function PrescriptionsPage() {
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [prescriptions, setPrescriptions] = useState<PrescriptionResponse[]>([]);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -75,14 +76,16 @@ export default function PrescriptionsPage() {
 
   function openDetails(prescription: PrescriptionResponse) {
     setDrawerDetails({ prescriptionId: prescription.id, type: 'details', title: 'Prescription Details' });
+    setIsDrawerOpen(true);
   }
 
   function openEdit(prescription: PrescriptionResponse) {
     setDrawerDetails({ prescriptionId: prescription.id, type: 'edit', title: 'Edit Prescription' });
+    setIsDrawerOpen(true);
   }
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function handleSaved() {
@@ -155,9 +158,9 @@ export default function PrescriptionsPage() {
         emptyMessage="You have not written any prescriptions yet."
       />
 
-      {drawerDetails !== null && drawerPrescription !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
-          {drawerDetails.type === 'edit' ? (
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {drawerPrescription !== null && (
+          drawerDetails?.type === 'edit' ? (
             <PrescriptionForm
               appointmentId={drawerPrescription.appointmentId}
               prescription={drawerPrescription}
@@ -166,9 +169,9 @@ export default function PrescriptionsPage() {
             />
           ) : (
             <PrescriptionDetails prescription={drawerPrescription} heading={drawerPrescription.patientName} />
-          )}
-        </Drawer>
-      )}
+          )
+        )}
+      </Drawer>
 
       <ConfirmDialog
         open={deleteTarget !== null}

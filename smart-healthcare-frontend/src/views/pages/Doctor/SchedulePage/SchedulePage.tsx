@@ -59,6 +59,12 @@ export default function SchedulePage() {
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [prescribedIds, setPrescribedIds] = useState<Set<number>>(new Set());
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  function openDrawer(details: DrawerDetails) {
+    setDrawerDetails(details);
+    setIsDrawerOpen(true);
+  }
 
   const refreshAppointments = useCallback(() => {
     if (doctorId !== null) {
@@ -83,19 +89,19 @@ export default function SchedulePage() {
     : null;
 
   function openComplete(appointment: AppointmentResponse) {
-    setDrawerDetails({ appointmentId: appointment.id, type: 'complete', title: 'Complete Appointment' });
+    openDrawer({ appointmentId: appointment.id, type: 'complete', title: 'Complete Appointment' });
   }
 
   function openDetails(appointment: AppointmentResponse) {
-    setDrawerDetails({ appointmentId: appointment.id, type: 'details', title: 'Appointment Details' });
+    openDrawer({ appointmentId: appointment.id, type: 'details', title: 'Appointment Details' });
   }
 
   function openPrescribe(appointment: AppointmentResponse) {
-    setDrawerDetails({ appointmentId: appointment.id, type: 'prescribe', title: 'Add Prescription' });
+    openDrawer({ appointmentId: appointment.id, type: 'prescribe', title: 'Add Prescription' });
   }
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function handleCompleted() {
@@ -183,27 +189,25 @@ export default function SchedulePage() {
         emptyMessage="No appointments booked with you yet."
       />
 
-      {drawerDetails !== null && drawerAppointment !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
-          {drawerDetails.type === 'complete' && (
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {drawerAppointment !== null && drawerDetails?.type === 'complete' && (
             <CompleteAppointmentForm
               appointment={drawerAppointment}
               onSuccess={handleCompleted}
               onCancel={closeDrawer}
             />
           )}
-          {drawerDetails.type === 'prescribe' && (
+        {drawerAppointment !== null && drawerDetails?.type === 'prescribe' && (
             <PrescriptionForm
               appointmentId={drawerAppointment.id}
               onSuccess={handlePrescribed}
               onCancel={closeDrawer}
             />
           )}
-          {drawerDetails.type === 'details' && (
-            <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.patientName} />
-          )}
-        </Drawer>
-      )}
+        {drawerAppointment !== null && drawerDetails?.type === 'details' && (
+          <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.patientName} />
+        )}
+      </Drawer>
     </Box>
   );
 }

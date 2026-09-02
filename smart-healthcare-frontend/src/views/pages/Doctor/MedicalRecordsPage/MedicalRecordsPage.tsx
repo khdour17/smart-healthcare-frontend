@@ -42,6 +42,12 @@ export default function MedicalRecordsPage() {
   const [patientId, setPatientId] = useState<number | null>(null);
   const [history, setHistory] = useState<PatientHistoryResponse | null>(null);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  function openDrawer(details: DrawerDetails) {
+    setDrawerDetails(details);
+    setIsDrawerOpen(true);
+  }
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -74,7 +80,7 @@ export default function MedicalRecordsPage() {
     : null;
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function handleSaved() {
@@ -102,7 +108,7 @@ export default function MedicalRecordsPage() {
     return (
       <Box className={styles.entryActions}>
         <Tooltip title="Edit entry">
-          <IconButton size="small" onClick={() => setDrawerDetails({ type: 'edit', entryId, title: 'Edit Entry' })}>
+          <IconButton size="small" onClick={() => openDrawer({ type: 'edit', entryId, title: 'Edit Entry' })}>
             <EditIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -137,7 +143,7 @@ export default function MedicalRecordsPage() {
             variant="contained"
             startIcon={<AddIcon />}
             disabled={patient === null}
-            onClick={() => setDrawerDetails({ type: 'create', title: 'Add Entry' })}
+            onClick={() => openDrawer({ type: 'create', title: 'Add Entry' })}
           >
             Add Entry
           </Button>
@@ -152,16 +158,16 @@ export default function MedicalRecordsPage() {
         </Typography>
       )}
 
-      {drawerDetails !== null && patient !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {patient !== null && (
           <MedicalRecordForm
             patientId={patient.id}
             entry={editingEntry ?? undefined}
             onSuccess={handleSaved}
             onCancel={closeDrawer}
           />
-        </Drawer>
-      )}
+        )}
+      </Drawer>
 
       <ConfirmDialog
         open={deleteTarget !== null}

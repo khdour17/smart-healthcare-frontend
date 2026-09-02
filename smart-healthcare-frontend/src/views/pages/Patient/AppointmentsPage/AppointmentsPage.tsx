@@ -56,6 +56,7 @@ import {
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
 import { useToast } from '../../../../utils/useToast';
+import { appointmentTone } from '../../../../utils/appointmentTone';
 import styles from './AppointmentsPage.module.scss';
 
 type DrawerDetails =
@@ -71,12 +72,6 @@ interface ConfirmDetails {
   message: string;
   confirmLabel: string;
   cancelLabel: string;
-}
-
-function appointmentTone(status: AppointmentResponse['status']): CalendarItem['tone'] {
-  if (status === 'COMPLETED') return 'success';
-  if (status === 'CANCELLED') return 'muted';
-  return 'primary';
 }
 
 export default function AppointmentsPage() {
@@ -248,15 +243,12 @@ export default function AppointmentsPage() {
       />
 
       {view === 'calendar' ? (
-        <>
-          <WeekCalendar
-            days={weekDays(weekStart)}
-            items={calendarItems}
-            emptyMessage="Nothing booked this week."
-          />
-        </>
+        <WeekCalendar
+          days={weekDays(weekStart)}
+          items={calendarItems}
+          emptyMessage="Nothing booked this week."
+        />
       ) : (
-
         <DataTable
           columns={columns}
           rows={appointments}

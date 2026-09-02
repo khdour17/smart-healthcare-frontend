@@ -15,6 +15,7 @@ import {
   Tooltip,
 } from '@mui/material';
 
+import { classNames } from '../../../../utils/classNames';
 import styles from './LeftMenu.module.scss';
 import type { LeftMenuItem } from './leftMenuConfig';
 
@@ -26,10 +27,6 @@ interface LeftMenuProps {
   collapsed: boolean;
   onToggle?: () => void;
   onNavigate?: () => void;
-}
-
-function cx(...classes: Array<string | false | undefined>) {
-  return classes.filter(Boolean).join(' ');
 }
 
 export function LeftMenu({ items, collapsed, onToggle, onNavigate }: LeftMenuProps) {
@@ -53,15 +50,15 @@ export function LeftMenu({ items, collapsed, onToggle, onNavigate }: LeftMenuPro
               key={item.key}
               selected={isActive}
               onClick={() => goTo(item.path)}
-              className={cx(styles.item, collapsed && styles.itemCollapsed, isActive && styles.itemActive)}
+              className={classNames(styles.item, collapsed && styles.itemCollapsed, isActive && styles.itemActive)}
             >
-              <ListItemIcon className={cx(styles.icon, collapsed && styles.iconCollapsed, isActive && styles.iconActive)}>
+              <ListItemIcon className={classNames(styles.icon, collapsed && styles.iconCollapsed, isActive && styles.iconActive)}>
                 <Icon fontSize="small" />
               </ListItemIcon>
               {!collapsed && (
                 <ListItemText
                   primary={item.label}
-                  slotProps={{ primary: { className: cx(styles.label, isActive && styles.labelActive) } }}
+                  slotProps={{ primary: { className: classNames(styles.label, isActive && styles.labelActive) } }}
                 />
               )}
             </ListItemButton>

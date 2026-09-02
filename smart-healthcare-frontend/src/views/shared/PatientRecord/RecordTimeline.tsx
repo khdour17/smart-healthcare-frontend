@@ -27,6 +27,7 @@ import { formatTime } from '../../../utils/formatTime';
 import {
   AppointmentStatusChip,
 } from '../AppointmentStatusChip/AppointmentStatusChip';
+import { classNames } from '../../../utils/classNames';
 import styles from './RecordTimeline.module.scss';
 
 type ItemType = 'entry' | 'appointment' | 'prescription';
@@ -150,9 +151,9 @@ export function RecordTimeline({
 
             return (
               <Box key={item.id} className={styles.item}>
-                <Box className={`${styles.marker} ${markerStyles[item.type]}`}>{markerIcons[item.type]}</Box>
+                <Box className={classNames(styles.marker, markerStyles[item.type])}>{markerIcons[item.type]}</Box>
                 {item.onOpen ? (
-                  <ButtonBase className={`${styles.card} ${styles.clickable}`} onClick={item.onOpen} focusRipple>
+                  <ButtonBase className={classNames(styles.card, styles.clickable)} onClick={item.onOpen} focusRipple>
                     {content}
                   </ButtonBase>
                 ) : (

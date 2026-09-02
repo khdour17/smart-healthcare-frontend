@@ -1,8 +1,6 @@
 import {
-  useCallback,
   useContext,
-  useEffect,
-  useState,
+  useMemo,
 } from 'react';
 
 import {
@@ -10,33 +8,24 @@ import {
   Typography,
 } from '@mui/material';
 
-import {
-  getPatientHistory,
-  type PatientHistoryResponse,
-} from '../../../../api/medicalRecords/MedicalRecordsAPI';
+import { getPatientHistory } from '../../../../api/medicalRecords/MedicalRecordsAPI';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { PatientRecord } from '../../../shared/PatientRecord/PatientRecord';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useLoadedData } from '../../../../utils/useLoadedData';
 import styles from './MedicalRecordsPage.module.scss';
 
 export default function MedicalRecordsPage() {
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
-  const [history, setHistory] = useState<PatientHistoryResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const refreshHistory = useCallback(() => {
-    if (patientId === null) return;
-    getPatientHistory(patientId)
-      .then(setHistory)
-      .catch(() => setError('Could not load your medical record. Please try again later.'))
-      .finally(() => setIsLoading(false));
-  }, [patientId]);
-
-  useEffect(() => {
-    refreshHistory();
-  }, [refreshHistory]);
+  const load = useMemo(
+    () => (patientId === null ? null : () => getPatientHistory(patientId)),
+    [patientId],
+  );
+  const { data: history, isLoading, error } = useLoadedData(
+    load,
+    'Could not load your medical record. Please try again later.',
+  );
 
   const isEmpty = history !== null
     && history.entries.length === 0

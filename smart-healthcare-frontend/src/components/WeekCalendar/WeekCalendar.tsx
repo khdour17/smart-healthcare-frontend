@@ -6,6 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { classNames } from '../../utils/classNames';
 import styles from './WeekCalendar.module.scss';
 
 type CalendarTone = 'primary' | 'success' | 'muted';
@@ -136,7 +137,7 @@ export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.
 
           return (
             <Box key={day.key} className={styles.day}>
-              <Box className={`${styles.dayHead} ${day.highlighted ? styles.dayHeadToday : ''}`}>
+              <Box className={classNames(styles.dayHead, day.highlighted && styles.dayHeadToday)}>
                 <Typography variant="body2" className={styles.dayLabel}>{day.label}</Typography>
                 {day.subLabel && (
                   <Typography variant="caption" className={styles.daySubLabel}>{day.subLabel}</Typography>
@@ -153,7 +154,7 @@ export function WeekCalendar({ days, items, emptyMessage = 'Nothing to show yet.
                     placement="top"
                   >
                     <Box
-                      className={`${styles.item} ${toneClass[item.tone]} ${item.onClick ? styles.clickable : ''}`}
+                      className={classNames(styles.item, toneClass[item.tone], Boolean(item.onClick) && styles.clickable)}
                       style={{
                         top: `${top}%`,
                         height: `${height}%`,

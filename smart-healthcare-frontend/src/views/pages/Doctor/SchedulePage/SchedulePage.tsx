@@ -58,6 +58,7 @@ import {
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
 import { useToast } from '../../../../utils/useToast';
+import { appointmentTone } from '../../../../utils/appointmentTone';
 import styles from './SchedulePage.module.scss';
 
 type DrawerType = 'complete' | 'details' | 'prescribe';
@@ -66,12 +67,6 @@ interface DrawerDetails {
   appointmentId: number;
   type: DrawerType;
   title: string;
-}
-
-function appointmentTone(status: AppointmentResponse['status']): CalendarItem['tone'] {
-  if (status === 'COMPLETED') return 'success';
-  if (status === 'CANCELLED') return 'muted';
-  return 'primary';
 }
 
 export default function SchedulePage() {

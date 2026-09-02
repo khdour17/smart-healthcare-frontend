@@ -4,6 +4,8 @@ export const COMMON = {
   PAGE_HEADING: '.MuiTypography-h5',
   ADD_BUTTON: 'main .MuiButton-contained',
   TABLE_ROW: '.MuiTableBody-root .MuiTableRow-root',
+  SELECT_ALL_CHECKBOX: '.MuiTableHead-root input[type="checkbox"]',
+  FIRST_ROW_CHECKBOX: '.MuiTableBody-root .MuiTableRow-root:first-child input[type="checkbox"]',
   DRAWER: '.MuiDrawer-paper',
   DRAWER_ALERT: '.MuiDrawer-paper [role="alert"]',
   DIALOG: '[role="dialog"]',

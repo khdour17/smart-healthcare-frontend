@@ -2,6 +2,7 @@ export const BUTTONS = {
   BACK_TO_DASHBOARD: 'Back to Dashboard',
   CANCEL: 'Cancel',
   DELETE: 'Delete',
+  ADD_DOCTOR: 'Add Doctor',
   CREATE_DOCTOR: 'Create Doctor',
   CREATE_PATIENT: 'Create Patient',
   CREATE_ADMIN: 'Create Admin',
@@ -136,6 +137,11 @@ export const TEXTS = {
   APPOINTMENT_WITH: 'Appointment with',
   PRESCRIPTION_FROM: 'Prescription from',
 };
+
+export function deleteDoctorsMessage(count: number): string {
+  const label = count === 1 ? 'doctor' : 'doctors';
+  return `Delete ${count} ${label}? This action cannot be undone.`;
+}
 
 export function doctorNotAvailableMessage(dayName: string): string {
   return `Doctor not available on ${dayName}`;

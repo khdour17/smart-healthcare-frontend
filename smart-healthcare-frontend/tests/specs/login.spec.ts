@@ -2,6 +2,8 @@ import { ROUTES } from '../config/app.config';
 import {
   BUTTONS,
   greetingText,
+  MENU_ITEMS,
+  PAGE_TITLES,
   TEXTS,
 } from '../config/messages';
 import {
@@ -11,7 +13,10 @@ import {
   WRONG_PASSWORD,
 } from '../testData/common.data';
 import { test } from '../fixtures/testFixtures';
-import { COMMON } from '../selectors/common.selectors';
+import {
+  COMMON,
+  userMenuItem,
+} from '../selectors/common.selectors';
 import { LOGIN_PAGE } from '../selectors/loginPage.selectors';
 
 test.describe('Verify Login', () => {
@@ -45,6 +50,13 @@ test.describe('Verify Login', () => {
 
     await commonPage.verifyAlert(COMMON.ALERT, TEXTS.LOGIN_ERROR_MESSAGE);
     await commonPage.verifyUrl(ROUTES.LOGIN);
+  });
+
+  test('TC-073 Verify that the password is not shown while it is typed', async ({ loginPage, commonPage }) => {
+    await loginPage.open();
+    await loginPage.fillCredentials(USERS.PATIENT);
+
+    await commonPage.verifyItemHasValue(LOGIN_PAGE.PASSWORD_INPUT, USERS.PATIENT.password);
   });
 
   test('TC-006 Verify that the form does not submit when the fields are empty', async ({ loginPage, commonPage }) => {
@@ -84,6 +96,25 @@ test.describe('Verify Logout And Session', () => {
 
     await commonPage.verifyUrl(ROUTES.LOGIN);
     await commonPage.verifyItemExists(LOGIN_PAGE.SUBMIT_BUTTON);
+  });
+
+  test('TC-074 Verify that the user stays logged in after a reload', async ({ page, loginPage, commonPage }) => {
+    await loginPage.loginAs(USERS.DOCTOR);
+
+    await page.reload();
+
+    await commonPage.verifyUrl(ROUTES.DASHBOARD);
+    await commonPage.verifyTextExists(greetingText(USERS.DOCTOR.username));
+  });
+
+  test('TC-075 Verify that the user menu opens the profile page', async ({ loginPage, commonPage }) => {
+    await loginPage.loginAs(USERS.DOCTOR);
+
+    await commonPage.clickOnItem(COMMON.AVATAR_BUTTON);
+    await commonPage.clickOnItem(userMenuItem(MENU_ITEMS.PROFILE));
+
+    await commonPage.verifyUrl(ROUTES.PROFILE);
+    await commonPage.verifyItemContainsText(COMMON.PAGE_HEADING, PAGE_TITLES.PROFILE);
   });
 });
 

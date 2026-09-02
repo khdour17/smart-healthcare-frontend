@@ -1,6 +1,7 @@
 import { ROUTES } from '../config/app.config';
 import {
   BUTTONS,
+  deleteDoctorsMessage,
   FIELD_LABELS,
   ICON_BUTTONS,
   PAGE_TITLES,
@@ -181,6 +182,41 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemExists(tableRow(username));
 
     await adminPage.deleteRows([username], BUTTONS.DELETE);
+  });
+
+  test('TC-076 Verify that the header checkbox selects every doctor and Clear selection undoes it', async ({ adminPage }) => {
+    await adminPage.goto(ROUTES.ADMIN_DOCTORS);
+    await adminPage.verifyItemExists(COMMON.TABLE_ROW);
+
+    await adminPage.checkItem(COMMON.SELECT_ALL_CHECKBOX);
+
+    await adminPage.verifyItemExists(iconButton(ICON_BUTTONS.DELETE_SELECTED));
+    await adminPage.verifyItemIsChecked(COMMON.FIRST_ROW_CHECKBOX);
+
+    await adminPage.clickOnItem(iconButton(ICON_BUTTONS.CLEAR_SELECTION));
+
+    await adminPage.verifyItemMissing(iconButton(ICON_BUTTONS.DELETE_SELECTED));
+    await adminPage.verifyItemIsNotChecked(COMMON.FIRST_ROW_CHECKBOX);
+    await adminPage.verifyItemContainsText(COMMON.ADD_BUTTON, BUTTONS.ADD_DOCTOR);
+  });
+
+  test('TC-077 Verify that the delete dialog says how many doctors will be removed', async ({ adminPage }) => {
+    const doctor = newDoctor();
+    const username = doctor[FIELD_LABELS.USERNAME];
+
+    await adminPage.goto(ROUTES.ADMIN_DOCTORS);
+    await adminPage.addUser(doctor, BUTTONS.CREATE_DOCTOR);
+    await adminPage.checkItem(tableRowCheckbox(username));
+
+    await adminPage.verifyTextExists(selectedCountText(1));
+
+    await adminPage.clickOnItem(iconButton(ICON_BUTTONS.DELETE_SELECTED));
+
+    await adminPage.verifyItemContainsText(COMMON.DIALOG_MESSAGE, deleteDoctorsMessage(1));
+
+    await adminPage.clickOnItem(dialogButton(BUTTONS.DELETE));
+
+    await adminPage.verifyItemMissing(tableRow(username));
   });
 });
 

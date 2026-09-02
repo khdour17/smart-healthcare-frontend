@@ -9,7 +9,7 @@ import {
 import { EmptyState } from '../EmptyState/EmptyState';
 import styles from './WeekCalendar.module.scss';
 
-export type CalendarTone = 'primary' | 'success' | 'muted';
+type CalendarTone = 'primary' | 'success' | 'muted';
 
 export interface CalendarDay {
   key: string;

@@ -2,14 +2,14 @@ const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAYS_IN_WEEK = 7;
 
-export interface WeekDay {
+interface WeekDay {
   key: string;
   label: string;
   subLabel: string;
   highlighted: boolean;
 }
 
-export function toIsoDate(date: Date): string {
+function toIsoDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   return `${date.getFullYear()}-${month}-${String(date.getDate()).padStart(2, '0')}`;
 }
@@ -20,12 +20,6 @@ export function startOfWeek(date: Date): Date {
   start.setDate(start.getDate() - (weekday === 0 ? 6 : weekday - 1));
   start.setHours(0, 0, 0, 0);
   return start;
-}
-
-export function addWeeks(date: Date, weeks: number): Date {
-  const moved = new Date(date);
-  moved.setDate(moved.getDate() + weeks * DAYS_IN_WEEK);
-  return moved;
 }
 
 export function weekDays(weekStart: Date): WeekDay[] {

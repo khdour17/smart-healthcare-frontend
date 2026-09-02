@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-export interface ToastContextValue {
+interface ToastContextValue {
   showToast: (message: string) => void;
 }
 

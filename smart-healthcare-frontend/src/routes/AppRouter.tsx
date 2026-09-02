@@ -1,6 +1,7 @@
 import {
   lazy,
   Suspense,
+  useContext,
 } from 'react';
 
 import {
@@ -9,12 +10,15 @@ import {
   Routes,
 } from 'react-router-dom';
 
+import { AuthContext } from '../contexts/AuthContext';
 import { RequireAuth } from './guards/RequireAuth';
 import { RequireRole } from './guards/RequireRole';
 
 const LoginPage = lazy(() => import('../views/pages/LoginPage/LoginPage'));
 const MainLayout = lazy(() => import('../views/layouts/MainLayout/MainLayout'));
-const DashboardPage = lazy(() => import('../views/pages/DashboardPage/DashboardPage'));
+const AdminDashboardPage = lazy(() => import('../views/pages/Admin/DashboardPage/DashboardPage'));
+const DoctorDashboardPage = lazy(() => import('../views/pages/Doctor/DashboardPage/DashboardPage'));
+const PatientDashboardPage = lazy(() => import('../views/pages/Patient/DashboardPage/DashboardPage'));
 const AdminsPage = lazy(() => import('../views/pages/Admin/AdminsPage/AdminsPage'));
 const DoctorsPage = lazy(() => import('../views/pages/Admin/DoctorsPage/DoctorsPage'));
 const PatientsPage = lazy(() => import('../views/pages/Admin/PatientsPage/PatientsPage'));
@@ -25,7 +29,18 @@ const AppointmentsPage = lazy(() => import('../views/pages/Patient/AppointmentsP
 const PrescriptionsPage = lazy(() => import('../views/pages/Patient/PrescriptionsPage/PrescriptionsPage'));
 const PatientRecordsPage = lazy(() => import('../views/pages/Doctor/MedicalRecordsPage/MedicalRecordsPage'));
 const MedicalRecordsPage = lazy(() => import('../views/pages/Patient/MedicalRecordsPage/MedicalRecordsPage'));
+const ProfilePage = lazy(() => import('../views/shared/ProfilePage/ProfilePage'));
+const SettingsPage = lazy(() => import('../views/shared/SettingsPage/SettingsPage'));
 const NotFoundPage = lazy(() => import('../views/pages/NotFoundPage/NotFoundPage'));
+
+function RoleDashboard() {
+  const auth = useContext(AuthContext);
+  const role = auth?.user?.role;
+
+  if (role === 'ADMIN') return <AdminDashboardPage />;
+  if (role === 'DOCTOR') return <DoctorDashboardPage />;
+  return <PatientDashboardPage />;
+}
 
 export function AppRouter() {
   return (
@@ -35,7 +50,9 @@ export function AppRouter() {
           <Route path="/login" element={<LoginPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/dashboard" element={<MainLayout />}>
-              <Route index element={<DashboardPage />} />
+              <Route index element={<RoleDashboard />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="settings" element={<SettingsPage />} />
               <Route element={<RequireRole roles={['ADMIN']} />}>
                 <Route path="admins" element={<AdminsPage />} />
                 <Route path="doctors" element={<DoctorsPage />} />

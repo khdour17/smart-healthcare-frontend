@@ -28,6 +28,7 @@ import {
   StatTiles,
 } from '../../../../components/StatTiles/StatTiles';
 import { AuthContext } from '../../../../contexts/AuthContext';
+import { formatTime } from '../../../../utils/formatTime';
 import {
   appointmentShare,
   countByStatus,
@@ -59,7 +60,7 @@ function buildTiles(
     { label: 'Cancelled', value: String(countByStatus(appointments, 'CANCELLED')) },
     { label: 'Prescriptions', value: String(prescriptions.length) },
     { label: 'Last visit', value: lastVisit ?? NONE },
-    { label: 'Next appointment', value: next ? `${next.appointmentDate} ${next.startTime}` : NONE },
+    { label: 'Next appointment', value: next ? `${next.appointmentDate} ${formatTime(next.startTime)}` : NONE },
   ];
 }
 

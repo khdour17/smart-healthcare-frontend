@@ -4,12 +4,14 @@ export const COMMON = {
   PAGE_HEADING: '.MuiTypography-h5',
   ADD_BUTTON: 'main .MuiButton-contained',
   TABLE_ROW: '.MuiTableBody-root .MuiTableRow-root',
-  DELETE_SELECTED_BUTTON: 'button[aria-label="Delete selected"]',
   DRAWER: '.MuiDrawer-paper',
   DRAWER_ALERT: '.MuiDrawer-paper [role="alert"]',
   DIALOG: '[role="dialog"]',
   DIALOG_ALERT: '[role="dialog"] [role="alert"]',
   DIALOG_MESSAGE: '.MuiDialogContentText-root',
+  TOAST: '.MuiSnackbar-root',
+  CALENDAR_ITEM: 'main [class*="item_"]',
+  CALENDAR_DAY: 'main [class*="dayLabel"]',
 };
 
 export function leftMenuItem(label: string): string {
@@ -32,10 +34,30 @@ export function formField(label: string): string {
   return `${COMMON.DRAWER} .MuiFormControl-root:has(label:text-is("${label}")) input`;
 }
 
+export function selectField(label: string): string {
+  return `${COMMON.DRAWER} .MuiFormControl-root:has(label:text-is("${label}")) [role="combobox"]`;
+}
+
+export function listOption(label: string): string {
+  return `[role="option"]:text-is("${label}")`;
+}
+
 export function drawerButton(label: string): string {
   return `${COMMON.DRAWER} button:text-is("${label}")`;
 }
 
 export function dialogButton(label: string): string {
   return `${COMMON.DIALOG} button:text-is("${label}")`;
+}
+
+export function iconButton(label: string): string {
+  return `button[aria-label="${label}"]`;
+}
+
+export function rowAction(cellText: string, actionLabel: string): string {
+  return `${tableRow(cellText)} button[aria-label="${actionLabel}"]`;
+}
+
+export function calendarItem(text: string): string {
+  return `${COMMON.CALENDAR_ITEM}:has-text("${text}")`;
 }

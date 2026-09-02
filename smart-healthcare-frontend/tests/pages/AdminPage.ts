@@ -1,7 +1,9 @@
+import { ICON_BUTTONS } from '../config/messages';
 import {
   COMMON,
   dialogButton,
   drawerButton,
+  iconButton,
   tableRowCheckbox,
 } from '../selectors/common.selectors';
 import { CommonPage } from './CommonPage';
@@ -18,7 +20,7 @@ export class AdminPage extends CommonPage {
       await this.checkItem(tableRowCheckbox(cellText));
     }
 
-    await this.clickOnItem(COMMON.DELETE_SELECTED_BUTTON);
+    await this.clickOnItem(iconButton(ICON_BUTTONS.DELETE_SELECTED));
     await this.clickOnItem(dialogButton(confirmLabel));
   }
 }

@@ -25,6 +25,24 @@ export const MENU_ITEMS = {
   SETTINGS: 'Settings',
 };
 
+export const ICON_BUTTONS = {
+  DELETE_SELECTED: 'Delete selected',
+  CLEAR_SELECTION: 'Clear selection',
+  VIEW_DETAILS: 'View details',
+  COMPLETE_APPOINTMENT: 'Complete appointment',
+  ADD_PRESCRIPTION: 'Add prescription',
+  EDIT_PRESCRIPTION: 'Edit prescription',
+  DELETE_PRESCRIPTION: 'Delete prescription',
+  CANCEL_APPOINTMENT: 'Cancel appointment',
+  DELETE_APPOINTMENT: 'Delete appointment',
+  EDIT_ENTRY: 'Edit entry',
+  DELETE_ENTRY: 'Delete entry',
+  CALENDAR_VIEW: 'Calendar view',
+  LIST_VIEW: 'List view',
+  PREVIOUS_WEEK: 'Previous week',
+  NEXT_WEEK: 'Next week',
+};
+
 export const PAGE_TITLES = {
   DOCTORS: 'Doctors',
   PATIENTS: 'Patients',
@@ -41,6 +59,22 @@ export const FIELD_LABELS = {
   DATE_OF_BIRTH: 'Date of Birth',
   PHONE: 'Phone',
   ADDRESS: 'Address',
+  DAY_OF_WEEK: 'Day of Week',
+  START_TIME: 'Start Time',
+  END_TIME: 'End Time',
+  SLOT_DURATION: 'Slot Duration (minutes)',
+  NOTES: 'Notes',
+  MEDICINES: 'Medicines',
+  DIAGNOSIS: 'Diagnosis',
+  INSTRUCTIONS: 'Instructions',
+  TITLE: 'Title',
+  DESCRIPTION: 'Description',
+  DATE: 'Date',
+  DOCTOR: 'Doctor',
+  SPECIALTY_FILTER: 'Specialty',
+  TIME: 'Time',
+  REASON: 'Reason',
+  PATIENT: 'Patient',
 };
 
 export const TEXTS = {

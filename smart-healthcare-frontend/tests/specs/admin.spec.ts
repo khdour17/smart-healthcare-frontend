@@ -2,6 +2,7 @@ import { ROUTES } from '../config/app.config';
 import {
   BUTTONS,
   FIELD_LABELS,
+  ICON_BUTTONS,
   PAGE_TITLES,
   selectedCountText,
   TEXTS,
@@ -12,6 +13,7 @@ import {
   dialogButton,
   drawerButton,
   formField,
+  iconButton,
   tableRow,
   tableRowCheckbox,
 } from '../selectors/common.selectors';
@@ -157,7 +159,7 @@ test.describe('Verify Admin Doctors', () => {
 
     await adminPage.verifyTextExists(selectedCountText(2));
 
-    await adminPage.clickOnItem(COMMON.DELETE_SELECTED_BUTTON);
+    await adminPage.clickOnItem(iconButton(ICON_BUTTONS.DELETE_SELECTED));
     await adminPage.clickOnItem(dialogButton(BUTTONS.DELETE));
 
     await adminPage.verifyItemMissing(tableRow(firstUsername));
@@ -172,7 +174,7 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.addUser(doctor, BUTTONS.CREATE_DOCTOR);
 
     await adminPage.checkItem(tableRowCheckbox(username));
-    await adminPage.clickOnItem(COMMON.DELETE_SELECTED_BUTTON);
+    await adminPage.clickOnItem(iconButton(ICON_BUTTONS.DELETE_SELECTED));
     await adminPage.clickOnItem(dialogButton(BUTTONS.CANCEL));
 
     await adminPage.verifyItemMissing(COMMON.DIALOG);

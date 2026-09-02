@@ -5,6 +5,9 @@ import {
   COMMON,
   formField,
   leftMenuItem,
+  listOption,
+  rowAction,
+  selectField,
   userMenuItem,
 } from '../selectors/common.selectors';
 import type { MenuExpectation } from '../types';
@@ -40,6 +43,19 @@ export class CommonPage {
     for (const [label, value] of Object.entries(fields)) {
       await this.fillItem(formField(label), value);
     }
+  }
+
+  async chooseOption(fieldLabel: string, optionLabel: string): Promise<void> {
+    await this.clickOnItem(selectField(fieldLabel));
+    await this.clickOnItem(listOption(optionLabel));
+  }
+
+  async clickRowAction(cellText: string, actionLabel: string): Promise<void> {
+    await this.clickOnItem(rowAction(cellText, actionLabel));
+  }
+
+  async verifyToast(message: string): Promise<void> {
+    await this.verifyItemContainsText(COMMON.TOAST, message);
   }
 
   async verifyItemExists(selector: string): Promise<void> {

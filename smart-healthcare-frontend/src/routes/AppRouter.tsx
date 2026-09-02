@@ -29,8 +29,8 @@ const AppointmentsPage = lazy(() => import('../views/pages/Patient/AppointmentsP
 const PrescriptionsPage = lazy(() => import('../views/pages/Patient/PrescriptionsPage/PrescriptionsPage'));
 const PatientRecordsPage = lazy(() => import('../views/pages/Doctor/MedicalRecordsPage/MedicalRecordsPage'));
 const MedicalRecordsPage = lazy(() => import('../views/pages/Patient/MedicalRecordsPage/MedicalRecordsPage'));
-const ProfilePage = lazy(() => import('../views/pages/ProfilePage/ProfilePage'));
-const SettingsPage = lazy(() => import('../views/pages/SettingsPage/SettingsPage'));
+const ProfilePage = lazy(() => import('../views/shared/ProfilePage/ProfilePage'));
+const SettingsPage = lazy(() => import('../views/shared/SettingsPage/SettingsPage'));
 const NotFoundPage = lazy(() => import('../views/pages/NotFoundPage/NotFoundPage'));
 
 function RoleDashboard() {

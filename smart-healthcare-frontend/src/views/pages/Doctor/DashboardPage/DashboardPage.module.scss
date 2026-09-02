@@ -2,16 +2,6 @@
 
 .page { display: flex; flex-direction: column; gap: 20px; }
 
-.headerRow {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.shortcuts { display: flex; flex-wrap: wrap; gap: 12px; }
-
 .charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

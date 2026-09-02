@@ -2,7 +2,7 @@ import type { AppointmentResponse } from '../api/appointments/AppointmentsAPI';
 import type { BarChartPoint } from '../components/BarChart/BarChart';
 import type { ShareBarSegment } from '../components/ShareBar/ShareBar';
 import type { AppointmentStatus } from '../types/common';
-import { todayIso } from './todayIso';
+import { todayIso } from '../utils/todayIso';
 
 const DAYS_SHOWN = 7;
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

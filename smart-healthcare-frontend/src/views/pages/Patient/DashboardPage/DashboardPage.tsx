@@ -5,11 +5,8 @@ import {
   useState,
 } from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
 import {
   Box,
-  Button,
   Typography,
 } from '@mui/material';
 
@@ -35,8 +32,8 @@ import {
   appointmentShare,
   countByStatus,
   upcomingAppointments,
-} from '../../../../utils/appointmentAnalytics';
-import { visitsPerDoctor } from './patientAnalytics';
+} from '../../../../analytics/appointmentAnalytics';
+import { visitsPerDoctor } from '../../../../analytics/patientAnalytics';
 import styles from './DashboardPage.module.scss';
 
 interface Overview {
@@ -81,7 +78,6 @@ async function loadOverview(patientId: number): Promise<Overview> {
 
 export default function DashboardPage() {
   const auth = useContext(AuthContext);
-  const navigate = useNavigate();
   const patientId = auth?.user?.roleEntityId ?? null;
   const [overview, setOverview] = useState<Overview | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -104,16 +100,9 @@ export default function DashboardPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Box>
-          <Typography variant="h5">My Dashboard</Typography>
-          <Typography variant="body2" color="textSecondary">Your appointments, your prescriptions and your visits.</Typography>
-        </Box>
-        <Box className={styles.shortcuts}>
-          <Button variant="outlined" onClick={() => navigate('/dashboard/appointments')}>Appointments</Button>
-          <Button variant="outlined" onClick={() => navigate('/dashboard/prescriptions')}>Prescriptions</Button>
-          <Button variant="outlined" onClick={() => navigate('/dashboard/medical-record')}>Medical Record</Button>
-        </Box>
+      <Box>
+        <Typography variant="h5">My Dashboard</Typography>
+        <Typography variant="body2" color="textSecondary">Your appointments, your prescriptions and your visits.</Typography>
       </Box>
 
       {isLoading && (

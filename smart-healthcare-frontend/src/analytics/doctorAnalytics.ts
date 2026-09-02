@@ -1,6 +1,6 @@
-import type { DoctorAvailabilityResponse } from '../../../../api/availability/AvailabilityAPI';
-import type { BarChartPoint } from '../../../../components/BarChart/BarChart';
-import type { DayOfWeek } from '../../../../types/common';
+import type { DoctorAvailabilityResponse } from '../api/availability/AvailabilityAPI';
+import type { BarChartPoint } from '../components/BarChart/BarChart';
+import type { DayOfWeek } from '../types/common';
 
 const WEEK: DayOfWeek[] = [
   'MONDAY',

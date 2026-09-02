@@ -1,5 +1,5 @@
-import type { AppointmentResponse } from '../../../../api/appointments/AppointmentsAPI';
-import type { BarChartPoint } from '../../../../components/BarChart/BarChart';
+import type { AppointmentResponse } from '../api/appointments/AppointmentsAPI';
+import type { BarChartPoint } from '../components/BarChart/BarChart';
 
 const DOCTORS_SHOWN = 6;
 

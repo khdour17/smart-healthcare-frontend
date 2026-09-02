@@ -11,7 +11,7 @@ import styles from './WeekCalendar.module.scss';
 
 type CalendarTone = 'primary' | 'success' | 'muted';
 
-export interface CalendarDay {
+interface CalendarDay {
   key: string;
   label: string;
   subLabel?: string;

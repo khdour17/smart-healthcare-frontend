@@ -6,7 +6,7 @@ import {
 
 import styles from './ShareBar.module.scss';
 
-export type ShareSlot = 'one' | 'two' | 'three' | 'muted';
+type ShareSlot = 'one' | 'two' | 'three' | 'muted';
 
 export interface ShareBarSegment {
   label: string;

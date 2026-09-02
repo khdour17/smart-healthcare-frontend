@@ -1,0 +1,123 @@
+@use '../../styles/variables' as *;
+
+$head-height: 52px;
+$hour-height: 56px;
+
+.calendar {
+  position: relative;
+  display: flex;
+  border-radius: $radius-base;
+  background-color: $color-surface-2;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.axis {
+  flex-shrink: 0;
+  width: 64px;
+  border-right: 1px solid $color-border;
+}
+
+.axisHead { height: $head-height; border-bottom: 1px solid $color-border; }
+
+.axisHour {
+  position: relative;
+  height: $hour-height;
+  border-bottom: 1px solid rgba(35, 47, 62, 0.55);
+}
+
+.axisLabel {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  color: $color-text-muted;
+  font-variant-numeric: tabular-nums;
+}
+
+.days { display: flex; flex: 1; min-width: 0; }
+
+.day {
+  flex: 1;
+  min-width: 0;
+  border-right: 1px solid $color-border;
+  &:last-child { border-right: none; }
+}
+
+.dayHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: $head-height;
+  gap: 1px;
+  border-bottom: 1px solid $color-border;
+}
+
+.dayHeadToday { background-color: $color-primary-muted; }
+
+.dayLabel { font-weight: 600; color: $color-text-primary; }
+.daySubLabel { color: $color-text-muted; }
+
+.dayBody { position: relative; }
+
+.hourCell {
+  height: $hour-height;
+  border-bottom: 1px solid rgba(35, 47, 62, 0.55);
+}
+
+.item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  overflow: hidden;
+  border-radius: $radius-small;
+  border-left: 3px solid;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.clickable {
+  cursor: pointer;
+  &:hover { filter: brightness(1.18); transform: translateY(-1px); }
+}
+
+.tonePrimary {
+  background-color: rgba(57, 135, 229, 0.22);
+  border-left-color: $color-series-1;
+}
+
+.toneSuccess {
+  background-color: rgba(25, 158, 112, 0.22);
+  border-left-color: $color-series-3;
+}
+
+.toneMuted {
+  background-color: rgba(147, 163, 184, 0.14);
+  border-left-color: $color-text-muted;
+}
+
+.itemTitle {
+  font-weight: 600;
+  color: $color-text-primary;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemSubtitle {
+  color: $color-text-secondary;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+}

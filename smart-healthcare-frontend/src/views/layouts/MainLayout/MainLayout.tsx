@@ -14,7 +14,7 @@ import { AuthContext } from '../../../contexts/AuthContext';
 import {
   getMenuCollapsed,
   saveMenuCollapsed,
-} from '../../../utils/menuPreference';
+} from '../../../utils/preferences';
 import { Header } from './Header/Header';
 import { LeftMenu } from './LeftMenu/LeftMenu';
 import { getLeftMenuItems } from './LeftMenu/leftMenuConfig';

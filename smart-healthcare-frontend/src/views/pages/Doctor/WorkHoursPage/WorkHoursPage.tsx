@@ -29,9 +29,29 @@ import {
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { formatTime } from '../../../../utils/formatTime';
+import {
+  getPageView,
+  type PageView,
+  savePageView,
+} from '../../../../utils/preferences';
 import { AddAvailabilityForm } from './AddAvailabilityForm/AddAvailabilityForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { ViewToggle } from '../../../../components/ViewToggle/ViewToggle';
+import {
+  type CalendarItem,
+  WeekCalendar,
+} from '../../../../components/WeekCalendar/WeekCalendar';
 import styles from './WorkHoursPage.module.scss';
+
+const WEEK_DAYS = [
+  { key: 'MONDAY', label: 'Mon' },
+  { key: 'TUESDAY', label: 'Tue' },
+  { key: 'WEDNESDAY', label: 'Wed' },
+  { key: 'THURSDAY', label: 'Thu' },
+  { key: 'FRIDAY', label: 'Fri' },
+  { key: 'SATURDAY', label: 'Sat' },
+  { key: 'SUNDAY', label: 'Sun' },
+];
 
 export default function WorkHoursPage() {
   const auth = useContext(AuthContext);
@@ -40,6 +60,12 @@ export default function WorkHoursPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [view, setView] = useState<PageView>(() => getPageView('workHours'));
+
+  function changeView(next: PageView) {
+    setView(next);
+    savePageView('workHours', next);
+  }
 
   const refreshSlots = useCallback(() => {
     if (doctorId !== null) getDoctorAvailability(doctorId).then(setSlots);
@@ -89,19 +115,41 @@ export default function WorkHoursPage() {
     },
   ];
 
+  const calendarItems: CalendarItem[] = slots.map((slot) => ({
+    id: String(slot.id),
+    dayKey: slot.dayOfWeek,
+    startTime: slot.startTime,
+    endTime: slot.endTime,
+    title: `${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`,
+    subtitle: `${slot.slotDurationMinutes} min slots`,
+    tone: 'primary',
+    onClick: () => openConfirmDelete(slot.id),
+  }));
+
   return (
     <Box className={styles.page}>
       <PageHeader
         title="Work Hours"
         subtitle="The hours you are open for appointments each week."
         actions={(
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
-            Add Availability
-          </Button>
+          <>
+            <ViewToggle view={view} onChange={changeView} />
+            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
+              Add Availability
+            </Button>
+          </>
         )}
       />
 
-      <DataTable columns={columns} rows={slots} getRowKey={(row) => row.id} emptyMessage="No work hours set yet." />
+      {view === 'calendar' ? (
+        <WeekCalendar
+          days={WEEK_DAYS}
+          items={calendarItems}
+          emptyMessage="No work hours set yet."
+        />
+      ) : (
+        <DataTable columns={columns} rows={slots} getRowKey={(row) => row.id} emptyMessage="No work hours set yet." />
+      )}
 
       {doctorId !== null && (
         <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Add Availability">

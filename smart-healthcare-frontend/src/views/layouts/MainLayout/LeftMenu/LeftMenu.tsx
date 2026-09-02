@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   useLocation,
   useNavigate,
@@ -25,14 +23,15 @@ const COLLAPSED_WIDTH = 76;
 
 interface LeftMenuProps {
   items: LeftMenuItem[];
+  collapsed: boolean;
+  onToggle: () => void;
 }
 
 function cx(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-export function LeftMenu({ items }: LeftMenuProps) {
-  const [collapsed, setCollapsed] = useState(false);
+export function LeftMenu({ items, collapsed, onToggle }: LeftMenuProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const width = collapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH;
@@ -64,7 +63,7 @@ export function LeftMenu({ items }: LeftMenuProps) {
           return collapsed ? <Tooltip key={item.key} title={item.label} placement="right">{button}</Tooltip> : button;
         })}
       </List>
-      <IconButton className={styles.toggleButton} onClick={() => setCollapsed((prev) => !prev)}>
+      <IconButton className={styles.toggleButton} onClick={onToggle}>
         {collapsed ? <ChevronRightIcon fontSize="small" /> : <ChevronLeftIcon fontSize="small" />}
       </IconButton>
     </Box>

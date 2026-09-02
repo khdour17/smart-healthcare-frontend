@@ -3,7 +3,7 @@ import type {
   MenuExpectation,
   UserRole,
 } from '../types';
-import { MENU_ITEMS } from './messages';
+import { MENU_ITEMS } from '../config/messages';
 
 export const USERS: Record<UserRole, Credentials> = {
   ADMIN: { username: 'admin', password: 'admin123' },

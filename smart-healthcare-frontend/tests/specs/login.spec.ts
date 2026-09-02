@@ -9,7 +9,7 @@ import {
   UNKNOWN_USER,
   USERS,
   WRONG_PASSWORD,
-} from '../config/testData';
+} from '../testData/common.data';
 import { test } from '../fixtures/testFixtures';
 import { COMMON } from '../selectors/common.selectors';
 import { LOGIN_PAGE } from '../selectors/loginPage.selectors';

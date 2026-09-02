@@ -6,13 +6,7 @@ import {
   selectedCountText,
   TEXTS,
 } from '../config/messages';
-import { USERS } from '../config/testData';
 import { test } from '../fixtures/testFixtures';
-import {
-  newAdmin,
-  newDoctor,
-  newPatient,
-} from '../helpers/userData';
 import {
   COMMON,
   dialogButton,
@@ -21,6 +15,12 @@ import {
   tableRow,
   tableRowCheckbox,
 } from '../selectors/common.selectors';
+import {
+  newAdmin,
+  newDoctor,
+  newPatient,
+} from '../testData/admin.data';
+import { USERS } from '../testData/common.data';
 
 test.beforeEach(async ({ loginPage }) => {
   await loginPage.loginAs(USERS.ADMIN);

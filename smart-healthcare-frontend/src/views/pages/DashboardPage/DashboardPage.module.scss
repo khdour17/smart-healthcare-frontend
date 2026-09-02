@@ -1,5 +1,25 @@
-.root {
+@use '../../../styles/variables' as *;
+
+.page { display: flex; flex-direction: column; gap: 20px; }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.tile {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  padding: 16px 18px;
+  border-radius: $radius-base;
+  background-color: $color-surface-2;
+  border: 1px solid $color-border;
 }
+
+.tileValue { font-weight: 600; }
+
+.shortcuts { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.message { padding: 8px 2px; }

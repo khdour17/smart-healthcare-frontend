@@ -30,15 +30,23 @@ Built with **React 19**, **TypeScript**, **MUI v9** and **SCSS Modules**, protec
 - [Architecture](#-architecture)
 - [Project Structure](#-project-structure)
 - [Routing & Guards](#-routing--guards)
+- [Authentication & Session](#-authentication--session)
 - [Talking to the API](#-talking-to-the-api)
+- [What Each Screen Calls](#-what-each-screen-calls)
+- [Dashboards & Analytics](#-dashboards--analytics)
+- [Design System](#-design-system)
 - [Styling Rules](#-styling-rules)
 - [Reusable Components](#-reusable-components)
 - [State & Data Loading](#-state--data-loading)
+- [Accessibility](#-accessibility)
+- [Performance](#-performance)
 - [End-to-End Tests](#-end-to-end-tests)
 - [Screenshot Script](#-screenshot-script)
 - [Setup & Installation](#-setup--installation)
 - [Docker](#-docker)
 - [npm Scripts](#-npm-scripts)
+- [Code Conventions](#-code-conventions)
+- [Troubleshooting](#-troubleshooting)
 - [Demo Accounts](#-demo-accounts)
 
 ---
@@ -316,6 +324,70 @@ so typing an admin URL as a patient never shows admin data, not even for a frame
 
 ---
 
+## 🔑 Authentication & Session
+
+### Signing in
+
+```
+LoginPage ──► POST /api/auth/login
+                    │
+                    ▼
+   { token, id, username, email, role, roleEntityId }
+                    │
+        saveSession(token, user)  ──► localStorage
+                    │
+        AuthContext.setUser(user)
+                    │
+                    ▼
+        Navigate to /dashboard
+```
+
+`AuthContextProvider` reads `localStorage` once on start-up, so a reload keeps you signed in.
+It checks the expiry before trusting what it finds:
+
+```ts
+function getInitialUser(): AuthUser | null {
+  const token = getToken();
+  const storedUser = getStoredUser();
+  if (token && storedUser && !isTokenExpired(token)) {
+    return storedUser;
+  }
+  clearSession();
+  return null;
+}
+```
+
+### What is stored
+
+| Key | Value | Why |
+|-----|-------|-----|
+| `token` | The raw JWT | Sent on every request by the axios interceptor |
+| `user` | `id`, `username`, `email`, `role`, `roleEntityId` | Avoids decoding the token on every render |
+| `menuCollapsed` | `true` / `false` | The side-menu preference |
+| `pageView.<page>` | `calendar` / `list` | The view each page opens in |
+
+`roleEntityId` is the doctor or patient row behind the account. It is what turns "me" into
+`/api/appointments/patient/12` without an extra lookup.
+
+### Signing out
+
+Three things end a session, and all of them land on `/login`:
+
+| Trigger | What happens |
+|---------|--------------|
+| **Logout** in the user menu | `clearSession()`, `setUser(null)`, navigate to `/login` |
+| **A 401 from any call** except login | The interceptor drops the token and redirects — this is how an expired token is caught mid-session |
+| **An expired token found on start-up** | `AuthContextProvider` clears it before rendering anything |
+
+The Settings page reads the expiry straight out of the token, so a user can see when the session
+ends:
+
+```ts
+const expiry = getSessionExpiry(token);   // jwtDecode(token).exp * 1000
+```
+
+---
+
 ## 🔌 Talking to the API
 
 `src/utils/httpClient.ts` is the only axios instance in the app.
@@ -343,6 +415,135 @@ export async function getAvailableSlots(doctorId: number, date: string): Promise
 export async function bookAppointment(patientId: number, request: AppointmentRequest): Promise<AppointmentResponse>
 export async function cancelAppointment(appointmentId: number): Promise<void>
 ```
+
+---
+
+## 🗺 What Each Screen Calls
+
+Useful when tracing a bug: every screen and the endpoints behind it.
+
+| Screen | Calls |
+|--------|-------|
+| Login | `POST /auth/login` |
+| Admin dashboard | `GET /doctors` · `GET /patients` · `GET /admin` · `GET /appointments` |
+| Doctor dashboard | `GET /appointments/doctor/{id}` · `GET /availability/doctor/{id}` · `GET /prescriptions/doctor/{id}` |
+| Patient dashboard | `GET /appointments/patient/{id}` · `GET /prescriptions/patient/{id}` |
+| Admin → Doctors | `GET /doctors` · `POST /auth/register/doctor` · `DELETE /doctors` |
+| Admin → Patients | `GET /patients` · `POST /auth/register/patient` · `DELETE /patients` |
+| Admin → Admins | `GET /admin` · `POST /auth/register/admin` · `DELETE /admin` |
+| Doctor → Appointments | `GET /appointments/doctor/{id}` · `GET /prescriptions/doctor/{id}` · `PATCH /appointments/{id}/complete` · `POST /prescriptions` |
+| Doctor → Work Hours | `GET /availability/doctor/{id}` · `POST /availability/doctor/{id}` · `DELETE /availability/{id}` |
+| Doctor → Prescriptions | `GET /prescriptions/doctor/{id}` · `PUT /prescriptions/{id}` · `DELETE /prescriptions/{id}` |
+| Doctor → Medical Records | `GET /patients` · `GET /medical-records/patient/{id}` · `POST` · `PUT` · `DELETE /medical-records/{id}` |
+| Patient → Appointments | `GET /appointments/patient/{id}` · `GET /doctors` · `GET /appointments/available-slots` · `POST /appointments/patient/{id}` · `PATCH /appointments/{id}/cancel` · `DELETE /appointments/{id}` |
+| Patient → Prescriptions | `GET /prescriptions/patient/{id}` |
+| Patient → Medical Record | `GET /medical-records/patient/{id}` |
+| Profile | `GET /doctors/search` · `GET /patients/search` · `GET /admin/search` · `PUT /doctors/{id}` · `PUT /patients/{id}` |
+| Settings | none — it reads the token |
+
+### The rules the UI mirrors
+
+The API is the authority, but the UI does not offer an action the API would reject:
+
+| Rule | How the screen shows it |
+|------|-------------------------|
+| A slot must be free | The Time field only lists slots from `available-slots` |
+| A day the doctor does not work has none | The Time field stays disabled and reads *"Doctor not available on SUNDAY"* |
+| Only a scheduled visit can be cancelled | The cancel icon appears on scheduled rows only |
+| Only a cancelled visit can be deleted | The delete icon appears on cancelled rows only |
+| Only a completed visit can be prescribed for | The prescription icon appears on completed rows without one |
+| A prescription needs at least one medicine | Save stays disabled until a medicine chip exists |
+| An admin cannot edit his own profile | The profile page has no Edit button and says why |
+
+When the API refuses anyway — a duplicate username, a slot taken between loading and submitting —
+the message comes back in an `Alert` inside the drawer or the dialog, and the form stays open with
+what was typed.
+
+---
+
+## 📊 Dashboards & Analytics
+
+Every chart is a pure function over the API response, kept in `src/analytics/` so it can be read
+and changed without touching a component.
+
+| Function | Feeds |
+|----------|-------|
+| `countBySpecialty(doctors)` | Admin → doctors per specialty |
+| `busiestDoctors(doctors, appointments)` | Admin → who is booked most |
+| `lastSevenDays(appointments)` | Admin and doctor → appointments per day |
+| `appointmentShare(appointments)` | All three → the scheduled / completed / cancelled bar |
+| `countByStatus(appointments, status)` | All three → the stat tiles |
+| `upcomingAppointments(appointments)` | Doctor and patient → next visit, upcoming count |
+| `weeklyHours(availability)` | Doctor → hours per weekday |
+| `visitsPerDoctor(appointments)` | Patient → who he sees most |
+
+The charts themselves are plain divs — `BarChart` and `ShareBar` are a few dozen lines of flexbox
+and CSS variables each. No chart library is installed, which keeps the bundle small and the dark
+theme consistent.
+
+| Dashboard | Tiles | Charts |
+|-----------|-------|--------|
+| **Admin** | Doctors · Patients · Admins · Appointments · Specialties | Status share · last 7 days · doctors per specialty · busiest doctors |
+| **Doctor** | Today · Upcoming · Completed · Patients seen · Prescriptions · Next appointment | Status share · last 7 days · hours per weekday |
+| **Patient** | Upcoming · Completed visits · Cancelled · Prescriptions · Last visit · Next appointment | Status share · visits per doctor |
+
+---
+
+## 🎨 Design System
+
+A single dark theme, defined once in `src/styles/_variables.scss` and consumed by every module.
+
+### Palette
+
+| Token | Value | Used for |
+|-------|-------|----------|
+| `$color-background` | `#0a0e14` | The page behind everything |
+| `$color-surface-1` | `#0f141c` | Inputs, table heads, the side menu |
+| `$color-surface-2` | `#141b25` | Cards, drawers, tables |
+| `$color-surface-3` | `#1b2431` | Raised blocks — summaries, the selection bar |
+| `$color-surface-hover` | `#202b3a` | Row hover |
+| `$color-border` | `#232f3e` | Every default border |
+| `$color-border-strong` | `#2f3d50` | Hover and focus borders |
+| `$color-primary` | `#3987e5` | Actions, the active menu item, scheduled visits |
+| `$color-success` | `#34d399` | Completed visits |
+| `$color-warning` | `#fbbf24` | Warnings |
+| `$color-error` | `#f87171` | Destructive actions and errors |
+| `$color-text-primary` | `#eef2f8` | Headings and values |
+| `$color-text-secondary` | `#93a3b8` | Labels and help text |
+| `$color-text-muted` | `#6b7a8f` | Disabled and placeholder |
+
+Charts use three fixed series colours (`#3987e5`, `#d95926`, `#199e70`) so a bar keeps its meaning
+across dashboards.
+
+### Shape, depth and type
+
+| Token | Value |
+|-------|-------|
+| `$radius-small` / `$radius-base` / `$radius-large` | `8px` / `12px` / `16px` |
+| `$shadow-card` | `0 1px 2px rgba(0,0,0,.32), 0 10px 28px rgba(0,0,0,.24)` |
+| `$shadow-raised` | `0 2px 6px rgba(0,0,0,.36), 0 18px 44px rgba(0,0,0,.32)` |
+| Font | **Inter**, bundled through `@fontsource/inter` — no network request |
+
+### Breakpoints
+
+| Token | Width | What changes |
+|-------|-------|--------------|
+| `$breakpoint-tablet` | `600px` | Page padding grows from 16 to 24 |
+| `$breakpoint-menu` | `900px` | The side menu becomes permanent; below it, a drawer behind the hamburger |
+| `$breakpoint-wide` | `1280px` | Page padding grows to 28/32 |
+
+### Feedback
+
+Every create, update, cancel and delete ends in a toast — one `Snackbar` in `ToastContextProvider`,
+bottom-right, 3.2 seconds, reached from anywhere through `useToast()`:
+
+```ts
+const showToast = useToast();
+showToast('Appointment booked.');
+```
+
+Errors do not use the toast. They stay next to the thing that failed — an `Alert` inside the drawer
+or the confirm dialog — so the user can fix the input without losing it.
 
 ---
 
@@ -414,6 +615,58 @@ const refreshRows = useCallback(() => {
 
 Two small preferences are kept in `localStorage` through `src/utils/preferences.ts`: whether the
 side menu stays collapsed, and whether a page opens in calendar or list view.
+
+---
+
+## ♿ Accessibility
+
+The app leans on MUI's primitives rather than rebuilding them, so roles, focus traps and keyboard
+handling come for free: the drawer and the dialog trap focus and close on `Escape`, the selects are
+real listboxes reachable with the arrow keys, and the tables are real `<table>` markup.
+
+On top of that:
+
+- **Every icon button has an accessible name.** Most come from the MUI `Tooltip` that already
+  labels them (`Delete selected`, `View details`, `Complete appointment`), and the ones without a
+  tooltip carry an explicit `aria-label` — `Open the user menu`, `Open the menu`, `Close`,
+  `Calendar view`, `List view`, `Previous week`, `Next week`, `Collapse the menu`, `Expand the menu`.
+- **The menu toggle says what it will do**, not what it is: `Expand the menu` when collapsed,
+  `Collapse the menu` when open.
+- **Required fields are real `required` inputs**, so the browser blocks the submit and points at
+  the field rather than the app inventing its own validation.
+- **Colour is never the only signal.** A status is a chip with a word in it, not a coloured dot.
+
+This is also what makes the test suite readable: a test clicks *"Delete selected"*, not
+`.MuiIconButton-root:nth-child(2)`. If a name changes, the test fails for the right reason.
+
+---
+
+## ⚡ Performance
+
+**Every route is lazy.** `AppRouter` wraps each page in `lazy(() => import(...))`, so a patient
+never downloads the admin screens:
+
+```ts
+const AdminsPage = lazy(() => import('../views/pages/Admin/AdminsPage/AdminsPage'));
+```
+
+Vite splits the result into a shared chunk plus one per page and per heavy MUI part:
+
+| Chunk | Size | Gzipped |
+|-------|------|---------|
+| `index` (React, router, theme, layout) | 257 kB | **83 kB** |
+| MUI palette internals | 86 kB | 30 kB |
+| `httpClient` (axios + the API layer) | 45 kB | 17 kB |
+| `TextField`, `Tooltip`, `Autocomplete`, `DataTable`, `Drawer`… | 10–45 kB each | loaded on demand |
+
+Other things that keep it quick:
+
+- **No chart library.** `BarChart` and `ShareBar` are divs and CSS.
+- **`useLatestCall`** stops a stale response from repainting a list.
+- **`useMemo` on the loader** in `useLoadedData`, so a re-render never refetches.
+- **Fonts are bundled**, not fetched from a CDN.
+- **nginx serves hashed assets** and only falls back to `index.html` for real routes, so a missing
+  asset is a `404` rather than an HTML page pretending to be JavaScript.
 
 ---
 
@@ -591,6 +844,40 @@ docker compose up -d --build web   # rebuild after a code change
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run test:e2e:report` | Opens the HTML report of the last run |
 | `npm run screenshots` | Regenerates every image in `smart-healthcare-frontend/screenshots/` |
+
+---
+
+## 📐 Code Conventions
+
+The rules this codebase is held to, and the reasoning behind each:
+
+| Rule | Why |
+|------|-----|
+| **No axios outside `src/api/`** | One place knows the endpoint shapes, so a backend change is one file |
+| **No inline `style`, no `sx`** | Styling stays in `.module.scss`, so a page reads as structure and a rule can be found by name |
+| **A component must be needed by three pages** | Otherwise it is a page's own markup, or MUI already has it |
+| **No comments that restate the code** | A name that needs a comment is a name that should change; the comments that stay explain *why* |
+| **A repeated block moves to `src/utils/` or a SCSS mixin** | The second copy is a bug waiting to be fixed once |
+| **`strict` TypeScript, no `any`, no unused locals** | `npm run build` fails on a dead variable |
+| **Selectors never live inside a spec** | A renamed label is one edit in `tests/selectors/` |
+
+`npm run lint` and `npm run build` both have to pass before anything is committed, and
+`npm run typecheck:tests` covers the Playwright project separately, since it has its own tsconfig.
+
+---
+
+## 🔧 Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| Every call returns `401` and the app bounces to `/login` | The token expired — it lasts 24 hours | Sign in again |
+| The app loads but every list is empty | The backend is not running, or nginx cannot reach it | `docker compose ps` — `healthcare-app` must be up on 8080 |
+| `docker compose up web` fails on the network | The frontend joins the backend's network | Start the backend stack first |
+| A record entry is refused as *"dated in the future"* | The containers were on UTC while you are not | Fixed by `TZ` in the backend compose — rebuild that stack |
+| The tests fail on login timeouts | Four workers logging in at once saturate BCrypt on a small machine | Run with fewer workers: `npx playwright test --workers=2` |
+| The tests fail with a strict-mode violation | A selector matches more than one element | Scope it, or use `firstMatch()` from `tests/selectors` |
+| `npm run dev` says the port is taken | The Docker container already owns 5173 | Stop it, or test against it with `BASE_URL=http://localhost:5173` |
+| Screenshots come out sparse | The database has no upcoming appointments | The script books its own — check the backend is reachable |
 
 ---
 

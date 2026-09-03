@@ -13,6 +13,7 @@ export const COMMON = {
   DIALOG_MESSAGE: '.MuiDialogContentText-root',
   TOAST: '.MuiSnackbar-root',
   FIRST_LIST_OPTION: '[role="listbox"] [role="option"]:first-child',
+  STAT_TILE: 'main [class*="tile"]',
   CALENDAR_ITEM: 'main [class*="item_"]',
   CALENDAR_DAY: 'main [class*="dayLabel"]',
   WEEK_LABEL: 'main [class*="weekLabel"]',
@@ -20,6 +21,7 @@ export const COMMON = {
   TIMELINE_ENTRY: 'main [class*="stream"] [class*="item_"]',
   FIRST_TIMELINE_ENTRY: 'main [class*="stream"] [class*="item_"]:first-child',
   MENU_SWITCH: 'main .MuiSwitch-root input',
+  MOBILE_MENU_ITEM: '.MuiDrawer-paper .MuiListItemButton-root',
 };
 
 export function leftMenuItem(label: string): string {
@@ -72,6 +74,10 @@ export function iconButton(label: string): string {
 
 export function rowAction(cellText: string, actionLabel: string): string {
   return `${tableRow(cellText)} button[aria-label="${actionLabel}"]`;
+}
+
+export function firstMatch(selector: string): string {
+  return `:nth-match(${selector}, 1)`;
 }
 
 export function firstRowAction(actionLabel: string): string {

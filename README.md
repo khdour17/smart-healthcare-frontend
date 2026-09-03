@@ -48,19 +48,19 @@ Built with **React 19**, **TypeScript**, **MUI v9** and **SCSS Modules**, protec
 <div align="center">
 
 ### Sign in
-![Login](screenshots/01-login.png)
+![Login](smart-healthcare-frontend/screenshots/01-login.png)
 
 ### Admin dashboard
-![Admin dashboard](screenshots/03-admin-dashboard.png)
+![Admin dashboard](smart-healthcare-frontend/screenshots/03-admin-dashboard.png)
 
 ### Doctor schedule — week calendar
-![Doctor schedule](screenshots/31-doctor-schedule-calendar.png)
+![Doctor schedule](smart-healthcare-frontend/screenshots/31-doctor-schedule-calendar.png)
 
 ### Patient books a visit
-![Book appointment](screenshots/13-patient-book-appointment.png)
+![Book appointment](smart-healthcare-frontend/screenshots/13-patient-book-appointment.png)
 
 ### A patient's medical record
-![Medical record](screenshots/20-patient-medical-record.png)
+![Medical record](smart-healthcare-frontend/screenshots/20-patient-medical-record.png)
 
 </div>
 
@@ -69,50 +69,50 @@ Built with **React 19**, **TypeScript**, **MUI v9** and **SCSS Modules**, protec
 
 | # | Screen | File |
 |---|--------|------|
-| 01 | Login | `screenshots/01-login.png` |
-| 02 | Login — wrong password | `screenshots/02-login-error.png` |
-| 03 | Admin dashboard | `screenshots/03-admin-dashboard.png` |
-| 04 | Admin — doctors | `screenshots/04-admin-doctors.png` |
-| 05 | Admin — add doctor | `screenshots/05-admin-add-doctor.png` |
-| 06 | Admin — rows selected | `screenshots/06-admin-selected-rows.png` |
-| 07 | Admin — delete dialog | `screenshots/07-admin-delete-dialog.png` |
-| 08 | Admin — patients | `screenshots/08-admin-patients.png` |
-| 09 | Admin — admins | `screenshots/09-admin-admins.png` |
-| 10 | Admin — profile (read only) | `screenshots/10-admin-profile.png` |
-| 11 | Toast after booking | `screenshots/11-toast-after-booking.png` |
-| 12 | Patient — appointments calendar | `screenshots/12-patient-appointments-calendar.png` |
-| 13 | Patient — book appointment | `screenshots/13-patient-book-appointment.png` |
-| 14 | Patient — appointments list | `screenshots/14-patient-appointments-list.png` |
-| 15 | Patient — cancel dialog | `screenshots/15-patient-cancel-dialog.png` |
-| 16 | Patient dashboard | `screenshots/16-patient-dashboard.png` |
-| 17 | Patient — appointment details | `screenshots/17-patient-appointment-details.png` |
-| 18 | Patient — prescriptions | `screenshots/18-patient-prescriptions.png` |
-| 19 | Patient — prescription details | `screenshots/19-patient-prescription-details.png` |
-| 20 | Patient — medical record | `screenshots/20-patient-medical-record.png` |
-| 21 | Patient — record filtered | `screenshots/21-patient-record-filtered.png` |
-| 22 | Patient — profile | `screenshots/22-patient-profile.png` |
-| 23 | Patient — edit profile | `screenshots/23-patient-edit-profile.png` |
-| 24 | Settings | `screenshots/24-settings.png` |
-| 25 | Collapsed side menu | `screenshots/25-collapsed-menu.png` |
-| 26 | User menu | `screenshots/26-user-menu.png` |
-| 27 | Not found | `screenshots/27-not-found.png` |
-| 28 | Mobile dashboard | `screenshots/28-mobile-dashboard.png` |
-| 29 | Mobile menu | `screenshots/29-mobile-menu.png` |
-| 30 | Doctor dashboard | `screenshots/30-doctor-dashboard.png` |
-| 31 | Doctor — schedule calendar | `screenshots/31-doctor-schedule-calendar.png` |
-| 32 | Doctor — schedule list | `screenshots/32-doctor-schedule-list.png` |
-| 33 | Doctor — complete a visit | `screenshots/33-doctor-complete-appointment.png` |
-| 34 | Doctor — add prescription | `screenshots/34-doctor-add-prescription.png` |
-| 35 | Doctor — appointment details | `screenshots/35-doctor-appointment-details.png` |
-| 36 | Doctor — work hours calendar | `screenshots/36-doctor-work-hours-calendar.png` |
-| 37 | Doctor — work hours list | `screenshots/37-doctor-work-hours-list.png` |
-| 38 | Doctor — add work hours | `screenshots/38-doctor-add-work-hours.png` |
-| 39 | Doctor — prescriptions | `screenshots/39-doctor-prescriptions.png` |
-| 40 | Doctor — edit prescription | `screenshots/40-doctor-edit-prescription.png` |
-| 41 | Doctor — prescription details | `screenshots/41-doctor-prescription-details.png` |
-| 42 | Doctor — medical records | `screenshots/42-doctor-medical-records.png` |
-| 43 | Doctor — add record entry | `screenshots/43-doctor-add-record-entry.png` |
-| 44 | Doctor — profile | `screenshots/44-doctor-profile.png` |
+| 01 | Login | `smart-healthcare-frontend/screenshots/01-login.png` |
+| 02 | Login — wrong password | `smart-healthcare-frontend/screenshots/02-login-error.png` |
+| 03 | Admin dashboard | `smart-healthcare-frontend/screenshots/03-admin-dashboard.png` |
+| 04 | Admin — doctors | `smart-healthcare-frontend/screenshots/04-admin-doctors.png` |
+| 05 | Admin — add doctor | `smart-healthcare-frontend/screenshots/05-admin-add-doctor.png` |
+| 06 | Admin — rows selected | `smart-healthcare-frontend/screenshots/06-admin-selected-rows.png` |
+| 07 | Admin — delete dialog | `smart-healthcare-frontend/screenshots/07-admin-delete-dialog.png` |
+| 08 | Admin — patients | `smart-healthcare-frontend/screenshots/08-admin-patients.png` |
+| 09 | Admin — admins | `smart-healthcare-frontend/screenshots/09-admin-admins.png` |
+| 10 | Admin — profile (read only) | `smart-healthcare-frontend/screenshots/10-admin-profile.png` |
+| 11 | Toast after booking | `smart-healthcare-frontend/screenshots/11-toast-after-booking.png` |
+| 12 | Patient — appointments calendar | `smart-healthcare-frontend/screenshots/12-patient-appointments-calendar.png` |
+| 13 | Patient — book appointment | `smart-healthcare-frontend/screenshots/13-patient-book-appointment.png` |
+| 14 | Patient — appointments list | `smart-healthcare-frontend/screenshots/14-patient-appointments-list.png` |
+| 15 | Patient — cancel dialog | `smart-healthcare-frontend/screenshots/15-patient-cancel-dialog.png` |
+| 16 | Patient dashboard | `smart-healthcare-frontend/screenshots/16-patient-dashboard.png` |
+| 17 | Patient — appointment details | `smart-healthcare-frontend/screenshots/17-patient-appointment-details.png` |
+| 18 | Patient — prescriptions | `smart-healthcare-frontend/screenshots/18-patient-prescriptions.png` |
+| 19 | Patient — prescription details | `smart-healthcare-frontend/screenshots/19-patient-prescription-details.png` |
+| 20 | Patient — medical record | `smart-healthcare-frontend/screenshots/20-patient-medical-record.png` |
+| 21 | Patient — record filtered | `smart-healthcare-frontend/screenshots/21-patient-record-filtered.png` |
+| 22 | Patient — profile | `smart-healthcare-frontend/screenshots/22-patient-profile.png` |
+| 23 | Patient — edit profile | `smart-healthcare-frontend/screenshots/23-patient-edit-profile.png` |
+| 24 | Settings | `smart-healthcare-frontend/screenshots/24-settings.png` |
+| 25 | Collapsed side menu | `smart-healthcare-frontend/screenshots/25-collapsed-menu.png` |
+| 26 | User menu | `smart-healthcare-frontend/screenshots/26-user-menu.png` |
+| 27 | Not found | `smart-healthcare-frontend/screenshots/27-not-found.png` |
+| 28 | Mobile dashboard | `smart-healthcare-frontend/screenshots/28-mobile-dashboard.png` |
+| 29 | Mobile menu | `smart-healthcare-frontend/screenshots/29-mobile-menu.png` |
+| 30 | Doctor dashboard | `smart-healthcare-frontend/screenshots/30-doctor-dashboard.png` |
+| 31 | Doctor — schedule calendar | `smart-healthcare-frontend/screenshots/31-doctor-schedule-calendar.png` |
+| 32 | Doctor — schedule list | `smart-healthcare-frontend/screenshots/32-doctor-schedule-list.png` |
+| 33 | Doctor — complete a visit | `smart-healthcare-frontend/screenshots/33-doctor-complete-appointment.png` |
+| 34 | Doctor — add prescription | `smart-healthcare-frontend/screenshots/34-doctor-add-prescription.png` |
+| 35 | Doctor — appointment details | `smart-healthcare-frontend/screenshots/35-doctor-appointment-details.png` |
+| 36 | Doctor — work hours calendar | `smart-healthcare-frontend/screenshots/36-doctor-work-hours-calendar.png` |
+| 37 | Doctor — work hours list | `smart-healthcare-frontend/screenshots/37-doctor-work-hours-list.png` |
+| 38 | Doctor — add work hours | `smart-healthcare-frontend/screenshots/38-doctor-add-work-hours.png` |
+| 39 | Doctor — prescriptions | `smart-healthcare-frontend/screenshots/39-doctor-prescriptions.png` |
+| 40 | Doctor — edit prescription | `smart-healthcare-frontend/screenshots/40-doctor-edit-prescription.png` |
+| 41 | Doctor — prescription details | `smart-healthcare-frontend/screenshots/41-doctor-prescription-details.png` |
+| 42 | Doctor — medical records | `smart-healthcare-frontend/screenshots/42-doctor-medical-records.png` |
+| 43 | Doctor — add record entry | `smart-healthcare-frontend/screenshots/43-doctor-add-record-entry.png` |
+| 44 | Doctor — profile | `smart-healthcare-frontend/screenshots/44-doctor-profile.png` |
 
 </details>
 
@@ -497,7 +497,7 @@ docker compose up -d tests-ui      # http://localhost:9323
 ```
 
 The full list of cases, with prerequisites, steps, data and expected results, is in
-[`test-cases/test-cases.xlsx`](test-cases/test-cases.xlsx).
+[`test-cases/test-cases.xlsx`](smart-healthcare-frontend/test-cases/test-cases.xlsx).
 
 ---
 
@@ -530,7 +530,7 @@ the visits the calendars need, and the `after` step deletes him again.
 
 ```bash
 git clone https://github.com/khdour17/smart-healthcare-frontend.git
-cd smart-healthcare-frontend
+cd smart-healthcare-frontend/smart-healthcare-frontend
 npm install
 npm run dev
 ```
@@ -591,7 +591,7 @@ docker compose up -d --build web   # rebuild after a code change
 | `npm run test:e2e` | Runs the 78 end-to-end tests |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run test:e2e:report` | Opens the HTML report of the last run |
-| `npm run screenshots` | Regenerates every image in `screenshots/` |
+| `npm run screenshots` | Regenerates every image in `smart-healthcare-frontend/screenshots/` |
 
 ---
 

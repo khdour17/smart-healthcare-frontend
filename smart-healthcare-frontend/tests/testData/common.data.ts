@@ -3,12 +3,23 @@ import type {
   MenuExpectation,
   UserRole,
 } from '../types';
-import { MENU_ITEMS } from './messages';
+import { MENU_ITEMS } from '../config/messages';
 
 export const USERS: Record<UserRole, Credentials> = {
   ADMIN: { username: 'admin', password: 'admin123' },
   DOCTOR: { username: 'dr_smith', password: 'doctor123' },
   PATIENT: { username: 'john_doe', password: 'patient123' },
+};
+
+export const PEOPLE = {
+  DOCTOR_NAME: 'Dr. Sarah Smith',
+  PATIENT_NAME: 'John Doe',
+};
+
+export const DASHBOARD_TITLES: Record<UserRole, string> = {
+  ADMIN: 'Admin Dashboard',
+  DOCTOR: 'Doctor Dashboard',
+  PATIENT: 'My Dashboard',
 };
 
 export const UNKNOWN_USER: Credentials = {
@@ -17,6 +28,11 @@ export const UNKNOWN_USER: Credentials = {
 };
 
 export const WRONG_PASSWORD = 'wrongpass';
+
+export function uniqueText(prefix: string): string {
+  const unique = `${Date.now().toString().slice(-7)}${Math.floor(Math.random() * 100)}`;
+  return `${prefix} ${unique}`;
+}
 
 export const EXPECTED_MENU_BY_ROLE: Record<UserRole, MenuExpectation> = {
   ADMIN: {

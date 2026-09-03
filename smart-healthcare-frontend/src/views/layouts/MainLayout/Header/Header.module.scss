@@ -5,16 +5,40 @@
   border-bottom: 1px solid $color-border;
 }
 
-.toolbar { display: flex; justify-content: space-between; }
-.brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-.logo { height: 28px; width: 28px; }
-.brandTitle { font-weight: 600; }
-.brandText { display: flex; flex-direction: column; line-height: 1.2; }
-.userArea { display: flex; align-items: center; gap: 16px; }
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.leftArea { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+.menuButton {
+  color: $color-text-secondary;
+  @media (min-width: $breakpoint-menu) { display: none; }
+}
+
+.brand { display: flex; align-items: center; gap: 12px; cursor: pointer; min-width: 0; }
+.logo { height: 28px; width: 28px; flex-shrink: 0; }
+.brandTitle { font-weight: 600; white-space: nowrap; }
+.brandText { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+
+.brandSubtitle {
+  display: none;
+  @media (min-width: $breakpoint-tablet) { display: block; }
+}
+
+.userArea { display: flex; align-items: center; gap: 12px; }
+
+.greeting {
+  display: none;
+  white-space: nowrap;
+  @media (min-width: $breakpoint-tablet) { display: block; }
+}
 
 .avatar {
-  width: 38px;
-  height: 38px;
-  font-size: 1rem;
+  width: 36px;
+  height: 36px;
+  font-size: 0.95rem;
   background-color: $color-primary;
 }

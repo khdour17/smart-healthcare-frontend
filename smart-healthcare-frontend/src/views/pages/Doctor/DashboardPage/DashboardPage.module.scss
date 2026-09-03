@@ -1,13 +1,6 @@
 @use '../../../../styles/mixins' as *;
 
-.page { display: flex; flex-direction: column; gap: 20px; }
-
-.charts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-}
-
-.message { padding: 8px 2px; }
-
+@include page-column;
+@include charts-grid;
+@include page-message;
 @include panel-section;

@@ -3,12 +3,12 @@ import type { ReactNode } from 'react';
 import {
   Checkbox,
   Paper,
+  Typography,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 
 import styles from './DataTable.module.scss';
@@ -102,7 +102,7 @@ export function DataTable<T>({
         </TableBody>
       </Table>
       {rows.length === 0 && (
-        <Typography className={styles.emptyMessage} color="textSecondary">{emptyMessage}</Typography>
+        <Typography variant="body2" color="textSecondary" className={styles.empty}>{emptyMessage}</Typography>
       )}
     </Paper>
   );

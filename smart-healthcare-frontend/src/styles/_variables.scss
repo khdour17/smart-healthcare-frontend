@@ -1,19 +1,41 @@
-$color-background: #0a0a0f;
-$color-surface-1: #111116;
-$color-surface-2: #17171f;
-$color-surface-3: #1e1e28;
-$color-border: #26262f;
-$color-primary: #3b82f6;
-$color-primary-muted: rgba(59, 130, 246, 0.14);
-$color-success: #22c55e;
-$color-error: #ef4444;
-$color-text-primary: #f5f5f7;
-$color-text-secondary: #9494a3;
-$radius-base: 10px;
+$color-background: #0a0e14;
+$color-surface-1: #0f141c;
+$color-surface-2: #141b25;
+$color-surface-3: #1b2431;
+$color-surface-hover: #202b3a;
+
+$color-border: #232f3e;
+$color-border-strong: #2f3d50;
+
+$color-primary: #3987e5;
+$color-primary-strong: #5aa2f2;
+$color-primary-muted: rgba(57, 135, 229, 0.16);
+
+$color-accent: #2dd4bf;
+$color-success: #34d399;
+$color-error: #f87171;
+$color-error-muted: rgba(248, 113, 113, 0.12);
+$color-warning: #fbbf24;
+
+$color-text-primary: #eef2f8;
+$color-text-secondary: #93a3b8;
+$color-text-muted: #6b7a8f;
+
+$radius-small: 8px;
+$radius-base: 12px;
+$radius-large: 16px;
+
+$shadow-card: 0 1px 2px rgba(0, 0, 0, 0.32), 0 10px 28px rgba(0, 0, 0, 0.24);
+$shadow-raised: 0 2px 6px rgba(0, 0, 0, 0.36), 0 18px 44px rgba(0, 0, 0, 0.32);
+
 $spacing-section: 20px;
 $font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
 $color-series-1: #3987e5;
 $color-series-2: #d95926;
 $color-series-3: #199e70;
-$color-chart-baseline: #383835;
+$color-chart-baseline: #2f3d50;
+
+$breakpoint-tablet: 600px;
+$breakpoint-menu: 900px;
+$breakpoint-wide: 1280px;

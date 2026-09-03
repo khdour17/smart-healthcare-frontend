@@ -1,7 +1,6 @@
 import {
-  useCallback,
   useContext,
-  useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -34,6 +33,9 @@ import {
   EditProfileForm,
   type ProfileField,
 } from './EditProfileForm/EditProfileForm';
+import { PageHeader } from '../../../components/PageHeader/PageHeader';
+import { useToast } from '../../../utils/useToast';
+import { useLoadedData } from '../../../utils/useLoadedData';
 import styles from './ProfilePage.module.scss';
 
 interface Profile {
@@ -104,29 +106,24 @@ async function saveProfile(user: AuthUser, values: Record<string, string>): Prom
 }
 
 export default function ProfilePage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const user = auth?.user ?? null;
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const refreshProfile = useCallback(() => {
-    if (user === null) return;
-    loadProfile(user)
-      .then((loaded) => {
-        setProfile(loaded);
-        setError(null);
-      })
-      .catch(() => setError('Could not load your profile. Please try again.'))
-      .finally(() => setIsLoading(false));
-  }, [user]);
-
-  useEffect(() => {
-    refreshProfile();
-  }, [refreshProfile]);
+  const load = useMemo(
+    () => (user === null ? null : () => loadProfile(user)),
+    [user],
+  );
+  const {
+    data: profile,
+    isLoading,
+    error,
+    reload: refreshProfile,
+  } = useLoadedData(load, 'Could not load your profile. Please try again.');
 
   function handleSaved() {
+    showToast('Profile saved.');
     setIsDrawerOpen(false);
     refreshProfile();
   }
@@ -141,12 +138,13 @@ export default function ProfilePage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Profile</Typography>
-        {canEdit && (
+      <PageHeader
+        title="Profile"
+        subtitle="Your account and the details linked to it."
+        actions={canEdit && (
           <Button variant="contained" startIcon={<EditIcon />} onClick={() => setIsDrawerOpen(true)}>Edit Profile</Button>
         )}
-      </Box>
+      />
 
       <Box className={styles.section}>
         <Typography variant="h6">Account</Typography>

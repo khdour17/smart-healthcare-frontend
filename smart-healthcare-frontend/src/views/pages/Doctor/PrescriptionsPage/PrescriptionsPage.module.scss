@@ -1,17 +1,6 @@
-@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
 
-.page { display: flex; flex-direction: column; gap: 20px; }
-.headerRow { display: flex; align-items: center; justify-content: space-between; }
+.deleteAction { @include quiet-danger-action; }
 
-.rowActions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: nowrap;
-  gap: 4px;
-}
-
-.deleteAction {
-  color: $color-text-secondary;
-  &:hover { color: $color-error; background-color: rgba(239, 68, 68, 0.1); }
-}
+@include page-column;
+@include row-actions;

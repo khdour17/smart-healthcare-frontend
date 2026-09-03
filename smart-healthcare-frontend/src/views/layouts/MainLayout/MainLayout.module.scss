@@ -14,9 +14,23 @@
   min-height: 0;
 }
 
+.wideMenu {
+  display: none;
+  @media (min-width: $breakpoint-menu) { display: flex; }
+}
+
+.narrowMenuPaper {
+  background-color: $color-surface-1;
+  background-image: none;
+  border-right: 1px solid $color-border;
+}
+
 .content {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  padding: 24px;
+  padding: 16px;
+
+  @media (min-width: $breakpoint-tablet) { padding: 24px; }
+  @media (min-width: $breakpoint-wide) { padding: 28px 32px; }
 }

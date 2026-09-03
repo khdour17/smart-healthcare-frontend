@@ -8,9 +8,9 @@
 }
 
 @mixin glass-panel {
-  background: rgba(24, 24, 27, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(39, 39, 42, 0.8);
+  background: rgba(15, 20, 28, 0.88);
+  backdrop-filter: blur(14px);
+  border: 1px solid $color-border;
 }
 
 @mixin selection-bar {
@@ -20,7 +20,7 @@
     gap: 4px;
     padding: 4px 6px 4px 16px;
     border-radius: 999px;
-    background-color: $color-surface-2;
+    background-color: $color-surface-3;
     border: 1px solid $color-border;
   }
 
@@ -32,7 +32,7 @@
 
   .selectionDelete {
     color: $color-error;
-    &:hover { background-color: rgba(239, 68, 68, 0.1); }
+    &:hover { background-color: $color-error-muted; }
   }
 }
 
@@ -45,5 +45,91 @@
     border-radius: $radius-base;
     background-color: $color-surface-2;
     border: 1px solid $color-border;
+    box-shadow: $shadow-card;
   }
+}
+
+
+@mixin page-column {
+  .page { display: flex; flex-direction: column; gap: 20px; }
+}
+
+@mixin row-actions {
+  .rowActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+}
+
+@mixin drawer-form {
+  .form { display: flex; flex-direction: column; gap: 16px; }
+  .actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+}
+
+@mixin charts-grid {
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+}
+
+@mixin page-message {
+  .message { padding: 8px 2px; }
+}
+
+@mixin danger-action {
+  color: $color-error;
+  &:hover { background-color: $color-error-muted; }
+}
+
+@mixin quiet-danger-action {
+  color: $color-text-secondary;
+  &:hover { color: $color-error; background-color: $color-error-muted; }
+}
+
+@mixin centered-message {
+  padding: 40px;
+  text-align: center;
+}
+
+@mixin tall-drawer-form {
+  @include drawer-form;
+  .form { height: 100%; }
+  .actions { margin-top: auto; }
+}
+
+@mixin fill-height-field {
+  flex: 1;
+
+  :global(.MuiInputBase-root) {
+    height: 100%;
+    align-items: flex-start;
+  }
+
+  :global(.MuiInputBase-input) {
+    height: 100% !important;
+    overflow: auto !important;
+  }
+}
+
+@mixin summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border-radius: $radius-base;
+  background-color: $color-surface-3;
+  border: 1px solid $color-border;
+}
+
+@mixin details-panel {
+  .details { display: flex; flex-direction: column; gap: 20px; }
+  .summary { @include summary-card; }
+  .section { display: flex; flex-direction: column; gap: 8px; }
+  .sectionBody { white-space: pre-wrap; }
+  .medicines { margin: 0; padding-left: 20px; }
 }

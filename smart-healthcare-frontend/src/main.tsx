@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 
 import { AuthContextProvider } from './contexts/AuthContextProvider';
+import { ToastContextProvider } from './contexts/ToastContextProvider';
 import { AppRouter } from './routes/AppRouter';
 import { theme } from './theme/theme';
 
@@ -24,7 +25,9 @@ createRoot(document.getElementById('root')!).render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthContextProvider>
-          <AppRouter />
+          <ToastContextProvider>
+            <AppRouter />
+          </ToastContextProvider>
         </AuthContextProvider>
       </ThemeProvider>
     </StyledEngineProvider>

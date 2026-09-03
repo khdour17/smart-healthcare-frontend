@@ -1,8 +1,6 @@
 import {
-  useCallback,
   useContext,
-  useEffect,
-  useState,
+  useMemo,
 } from 'react';
 
 import {
@@ -35,6 +33,8 @@ import {
 } from '../../../../analytics/appointmentAnalytics';
 import { todayIso } from '../../../../utils/todayIso';
 import { weeklyHours } from '../../../../analytics/doctorAnalytics';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useLoadedData } from '../../../../utils/useLoadedData';
 import styles from './DashboardPage.module.scss';
 
 interface Overview {
@@ -82,31 +82,16 @@ async function loadOverview(doctorId: number): Promise<Overview> {
 export default function DashboardPage() {
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
-  const [overview, setOverview] = useState<Overview | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const refreshOverview = useCallback(() => {
-    if (doctorId === null) return;
-    loadOverview(doctorId)
-      .then((loaded) => {
-        setOverview(loaded);
-        setError(null);
-      })
-      .catch(() => setError('Could not load your dashboard. Please try again.'))
-      .finally(() => setIsLoading(false));
-  }, [doctorId]);
-
-  useEffect(() => {
-    refreshOverview();
-  }, [refreshOverview]);
+  const load = useMemo(
+    () => (doctorId === null ? null : () => loadOverview(doctorId)),
+    [doctorId],
+  );
+  const { data: overview, isLoading, error } = useLoadedData(load, 'Could not load your dashboard. Please try again.');
 
   return (
     <Box className={styles.page}>
-      <Box>
-        <Typography variant="h5">Doctor Dashboard</Typography>
-        <Typography variant="body2" color="textSecondary">Your week, your patients and your work hours.</Typography>
-      </Box>
+      <PageHeader title="Doctor Dashboard" subtitle="Your week, your patients and your work hours." />
 
       {isLoading && (
         <Typography className={styles.message} color="textSecondary">Loading your dashboard...</Typography>

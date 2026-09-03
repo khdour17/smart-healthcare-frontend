@@ -14,7 +14,6 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -35,12 +34,30 @@ import { AuthContext } from '../../../../contexts/AuthContext';
 import { bySoonestFirst } from '../../../../utils/bySoonestFirst';
 import { formatTime } from '../../../../utils/formatTime';
 import {
+  getPageView,
+  type PageView,
+  savePageView,
+} from '../../../../utils/preferences';
+import {
+  startOfWeek,
+  weekDays,
+} from '../../../../utils/weekDates';
+import {
   AppointmentDetails,
 } from '../../../shared/AppointmentDetails/AppointmentDetails';
 import {
   AppointmentStatusChip,
 } from '../../../shared/AppointmentStatusChip/AppointmentStatusChip';
 import { BookAppointmentForm } from './BookAppointmentForm/BookAppointmentForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { CalendarToolbar } from '../../../../components/CalendarToolbar/CalendarToolbar';
+import {
+  type CalendarItem,
+  WeekCalendar,
+} from '../../../../components/WeekCalendar/WeekCalendar';
+import { useLatestCall } from '../../../../utils/useLatestCall';
+import { useToast } from '../../../../utils/useToast';
+import { appointmentTone } from '../../../../utils/appointmentTone';
 import styles from './AppointmentsPage.module.scss';
 
 type DrawerDetails =
@@ -59,18 +76,36 @@ interface ConfirmDetails {
 }
 
 export default function AppointmentsPage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const patientId = auth?.user?.roleEntityId ?? null;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [view, setView] = useState<PageView>(() => getPageView('appointments'));
+  const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
+
+  function changeView(next: PageView) {
+    setView(next);
+    savePageView('appointments', next);
+  }
+
+  function openDrawer(details: DrawerDetails) {
+    setDrawerDetails(details);
+    setIsDrawerOpen(true);
+  }
   const [confirmDetails, setConfirmDetails] = useState<ConfirmDetails | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
 
+  const startAppointmentsCall = useLatestCall();
+
   const refreshAppointments = useCallback(() => {
-    if (patientId !== null) {
-      getPatientAppointments(patientId).then((data) => setAppointments([...data].sort(bySoonestFirst)));
-    }
-  }, [patientId]);
+    if (patientId === null) return;
+    const isLatestCall = startAppointmentsCall();
+    getPatientAppointments(patientId).then((data) => {
+      if (isLatestCall()) setAppointments([...data].sort(bySoonestFirst));
+    });
+  }, [patientId, startAppointmentsCall]);
 
   useEffect(() => {
     refreshAppointments();
@@ -81,18 +116,19 @@ export default function AppointmentsPage() {
     : null;
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function openBook() {
-    setDrawerDetails({ type: 'book', title: 'Book Appointment' });
+    openDrawer({ type: 'book', title: 'Book Appointment' });
   }
 
   function openDetails(appointment: AppointmentResponse) {
-    setDrawerDetails({ type: 'details', title: 'Appointment Details', appointmentId: appointment.id });
+    openDrawer({ type: 'details', title: 'Appointment Details', appointmentId: appointment.id });
   }
 
   function handleBooked() {
+    showToast('Appointment booked.');
     closeDrawer();
     refreshAppointments();
   }
@@ -128,6 +164,7 @@ export default function AppointmentsPage() {
       if (type === 'cancel') await cancelAppointment(appointmentId);
       else await deleteAppointment(appointmentId);
       setConfirmDetails(null);
+      showToast(type === 'cancel' ? 'Appointment cancelled.' : 'Appointment deleted.');
       refreshAppointments();
     } catch {
       setConfirmError(`Could not ${type} this appointment. Please try again.`);
@@ -180,35 +217,62 @@ export default function AppointmentsPage() {
     },
   ];
 
+  const calendarItems: CalendarItem[] = appointments.map((appointment) => ({
+    id: String(appointment.id),
+    dayKey: appointment.appointmentDate,
+    startTime: appointment.startTime,
+    endTime: appointment.endTime,
+    title: appointment.doctorName,
+    subtitle: `${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}`,
+    tone: appointmentTone(appointment.status),
+    onClick: () => openDetails(appointment),
+  }));
+
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">My Appointments</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
-          Book Appointment
-        </Button>
-      </Box>
-
-      <DataTable
-        columns={columns}
-        rows={appointments}
-        getRowKey={(row) => row.id}
-        emptyMessage="No appointments booked yet."
+      <PageHeader
+        title="My Appointments"
+        subtitle="Everything you have booked, past and upcoming."
+        actions={(
+          <Button variant="contained" startIcon={<AddIcon />} onClick={openBook} disabled={patientId === null}>
+            Book Appointment
+          </Button>
+        )}
       />
 
-      {drawerDetails !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
-          {drawerDetails.type === 'book' ? (
-            patientId !== null && (
-              <BookAppointmentForm patientId={patientId} onSuccess={handleBooked} onCancel={closeDrawer} />
-            )
-          ) : (
-            drawerAppointment !== null && (
-              <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.doctorName} />
-            )
-          )}
-        </Drawer>
+      <CalendarToolbar
+        view={view}
+        onViewChange={changeView}
+        weekStart={weekStart}
+        onWeekChange={setWeekStart}
+      />
+
+      {view === 'calendar' ? (
+        <WeekCalendar
+          days={weekDays(weekStart)}
+          items={calendarItems}
+          emptyMessage="Nothing booked this week."
+        />
+      ) : (
+        <DataTable
+          columns={columns}
+          rows={appointments}
+          getRowKey={(row) => row.id}
+          emptyMessage="No appointments booked yet."
+        />
       )}
+
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {drawerDetails?.type === 'book' ? (
+          patientId !== null && (
+            <BookAppointmentForm patientId={patientId} onSuccess={handleBooked} onCancel={closeDrawer} />
+          )
+        ) : (
+          drawerAppointment !== null && (
+            <AppointmentDetails appointment={drawerAppointment} heading={drawerAppointment.doctorName} />
+          )
+        )}
+      </Drawer>
 
       <ConfirmDialog
         open={confirmDetails !== null}

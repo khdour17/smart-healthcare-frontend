@@ -1,14 +1,9 @@
-@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
 
-.page { display: flex; flex-direction: column; gap: 20px; }
-.headerRow { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .headerTools { display: flex; align-items: center; gap: 12px; }
 .picker { min-width: 260px; }
-.empty { padding: 40px; text-align: center; }
-
+.empty { @include centered-message; }
 .entryActions { display: flex; align-items: center; gap: 4px; }
+.deleteAction { @include quiet-danger-action; }
 
-.deleteAction {
-  color: $color-text-secondary;
-  &:hover { color: $color-error; background-color: rgba(239, 68, 68, 0.1); }
-}
+@include page-column;

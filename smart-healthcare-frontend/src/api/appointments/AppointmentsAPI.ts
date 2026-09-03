@@ -30,6 +30,11 @@ export interface AvailableSlotResponse {
   endTime: string;
 }
 
+export async function getAllAppointments(): Promise<AppointmentResponse[]> {
+  const response = await httpClient.get<AppointmentResponse[]>('/appointments');
+  return response.data;
+}
+
 export async function getPatientAppointments(patientId: number): Promise<AppointmentResponse[]> {
   const response = await httpClient.get<AppointmentResponse[]>(`/appointments/patient/${patientId}`);
   return response.data;

@@ -24,7 +24,7 @@ export function appointmentShare(appointments: AppointmentResponse[]): ShareBarS
   return [
     { label: 'Scheduled', value: countByStatus(appointments, 'SCHEDULED'), slot: 'one' },
     { label: 'Completed', value: countByStatus(appointments, 'COMPLETED'), slot: 'three' },
-    { label: 'Cancelled', value: countByStatus(appointments, 'CANCELLED'), slot: 'two' },
+    { label: 'Cancelled', value: countByStatus(appointments, 'CANCELLED'), slot: 'muted' },
   ];
 }
 

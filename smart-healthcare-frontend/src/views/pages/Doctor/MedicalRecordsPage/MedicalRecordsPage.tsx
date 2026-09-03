@@ -31,6 +31,9 @@ import {
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { PatientRecord } from '../../../shared/PatientRecord/PatientRecord';
 import { MedicalRecordForm } from './MedicalRecordForm/MedicalRecordForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useLatestCall } from '../../../../utils/useLatestCall';
+import { useToast } from '../../../../utils/useToast';
 import styles from './MedicalRecordsPage.module.scss';
 
 type DrawerDetails =
@@ -38,10 +41,17 @@ type DrawerDetails =
   | { type: 'edit'; entryId: string; title: string };
 
 export default function MedicalRecordsPage() {
+  const showToast = useToast();
   const [patients, setPatients] = useState<PatientResponse[]>([]);
   const [patientId, setPatientId] = useState<number | null>(null);
   const [history, setHistory] = useState<PatientHistoryResponse | null>(null);
   const [drawerDetails, setDrawerDetails] = useState<DrawerDetails | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  function openDrawer(details: DrawerDetails) {
+    setDrawerDetails(details);
+    setIsDrawerOpen(true);
+  }
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -49,8 +59,13 @@ export default function MedicalRecordsPage() {
     getAllPatients().then(setPatients);
   }, []);
 
+  const startHistoryCall = useLatestCall();
+
   function loadHistory(id: number) {
-    getPatientHistory(id).then(setHistory);
+    const isLatestCall = startHistoryCall();
+    getPatientHistory(id).then((loaded) => {
+      if (isLatestCall()) setHistory(loaded);
+    });
   }
 
   const patient = patients.find((item) => item.id === patientId) ?? null;
@@ -74,10 +89,11 @@ export default function MedicalRecordsPage() {
     : null;
 
   function closeDrawer() {
-    setDrawerDetails(null);
+    setIsDrawerOpen(false);
   }
 
   function handleSaved() {
+    showToast('Record entry saved.');
     closeDrawer();
     refreshHistory();
   }
@@ -86,6 +102,7 @@ export default function MedicalRecordsPage() {
     if (deleteId === null) return;
     try {
       await deleteMedicalRecord(deleteId);
+      showToast('Record entry deleted.');
       setDeleteId(null);
       refreshHistory();
     } catch {
@@ -102,7 +119,7 @@ export default function MedicalRecordsPage() {
     return (
       <Box className={styles.entryActions}>
         <Tooltip title="Edit entry">
-          <IconButton size="small" onClick={() => setDrawerDetails({ type: 'edit', entryId, title: 'Edit Entry' })}>
+          <IconButton size="small" onClick={() => openDrawer({ type: 'edit', entryId, title: 'Edit Entry' })}>
             <EditIcon fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -121,28 +138,31 @@ export default function MedicalRecordsPage() {
 
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Medical Records</Typography>
-        <Box className={styles.headerTools}>
-          <Autocomplete
-            className={styles.picker}
-            options={patients}
-            value={patient}
-            onChange={handlePatientChange}
-            getOptionLabel={(option) => option.name}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderInput={(params) => <TextField {...params} label="Patient" size="small" />}
-          />
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            disabled={patient === null}
-            onClick={() => setDrawerDetails({ type: 'create', title: 'Add Entry' })}
-          >
-            Add Entry
-          </Button>
-        </Box>
-      </Box>
+      <PageHeader
+        title="Medical Records"
+        subtitle="Pick a patient to read and write their record."
+        actions={(
+          <Box className={styles.headerTools}>
+            <Autocomplete
+              className={styles.picker}
+              options={patients}
+              value={patient}
+              onChange={handlePatientChange}
+              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderInput={(params) => <TextField {...params} label="Patient" size="small" />}
+            />
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              disabled={patient === null}
+              onClick={() => openDrawer({ type: 'create', title: 'Add Entry' })}
+            >
+              Add Entry
+            </Button>
+          </Box>
+        )}
+      />
 
       {history !== null ? (
         <PatientRecord history={history} entryActions={entryActions} />
@@ -152,16 +172,16 @@ export default function MedicalRecordsPage() {
         </Typography>
       )}
 
-      {drawerDetails !== null && patient !== null && (
-        <Drawer open onClose={closeDrawer} title={drawerDetails.title}>
+      <Drawer open={isDrawerOpen} onClose={closeDrawer} title={drawerDetails?.title ?? ''}>
+        {patient !== null && (
           <MedicalRecordForm
             patientId={patient.id}
             entry={editingEntry ?? undefined}
             onSuccess={handleSaved}
             onCancel={closeDrawer}
           />
-        </Drawer>
-      )}
+        )}
+      </Drawer>
 
       <ConfirmDialog
         open={deleteTarget !== null}

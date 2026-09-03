@@ -1,10 +1,4 @@
 import {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-
-import {
   Box,
   Typography,
 } from '@mui/material';
@@ -12,12 +6,9 @@ import {
 import { getAllAdmins } from '../../../../api/admin/AdminAPI';
 import {
   type AppointmentResponse,
-  getDoctorAppointments,
+  getAllAppointments,
 } from '../../../../api/appointments/AppointmentsAPI';
-import {
-  type DoctorResponse,
-  getAllDoctors,
-} from '../../../../api/doctors/DoctorsAPI';
+import { getAllDoctors } from '../../../../api/doctors/DoctorsAPI';
 import { getAllPatients } from '../../../../api/patients/PatientsAPI';
 import {
   type BarChartPoint,
@@ -36,6 +27,8 @@ import {
   busiestDoctors,
   countBySpecialty,
 } from '../../../../analytics/adminAnalytics';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useLoadedData } from '../../../../utils/useLoadedData';
 import styles from './DashboardPage.module.scss';
 
 interface Overview {
@@ -47,16 +40,12 @@ interface Overview {
 }
 
 async function loadOverview(): Promise<Overview> {
-  const [doctors, patients, admins] = await Promise.all([
+  const [doctors, patients, admins, appointments] = await Promise.all([
     getAllDoctors(),
     getAllPatients(),
     getAllAdmins(),
+    getAllAppointments(),
   ]);
-
-  const perDoctor = await Promise.all(
-    doctors.map((doctor: DoctorResponse) => getDoctorAppointments(doctor.id)),
-  );
-  const appointments = perDoctor.flat();
 
   return {
     tiles: [
@@ -74,30 +63,11 @@ async function loadOverview(): Promise<Overview> {
 }
 
 export default function DashboardPage() {
-  const [overview, setOverview] = useState<Overview | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const refreshOverview = useCallback(() => {
-    loadOverview()
-      .then((loaded) => {
-        setOverview(loaded);
-        setError(null);
-      })
-      .catch(() => setError('Could not load the dashboard. Please try again.'))
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  useEffect(() => {
-    refreshOverview();
-  }, [refreshOverview]);
+  const { data: overview, isLoading, error } = useLoadedData(loadOverview, 'Could not load the dashboard. Please try again.');
 
   return (
     <Box className={styles.page}>
-      <Box>
-        <Typography variant="h5">Admin Dashboard</Typography>
-        <Typography variant="body2" color="textSecondary">How busy the clinic is right now.</Typography>
-      </Box>
+      <PageHeader title="Admin Dashboard" subtitle="How busy the clinic is right now." />
 
       {isLoading && (
         <Typography className={styles.message} color="textSecondary">Loading the dashboard...</Typography>

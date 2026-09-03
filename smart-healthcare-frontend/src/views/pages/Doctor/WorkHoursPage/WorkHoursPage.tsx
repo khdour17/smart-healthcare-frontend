@@ -12,7 +12,6 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 
 import {
@@ -30,26 +29,63 @@ import {
 import { Drawer } from '../../../../components/Drawer/Drawer';
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { formatTime } from '../../../../utils/formatTime';
+import {
+  getPageView,
+  type PageView,
+  savePageView,
+} from '../../../../utils/preferences';
 import { AddAvailabilityForm } from './AddAvailabilityForm/AddAvailabilityForm';
+import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { CalendarToolbar } from '../../../../components/CalendarToolbar/CalendarToolbar';
+import {
+  type CalendarItem,
+  WeekCalendar,
+} from '../../../../components/WeekCalendar/WeekCalendar';
+import { useLatestCall } from '../../../../utils/useLatestCall';
+import { useToast } from '../../../../utils/useToast';
 import styles from './WorkHoursPage.module.scss';
 
+const WEEK_DAYS = [
+  { key: 'MONDAY', label: 'Mon' },
+  { key: 'TUESDAY', label: 'Tue' },
+  { key: 'WEDNESDAY', label: 'Wed' },
+  { key: 'THURSDAY', label: 'Thu' },
+  { key: 'FRIDAY', label: 'Fri' },
+  { key: 'SATURDAY', label: 'Sat' },
+  { key: 'SUNDAY', label: 'Sun' },
+];
+
 export default function WorkHoursPage() {
+  const showToast = useToast();
   const auth = useContext(AuthContext);
   const doctorId = auth?.user?.roleEntityId ?? null;
   const [slots, setSlots] = useState<DoctorAvailabilityResponse[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [view, setView] = useState<PageView>(() => getPageView('workHours'));
+
+  function changeView(next: PageView) {
+    setView(next);
+    savePageView('workHours', next);
+  }
+
+  const startSlotsCall = useLatestCall();
 
   const refreshSlots = useCallback(() => {
-    if (doctorId !== null) getDoctorAvailability(doctorId).then(setSlots);
-  }, [doctorId]);
+    if (doctorId === null) return;
+    const isLatestCall = startSlotsCall();
+    getDoctorAvailability(doctorId).then((loaded) => {
+      if (isLatestCall()) setSlots(loaded);
+    });
+  }, [doctorId, startSlotsCall]);
 
   useEffect(() => {
     refreshSlots();
   }, [refreshSlots]);
 
   function handleCreated() {
+    showToast('Work hours saved.');
     setIsDrawerOpen(false);
     refreshSlots();
   }
@@ -64,6 +100,7 @@ export default function WorkHoursPage() {
     try {
       await deleteAvailability(deleteTargetId);
       setDeleteTargetId(null);
+      showToast('Work hours removed.');
       refreshSlots();
     } catch {
       setDeleteError('Could not delete this availability slot.');
@@ -89,16 +126,39 @@ export default function WorkHoursPage() {
     },
   ];
 
+  const calendarItems: CalendarItem[] = slots.map((slot) => ({
+    id: String(slot.id),
+    dayKey: slot.dayOfWeek,
+    startTime: slot.startTime,
+    endTime: slot.endTime,
+    title: `${formatTime(slot.startTime)} - ${formatTime(slot.endTime)}`,
+    subtitle: `${slot.slotDurationMinutes} min slots`,
+    tone: 'primary',
+  }));
+
   return (
     <Box className={styles.page}>
-      <Box className={styles.headerRow}>
-        <Typography variant="h5">Work Hours</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
-          Add Availability
-        </Button>
-      </Box>
+      <PageHeader
+        title="Work Hours"
+        subtitle="The hours you are open for appointments each week."
+        actions={(
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsDrawerOpen(true)} disabled={doctorId === null}>
+            Add Availability
+          </Button>
+        )}
+      />
 
-      <DataTable columns={columns} rows={slots} getRowKey={(row) => row.id} emptyMessage="No work hours set yet." />
+      <CalendarToolbar view={view} onViewChange={changeView} />
+
+      {view === 'calendar' ? (
+        <WeekCalendar
+          days={WEEK_DAYS}
+          items={calendarItems}
+          emptyMessage="No work hours set yet."
+        />
+      ) : (
+        <DataTable columns={columns} rows={slots} getRowKey={(row) => row.id} emptyMessage="No work hours set yet." />
+      )}
 
       {doctorId !== null && (
         <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Add Availability">

@@ -188,15 +188,14 @@ The left menu, the routes and the API calls all follow the role in the JWT.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                        Browser                               │
+│                           Browser                            │
 │                                                              │
-│   AppRouter ──► RequireAuth ──► RequireRole ──► MainLayout    │
-│                                                    │         │
-│                                    Header · LeftMenu · Outlet │
-│                                                    │         │
-│                                                  Pages        │
-│                                                    │         │
-│                                 shared views + components     │
+│    AppRouter ─► RequireAuth ─► RequireRole ─► MainLayout     │
+│                              │                               │
+│                  Header · LeftMenu · Outlet                  │
+│                              │                               │
+│              pages · shared views · components               │
+│                                                              │
 └────────────────────────────────┬─────────────────────────────┘
                                  │  axios (httpClient)
                                  │  Authorization: Bearer <jwt>

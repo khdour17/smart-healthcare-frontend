@@ -57,7 +57,9 @@ import {
   type CalendarItem,
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
+import { useLatestCall } from '../../../../utils/useLatestCall';
 import { useToast } from '../../../../utils/useToast';
+import { appointmentTone } from '../../../../utils/appointmentTone';
 import styles from './SchedulePage.module.scss';
 
 type DrawerType = 'complete' | 'details' | 'prescribe';
@@ -66,12 +68,6 @@ interface DrawerDetails {
   appointmentId: number;
   type: DrawerType;
   title: string;
-}
-
-function appointmentTone(status: AppointmentResponse['status']): CalendarItem['tone'] {
-  if (status === 'COMPLETED') return 'success';
-  if (status === 'CANCELLED') return 'muted';
-  return 'primary';
 }
 
 export default function SchedulePage() {
@@ -95,18 +91,24 @@ export default function SchedulePage() {
     setIsDrawerOpen(true);
   }
 
+  const startAppointmentsCall = useLatestCall();
+  const startPrescribedCall = useLatestCall();
+
   const refreshAppointments = useCallback(() => {
-    if (doctorId !== null) {
-      getDoctorAppointments(doctorId).then((data) => setAppointments([...data].sort(bySoonestFirst)));
-    }
-  }, [doctorId]);
+    if (doctorId === null) return;
+    const isLatestCall = startAppointmentsCall();
+    getDoctorAppointments(doctorId).then((data) => {
+      if (isLatestCall()) setAppointments([...data].sort(bySoonestFirst));
+    });
+  }, [doctorId, startAppointmentsCall]);
 
   const refreshPrescribedIds = useCallback(() => {
-    if (doctorId !== null) {
-      getDoctorPrescriptions(doctorId)
-        .then((data) => setPrescribedIds(new Set(data.map((prescription) => prescription.appointmentId))));
-    }
-  }, [doctorId]);
+    if (doctorId === null) return;
+    const isLatestCall = startPrescribedCall();
+    getDoctorPrescriptions(doctorId).then((data) => {
+      if (isLatestCall()) setPrescribedIds(new Set(data.map((prescription) => prescription.appointmentId)));
+    });
+  }, [doctorId, startPrescribedCall]);
 
   useEffect(() => {
     refreshAppointments();

@@ -4,6 +4,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { classNames } from '../../utils/classNames';
 import styles from './ShareBar.module.scss';
 
 type ShareSlot = 'one' | 'two' | 'three' | 'muted';
@@ -45,7 +46,7 @@ export function ShareBar({ segments, emptyMessage = 'Nothing to show yet.' }: Sh
             placement="top"
           >
             <Box
-              className={`${styles.segment} ${slotClass[segment.slot]}`}
+              className={classNames(styles.segment, slotClass[segment.slot])}
               style={{ flexGrow: segment.value }}
             />
           </Tooltip>
@@ -55,7 +56,7 @@ export function ShareBar({ segments, emptyMessage = 'Nothing to show yet.' }: Sh
       <Box className={styles.legend}>
         {segments.map((segment) => (
           <Box key={segment.label} className={styles.legendItem}>
-            <Box className={`${styles.swatch} ${slotClass[segment.slot]}`} />
+            <Box className={classNames(styles.swatch, slotClass[segment.slot])} />
             <Typography variant="body2" color="textSecondary">{segment.label}</Typography>
             <Typography variant="body2" className={styles.legendValue}>{segment.value}</Typography>
           </Box>

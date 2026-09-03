@@ -53,6 +53,7 @@ export const ICON_BUTTONS = {
   PREVIOUS_WEEK: 'Previous week',
   NEXT_WEEK: 'Next week',
   CLOSE: 'Close',
+  OPEN_MENU: 'Open the menu',
   EXPAND_MENU: 'Expand the menu',
   COLLAPSE_MENU: 'Collapse the menu',
 };

@@ -49,12 +49,11 @@ export class DoctorPage extends CommonPage {
     await this.clickOnItem(drawerButton(BUTTONS.COMPLETE));
   }
 
-  async writePrescription(prescription: Prescription, submitLabel: string): Promise<void> {
+  async fillPrescription(prescription: Prescription): Promise<void> {
     await this.fillItem(formField(FIELD_LABELS.DIAGNOSIS), prescription.DIAGNOSIS);
     await this.fillItem(formField(FIELD_LABELS.MEDICINES), prescription.MEDICINE);
     await this.pressKey('Enter');
     await this.fillItem(formField(FIELD_LABELS.INSTRUCTIONS), prescription.INSTRUCTIONS);
-    await this.clickOnItem(drawerButton(submitLabel));
   }
 
   async deletePrescription(diagnosis: string): Promise<void> {

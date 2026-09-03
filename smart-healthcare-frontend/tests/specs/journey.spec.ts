@@ -83,7 +83,8 @@ test.describe('Verify A Visit From Booking To Prescription', () => {
     await doctorPage.verifyItemContainsText(tableRow(reason), STATUSES.COMPLETED);
 
     await doctorPage.clickRowAction(reason, ICON_BUTTONS.ADD_PRESCRIPTION);
-    await doctorPage.writePrescription({ ...PRESCRIPTION, DIAGNOSIS: diagnosis }, BUTTONS.SAVE_PRESCRIPTION);
+    await doctorPage.fillPrescription({ ...PRESCRIPTION, DIAGNOSIS: diagnosis });
+    await doctorPage.clickOnItem(drawerButton(BUTTONS.SAVE_PRESCRIPTION));
 
     await doctorPage.verifyToast(TEXTS.PRESCRIPTION_SAVED);
 

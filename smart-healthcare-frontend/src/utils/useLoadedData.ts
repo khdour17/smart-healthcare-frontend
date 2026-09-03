@@ -4,6 +4,8 @@ import {
   useState,
 } from 'react';
 
+import { useLatestCall } from './useLatestCall';
+
 interface LoadedData<T> {
   data: T | null;
   isLoading: boolean;
@@ -16,16 +18,24 @@ export function useLoadedData<T>(load: (() => Promise<T>) | null, errorMessage: 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const startCall = useLatestCall();
+
   const reload = useCallback(() => {
     if (load === null) return;
+    const isLatestCall = startCall();
     load()
       .then((loaded) => {
+        if (!isLatestCall()) return;
         setData(loaded);
         setError(null);
       })
-      .catch(() => setError(errorMessage))
-      .finally(() => setIsLoading(false));
-  }, [load, errorMessage]);
+      .catch(() => {
+        if (isLatestCall()) setError(errorMessage);
+      })
+      .finally(() => {
+        if (isLatestCall()) setIsLoading(false);
+      });
+  }, [load, errorMessage, startCall]);
 
   useEffect(() => {
     reload();

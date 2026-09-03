@@ -32,6 +32,7 @@ import { Drawer } from '../../../../components/Drawer/Drawer';
 import { PatientRecord } from '../../../shared/PatientRecord/PatientRecord';
 import { MedicalRecordForm } from './MedicalRecordForm/MedicalRecordForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useLatestCall } from '../../../../utils/useLatestCall';
 import { useToast } from '../../../../utils/useToast';
 import styles from './MedicalRecordsPage.module.scss';
 
@@ -58,8 +59,13 @@ export default function MedicalRecordsPage() {
     getAllPatients().then(setPatients);
   }, []);
 
+  const startHistoryCall = useLatestCall();
+
   function loadHistory(id: number) {
-    getPatientHistory(id).then(setHistory);
+    const isLatestCall = startHistoryCall();
+    getPatientHistory(id).then((loaded) => {
+      if (isLatestCall()) setHistory(loaded);
+    });
   }
 
   const patient = patients.find((item) => item.id === patientId) ?? null;

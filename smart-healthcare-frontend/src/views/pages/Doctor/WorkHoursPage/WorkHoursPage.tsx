@@ -41,6 +41,7 @@ import {
   type CalendarItem,
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
+import { useLatestCall } from '../../../../utils/useLatestCall';
 import { useToast } from '../../../../utils/useToast';
 import styles from './WorkHoursPage.module.scss';
 
@@ -69,9 +70,15 @@ export default function WorkHoursPage() {
     savePageView('workHours', next);
   }
 
+  const startSlotsCall = useLatestCall();
+
   const refreshSlots = useCallback(() => {
-    if (doctorId !== null) getDoctorAvailability(doctorId).then(setSlots);
-  }, [doctorId]);
+    if (doctorId === null) return;
+    const isLatestCall = startSlotsCall();
+    getDoctorAvailability(doctorId).then((loaded) => {
+      if (isLatestCall()) setSlots(loaded);
+    });
+  }, [doctorId, startSlotsCall]);
 
   useEffect(() => {
     refreshSlots();

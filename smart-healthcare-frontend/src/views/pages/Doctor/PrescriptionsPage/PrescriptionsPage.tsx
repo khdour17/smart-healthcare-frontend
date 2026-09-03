@@ -36,6 +36,7 @@ import {
   PrescriptionForm,
 } from '../../../shared/PrescriptionForm/PrescriptionForm';
 import { PageHeader } from '../../../../components/PageHeader/PageHeader';
+import { useLatestCall } from '../../../../utils/useLatestCall';
 import { useToast } from '../../../../utils/useToast';
 import styles from './PrescriptionsPage.module.scss';
 
@@ -57,12 +58,15 @@ export default function PrescriptionsPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const startPrescriptionsCall = useLatestCall();
+
   const refreshPrescriptions = useCallback(() => {
-    if (doctorId !== null) {
-      getDoctorPrescriptions(doctorId)
-        .then((data) => setPrescriptions([...data].sort(byNewestFirst((item) => item.prescriptionDate))));
-    }
-  }, [doctorId]);
+    if (doctorId === null) return;
+    const isLatestCall = startPrescriptionsCall();
+    getDoctorPrescriptions(doctorId).then((data) => {
+      if (isLatestCall()) setPrescriptions([...data].sort(byNewestFirst((item) => item.prescriptionDate)));
+    });
+  }, [doctorId, startPrescriptionsCall]);
 
   useEffect(() => {
     refreshPrescriptions();

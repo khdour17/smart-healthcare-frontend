@@ -26,6 +26,7 @@ import {
 } from '../../../components/DataTable/DataTable';
 import { Drawer } from '../../../components/Drawer/Drawer';
 import { PageHeader } from '../../../components/PageHeader/PageHeader';
+import { useLatestCall } from '../../../utils/useLatestCall';
 import { useToast } from '../../../utils/useToast';
 import styles from './UserListPage.module.scss';
 
@@ -66,9 +67,14 @@ export function UserListPage<T extends ListedUser>({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  const startRowsCall = useLatestCall();
+
   const refreshRows = useCallback(() => {
-    loadAll().then(setRows);
-  }, [loadAll]);
+    const isLatestCall = startRowsCall();
+    loadAll().then((loaded) => {
+      if (isLatestCall()) setRows(loaded);
+    });
+  }, [loadAll, startRowsCall]);
 
   useEffect(() => {
     refreshRows();

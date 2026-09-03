@@ -55,6 +55,7 @@ import {
   type CalendarItem,
   WeekCalendar,
 } from '../../../../components/WeekCalendar/WeekCalendar';
+import { useLatestCall } from '../../../../utils/useLatestCall';
 import { useToast } from '../../../../utils/useToast';
 import { appointmentTone } from '../../../../utils/appointmentTone';
 import styles from './AppointmentsPage.module.scss';
@@ -96,11 +97,15 @@ export default function AppointmentsPage() {
   const [confirmDetails, setConfirmDetails] = useState<ConfirmDetails | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
 
+  const startAppointmentsCall = useLatestCall();
+
   const refreshAppointments = useCallback(() => {
-    if (patientId !== null) {
-      getPatientAppointments(patientId).then((data) => setAppointments([...data].sort(bySoonestFirst)));
-    }
-  }, [patientId]);
+    if (patientId === null) return;
+    const isLatestCall = startAppointmentsCall();
+    getPatientAppointments(patientId).then((data) => {
+      if (isLatestCall()) setAppointments([...data].sort(bySoonestFirst));
+    });
+  }, [patientId, startAppointmentsCall]);
 
   useEffect(() => {
     refreshAppointments();

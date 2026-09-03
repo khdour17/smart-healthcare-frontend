@@ -29,6 +29,10 @@ test.beforeEach(async ({ loginPage }) => {
   await loginPage.loginAs(USERS.ADMIN);
 });
 
+test.afterEach(async ({ adminPage }) => {
+  await adminPage.removeCreatedUsers();
+});
+
 test.describe('Verify Admin Access', () => {
   test('TC-017 Verify that an admin can not open a patient page', async ({ commonPage }) => {
     await commonPage.goto(ROUTES.PATIENT_APPOINTMENTS);
@@ -49,8 +53,6 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemContainsText(tableRow(username), doctor[FIELD_LABELS.FULL_NAME]);
     await adminPage.verifyItemContainsText(tableRow(username), doctor[FIELD_LABELS.SPECIALTY]);
     await adminPage.verifyItemContainsText(tableRow(username), doctor[FIELD_LABELS.EMAIL]);
-
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-019 Verify that the admin can add a new doctor', async ({ adminPage }) => {
@@ -62,8 +64,6 @@ test.describe('Verify Admin Doctors', () => {
 
     await adminPage.verifyItemMissing(COMMON.DRAWER);
     await adminPage.verifyItemExists(tableRow(username));
-
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-020 Verify that a doctor can not be added with a username that is taken', async ({ adminPage }) => {
@@ -83,7 +83,6 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemExists(COMMON.DRAWER);
 
     await adminPage.clickOnItem(drawerButton(BUTTONS.CANCEL));
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-021 Verify that a doctor can not be added with an email that is taken', async ({ adminPage }) => {
@@ -103,7 +102,6 @@ test.describe('Verify Admin Doctors', () => {
     await adminPage.verifyItemExists(COMMON.DRAWER);
 
     await adminPage.clickOnItem(drawerButton(BUTTONS.CANCEL));
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-022 Verify that the required fields must be filled in the form', async ({ adminPage }) => {
@@ -180,8 +178,6 @@ test.describe('Verify Admin Doctors', () => {
 
     await adminPage.verifyItemMissing(COMMON.DIALOG);
     await adminPage.verifyItemExists(tableRow(username));
-
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-027 Verify that the header checkbox selects every doctor and Clear selection undoes it', async ({ adminPage }) => {
@@ -232,8 +228,6 @@ test.describe('Verify Admin Patients', () => {
     await adminPage.verifyItemContainsText(tableRow(username), patient[FIELD_LABELS.FULL_NAME]);
     await adminPage.verifyItemContainsText(tableRow(username), patient[FIELD_LABELS.DATE_OF_BIRTH]);
     await adminPage.verifyItemContainsText(tableRow(username), patient[FIELD_LABELS.EMAIL]);
-
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-030 Verify that the admin can add a new patient with and without the optional fields', async ({ adminPage }) => {
@@ -255,8 +249,6 @@ test.describe('Verify Admin Patients', () => {
     await adminPage.verifyItemMissing(COMMON.DRAWER);
     await adminPage.verifyItemExists(tableRow(fullUsername));
     await adminPage.verifyItemExists(tableRow(minimalUsername));
-
-    await adminPage.deleteRows([fullUsername, minimalUsername], BUTTONS.DELETE);
   });
 });
 
@@ -271,8 +263,6 @@ test.describe('Verify Admin Admins', () => {
 
     await adminPage.verifyItemContainsText(tableRow(username), admin[FIELD_LABELS.FULL_NAME]);
     await adminPage.verifyItemContainsText(tableRow(username), admin[FIELD_LABELS.DEPARTMENT]);
-
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-032 Verify that the admin can add another admin', async ({ adminPage, loginPage }) => {
@@ -289,8 +279,6 @@ test.describe('Verify Admin Admins', () => {
 
     await adminPage.logout();
     await loginPage.loginAs(USERS.ADMIN);
-    await adminPage.goto(ROUTES.ADMIN_ADMINS);
-    await adminPage.deleteRows([username], BUTTONS.DELETE);
   });
 
   test('TC-033 Verify that the admin can delete another admin', async ({ adminPage }) => {

@@ -1,5 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
+import { ROUTES } from '../config/app.config';
 import {
   BUTTONS,
   ICON_BUTTONS,
@@ -171,6 +172,11 @@ export class CommonPage {
     for (const label of expected.hidden) {
       await this.verifyItemMissing(leftMenuItem(label));
     }
+  }
+
+  async clearSession(): Promise<void> {
+    await this.goto(ROUTES.LOGIN);
+    await this.page.evaluate(() => localStorage.clear());
   }
 
   async logout(): Promise<void> {
